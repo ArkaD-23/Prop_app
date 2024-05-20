@@ -3,7 +3,7 @@ import React from "react";
 
 export default function signin() {
   return (
-    <div style={{ width: '360px', padding: '8% 0 0', margin: 'auto' }}>
+    <div style={{ width: '360px', padding: '8% 0 0', margin: '150px auto' }}>
       <div style={{
           position: 'relative', zIndex: '1', background: '#FFFFFF', maxWidth: '360px', margin: '0, auto 100px', padding: '45px', textAlign: 'center',
           boxShadow: '0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)'}}>
