@@ -1,5 +1,5 @@
 import React from 'react'
-import Propcard from '../_components/Propcard'
+import Propcard from '../../_components/Propcard'
 
 const profile = () => {
     return (
