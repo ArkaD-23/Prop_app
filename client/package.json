@@ -12,7 +12,9 @@
   "dependencies": {
     "next": "^14.2.3",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.23.1",
+    "router-dom": "^2.2.11"
   },
   "devDependencies": {
     "@babel/core": "^7.24.5",

@@ -1,18 +1,17 @@
 'use client';
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export default function Signin() {
   const [formData, setFormData] = useState({});
-  
+  const router = useRouter();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
-    const router = useRouter();
     e.preventDefault();
     try {
       const res = await fetch('/server/auth/signin', {
@@ -24,7 +23,7 @@ export default function Signin() {
       });
       const data = await res.json();
       if (data.success === false) {
-        console.log(data);
+        console.log('Signin denied');
         return;
       }
       router.push('/');
@@ -47,7 +46,7 @@ export default function Signin() {
           boxShadow: '0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)',
         }}
       >
-        <form onSubmit={handleSubmit}>
+        <form>
           <input
             id="email"
             onChange={handleChange}
@@ -84,6 +83,7 @@ export default function Signin() {
           />
           <button
             id="button"
+            onClick={handleSubmit}
             style={{
               fontFamily: '"Roboto", sans-serif',
               textTransform: 'uppercase',
