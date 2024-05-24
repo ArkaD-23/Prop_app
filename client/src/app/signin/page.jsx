@@ -66,6 +66,7 @@ export default function Signin() {
                 padding: '15px',
                 boxSizing: 'border-box',
                 fontSize: '14px',
+                borderRadius:'50px'
               }}
               type="text"
               placeholder="email"
@@ -83,6 +84,7 @@ export default function Signin() {
                 padding: '15px',
                 boxSizing: 'border-box',
                 fontSize: '14px',
+                borderRadius:'50px'
               }}
               type="password"
               placeholder="password"
@@ -102,6 +104,7 @@ export default function Signin() {
                 WebkitTransition: 'all 0.3s ease',
                 transition: 'all 0.3s ease',
                 cursor: 'pointer',
+                borderRadius:'50px'
               }}
             >
               login
