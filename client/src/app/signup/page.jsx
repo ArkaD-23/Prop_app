@@ -6,49 +6,50 @@ export default function Signup() {
 
   const [formData, setFormData] = useState({});
   const router = useRouter();
- /* useEffect(() => {
-    handleChange;
-    handleSubmit;
-  }, []);*/
+  /* useEffect(() => {
+     handleChange;
+     handleSubmit;
+   }, []);*/
 
-    const handleChange = (e) => {
-      setFormData({ ...formData, [e.target.id]: e.target.value })
-    };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value })
+  };
 
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      if(!formData.username || !formData.email || !formData.password) {
-        alert('Please fill all the fields!')
-        return
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.username || !formData.email || !formData.password) {
+      alert('Please fill all the fields!')
+      return
+    }
+
+    try {
+      const res = await fetch('../../server/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      console.log(data);
+      if (data.success === false) {
+        alert('Enter your details as mentioned accordingly')
+        return;
       }
-
-      try {
-        const res = await fetch('../../server/auth/signup', {
-          method: 'POST',
-          headers: {
-            'Content-type': 'application/json'
-          },
-          body: JSON.stringify(formData),
-        });
-        const data = await res.json();
-        console.log(data);
-        if (data.success === false) {
-          alert('Enter your details as mentioned accordingly')
-          return;
-        }
-        router.push('/signin');
-      } catch (error) {
-        console.log(error);
-      }
-    };
+      router.push('/signin');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 
-    return (
-      <div style={{ width: '360px', padding: '8% 0 0', margin: '150px auto' }}>
+  return (
+    <div style={{ width: '360px', padding: '8% 0 0', margin: '150px auto' }}>
         <div style={{
           position: 'relative', zIndex: '1', background: '#FFFFFF', maxWidth: '360px', margin: '0, auto 100px', padding: '45px', textAlign: 'center',
           boxShadow: '0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)'
         }}>
+          <h1 style={{textAlign:'center', marginBottom:'1.6em'}}>SIGNUP</h1>
           <form onSubmit={handleSubmit}>
             <input id="username" onChange={handleChange} style={{ fontFamily: 'Roboto', outline: '0', background: '#f2f2f2', width: '100%', border: '0', margin: '0 0 15px', padding: '15px', boxSizing: 'border-box', fontSize: '14px' }} type="text" placeholder="username" />
             <input id="email" onChange={handleChange} style={{ fontFamily: 'Roboto', outline: '0', background: '#f2f2f2', width: '100%', border: '0', margin: '0 0 15px', padding: '15px', boxSizing: 'border-box', fontSize: '14px' }} type="text" placeholder="email" />
@@ -57,6 +58,6 @@ export default function Signup() {
           </form>
         </div>
       </div>
-    )
-  };
+  )
+};
 

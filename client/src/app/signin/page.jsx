@@ -39,8 +39,6 @@ export default function Signin() {
 
   return (
     <div style={{ width: '360px', padding: '8% 0 0', margin: '150px auto' }}>
-      <div style={{display: 'column',justifyContent:'center',alignContents:'center'}}>
-        <h1>SIGNIN</h1>
         <div
           style={{
             position: 'relative',
@@ -53,6 +51,7 @@ export default function Signin() {
             boxShadow: '0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)',
           }}
         >
+          <h1 style={{textAlign:'center', marginBottom:'1.6em'}}>SIGNIN</h1>
           <form onSubmit={handleSubmit}>
             <input
               id="email"
@@ -125,6 +124,6 @@ export default function Signin() {
           </form>
         </div>
       </div>
-    </div>
+    
   );
 }
