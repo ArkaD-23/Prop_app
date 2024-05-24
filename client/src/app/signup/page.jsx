@@ -17,6 +17,11 @@ export default function Signup() {
 
     const handleSubmit = async (e) => {
       e.preventDefault();
+      if(!formData.username || !formData.email || !formData.password) {
+        alert('Please fill all the fields!')
+        return
+      }
+
       try {
         const res = await fetch('../../server/auth/signup', {
           method: 'POST',
@@ -28,6 +33,7 @@ export default function Signup() {
         const data = await res.json();
         console.log(data);
         if (data.success === false) {
+          alert('Enter your details as mentioned accordingly')
           return;
         }
         router.push('/signin');

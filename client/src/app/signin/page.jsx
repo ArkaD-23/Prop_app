@@ -13,6 +13,10 @@ export default function Signin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(!formData.email || !formData.password) {
+      alert('Please fill all the fields!')
+      return
+    }
     try {
       const res = await fetch('../../server/auth/signin', {
         method: 'POST',
@@ -24,7 +28,7 @@ export default function Signin() {
       const data = await res.json();
       console.log(data);
       if (data.success === false) {
-        console.log('Signin denied');
+        alert('Please enter correct credentials');
         return;
       }
       router.push('/');
