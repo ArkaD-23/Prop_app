@@ -14,7 +14,7 @@ export default function Signin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('/server/auth/signin', {
+      const res = await fetch('../../server/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -22,6 +22,7 @@ export default function Signin() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+      console.log(data);
       if (data.success === false) {
         console.log('Signin denied');
         return;
