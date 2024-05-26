@@ -2,6 +2,10 @@ import { errorHandeler } from "../utils/error";
 import User from "../models/user.model";
 import bcryptjs from "bcryptjs";
 
+export const test = (req, res) => {
+    res.json("Server is running successfully......");
+}
+
 export const updateUser = async (req, res, next) => {
     if(req.user.id != req.params.id) 
         return errorHandeler(400,"You can update your profile only.....");
@@ -24,4 +28,5 @@ export const updateUser = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+};
+

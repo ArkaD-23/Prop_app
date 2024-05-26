@@ -1,8 +1,19 @@
+'use client'
 import React from 'react'
 import Propcard from '../../_components/Propcard'
 import Link from 'next/link'
 
-const profile = () => {
+const Profile = () => {
+
+    const handleSignout = async () => {
+        try {
+            await fetch("../../server/auth/signout");
+            alert("Signout successful");
+        } catch (error) {
+            next(error);
+        }
+    }
+
     return (
         <div style={{ display: 'grid' }}>
             <div style={{
@@ -37,11 +48,11 @@ const profile = () => {
                 <Link href="/sell" style={{ fontFamily: '"Roboto", sans-serif', textTransform: 'uppercase', outline: '0', background: '#2980b9', width: '20%', border: '0', padding: '15px', color: '#FFFFFF', fontSize: '14px', WebkitTransition: 'all 0.3 ease', transition: 'all 0.3 ease', cursor: 'pointer', borderRadius: '50px',textDecoration:'none',textAlign:'center' }}>
                     Add Listing
                 </Link>
-                <Link href="/signout" style={{ fontFamily: '"Roboto", sans-serif', textTransform: 'uppercase', outline: '0', background: '#2980b9', width: '20%', border: '0', padding: '15px', color: '#FFFFFF', fontSize: '14px', WebkitTransition: 'all 0.3 ease', transition: 'all 0.3 ease', cursor: 'pointer', borderRadius: '50px', textDecoration:'none', textAlign:'center'}} >Signout</Link>
+                <Link href="/" onClick={handleSignout} style={{ fontFamily: '"Roboto", sans-serif', textTransform: 'uppercase', outline: '0', background: '#2980b9', width: '20%', border: '0', padding: '15px', color: '#FFFFFF', fontSize: '14px', WebkitTransition: 'all 0.3 ease', transition: 'all 0.3 ease', cursor: 'pointer', borderRadius: '50px', textDecoration:'none', textAlign:'center'}} >Signout</Link>
             </div>
 
         </div>
     )
 }
 
-export default profile 
+export default Profile; 
