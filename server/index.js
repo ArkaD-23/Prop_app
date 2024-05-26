@@ -6,15 +6,6 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.router.js";
 dotenv.config();
 
-mongoose
-    .connect(process.env.MONGO_URL)
-    .then(() => {
-        console.log("Connected to the database........")
-    })
-    .catch((err) => {
-        console.log(err);
-    })
-
 const app = express();
 
 app.use(cors());
