@@ -1,4 +1,4 @@
-import { Navbar } from "./_components/Navbar.jsx";
+import { Navbar } from "@/components/Navbar.jsx";
 
 export const metadata = {
   title: "Create Next App",

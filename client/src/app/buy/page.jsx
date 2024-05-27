@@ -1,6 +1,6 @@
 import React from 'react'
-import Propcard from '../_components/Propcard'
-import Searchbar from '../_components/Searchbar'
+import Propcard from "@/components/Propcard.jsx"
+import Searchbar from "@/components/Searchbar.jsx"
 
 const buy = () => {
   return (

@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import Propcard from '../../_components/Propcard'
+import Propcard from "@/components/Propcard.jsx"
 import Link from 'next/link'
 
 const Profile = () => {
