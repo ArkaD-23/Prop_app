@@ -5,6 +5,20 @@ import prisma from "../../db/db.config.js";
 
 export const signup = async (req, res, next) => {
     const { username, email, password, contact_no} = req.body;
+    try {
+        const alreadyUser = await prisma.user.findUnique({
+            where:{
+                email:email
+            }
+        });
+        if(alreadyUser) {
+            alert('This email is already registered!')
+            return errorHandeler(400, "Already registered");
+        }
+    }
+    catch (error) {
+        next(error)
+    } 
     if (!username || !email || !password || !contact_no) {
         return errorHandeler(400, "Please fill up all the fields");
     }

@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/Navbar.jsx";
+import StoreProvider from "./storeProvider";
 
 export const metadata = {
   title: "Create Next App",
@@ -9,10 +10,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Navbar/>
-        {children}
+        <StoreProvider>
+          <Navbar />
+          {children}
+        </StoreProvider>
       </body>
     </html>
-
-  );
+  )
 }

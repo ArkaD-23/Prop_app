@@ -2,10 +2,17 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart, signInSuccess, signInFailure } from "@/lib/store/features/user/userSlice.js";
+import { useAppDispatch, useAppSelector } from '@/lib/store/hooks/hooks.js';
+
 
 export default function Signin() {
   const [formData, setFormData] = useState({});
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((state) => state.user);
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -18,6 +25,7 @@ export default function Signin() {
       return
     }
     try {
+      dispatch(signInStart());
       const res = await fetch('../../server/auth/signin', {
         method: 'POST',
         headers: {
@@ -28,12 +36,14 @@ export default function Signin() {
       const data = await res.json();
       console.log(data);
       if (data.success === false) {
+        dispatch(signInFailure(data));
         alert('Please enter correct credentials');
         return;
       }
+      dispatch(signInSuccess(data));
       router.push('/');
     } catch (error) {
-      console.log(error);
+      dispatch(signInFailure(error));
     }
   };
 
