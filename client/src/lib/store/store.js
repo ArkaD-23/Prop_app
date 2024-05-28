@@ -4,7 +4,7 @@ import userReducer from "@/lib/store/features/user/userSlice.js"
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      user:userReducer
+      user: userReducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false,

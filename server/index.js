@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.router.js";
+import userRoutes from "./routes/user.router.js"
 dotenv.config();
 
 const app = express();
@@ -15,6 +16,7 @@ app.listen(3000, () => {
     console.log("Server is running on port 3000..........")
 });
 
+app.use("/server/user",userRoutes);
 app.use("/server/auth", authRoutes);
 
 app.use((err, req, res, next) => {
