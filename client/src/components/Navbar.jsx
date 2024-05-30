@@ -1,7 +1,11 @@
+'use client'
+import { useAppSelector } from '@/store/hooks/hooks.js'
 import Link from 'next/link'
 import React from 'react'
 
 export const Navbar = () => {
+    const { currentUser } = useAppSelector((state) => state.user);
+
     return (
         <div style={{ position: 'fixed', left: '0', top: '0', width: '100%', background: '#2980b9', boxShadow: '0 5px 10px rgba(0, 0, 0, 0.1)' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '100%', maxWidth: '90%', background: '#2980b9', margin: 'auto' }}>
@@ -15,9 +19,11 @@ export const Navbar = () => {
                     <Link style={{textDecoration: 'none'}} href="/sell">
                         <li style={{ color: 'azure', margin: '0 15px',}}>Sell</li>
                     </Link>
-                    <Link style={{textDecoration: 'none'}} href="/signin">
+                    {currentUser ? (<Link style={{textDecoration: 'none'}} href="/profile">
+                    <li style={{ color: 'azure', margin: '0 15px',}}>{currentUser.username}</li>
+                    </Link>) : (<Link style={{textDecoration: 'none'}} href="/signin">
                     <li style={{ color: 'azure', margin: '0 15px',}}>Signin</li>
-                    </Link>
+                    </Link>)}
                 </ul>
             </div>
         </div>

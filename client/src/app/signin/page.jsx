@@ -3,8 +3,8 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import { signInStart, signInSuccess, signInFailure } from "@/lib/store/features/user/userSlice.js";
-import { useAppDispatch, useAppSelector } from '@/lib/store/hooks/hooks.js';
+import { signInStart, signInSuccess, signInFailure } from "@/store/features/user/userSlice.js";
+import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks.js';
 
 
 export default function Signin() {
@@ -117,7 +117,7 @@ export default function Signin() {
                 borderRadius:'50px'
               }}
             >
-              login
+              {loading ? 'Loading....' : 'Signin'}
             </button>
             <p
               style={{
