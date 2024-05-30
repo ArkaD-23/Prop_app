@@ -11,7 +11,7 @@ export default function Signin() {
   const [formData, setFormData] = useState({});
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { loading, error } = useAppSelector((state) => state.user);
+  const { currentUser, loading, error } = useAppSelector((state) => state.user);
 
 
   const handleChange = (e) => {
@@ -41,7 +41,7 @@ export default function Signin() {
         return;
       }
       dispatch(signInSuccess(data));
-      router.push('/');
+      router.push('/profile');
     } catch (error) {
       dispatch(signInFailure(error));
     }

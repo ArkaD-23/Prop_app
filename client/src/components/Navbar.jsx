@@ -16,7 +16,7 @@ export const Navbar = () => {
                         <li style={{ color: 'azure', margin: '0 15px',}}>Sell</li>
                     </Link>
                     <Link style={{textDecoration: 'none'}} href="/signin">
-                        <li style={{ color: 'azure', margin: '0 15px',}}>Signin</li>
+                    <li style={{ color: 'azure', margin: '0 15px',}}>Signin</li>
                     </Link>
                 </ul>
             </div>

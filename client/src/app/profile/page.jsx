@@ -4,6 +4,7 @@ import Propcard from "@/components/Propcard.jsx"
 import Link from 'next/link'
 import { signOut, updateUserFailure, updateUserStart, updateUserSuccess } from '@/lib/store/features/user/userSlice.js'
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks/hooks.js'
+import { useRouter } from 'next/navigation'
 
 const Profile = () => {
 
@@ -11,6 +12,7 @@ const Profile = () => {
     const { currentUser, error, loading } = useAppSelector((state) => state.user);
     const [updateSuccess, setUpdateSuccess] = useState(false);
     const [formData, setFormData] = useState({});
+    const router = useRouter();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -61,11 +63,11 @@ const Profile = () => {
                 }}>
                     <h1 style={{ textAlign: 'center' }}>My Profile</h1>
                     <form onSubmit={handleSubmit}>
-                        <input style={{ fontFamily: 'Roboto', outline: '0', background: '#f2f2f2', width: '100%', border: '0', margin: '0 0 15px', padding: '15px', boxSizing: 'border-box', fontSize: '14px', borderRadius: '50px' }} type="text" defaultValue={currentUser.username} placeholder="username" onChange={handleChange} />
-                        <input style={{ fontFamily: 'Roboto', outline: '0', background: '#f2f2f2', width: '100%', border: '0', margin: '0 0 15px', padding: '15px', boxSizing: 'border-box', fontSize: '14px', borderRadius: '50px' }} type="text" defaultValue={currentUser.email} placeholder="email" onChange={handleChange} />
-                        <input style={{ fontFamily: 'Roboto', outline: '0', background: '#f2f2f2', width: '100%', border: '0', margin: '0 0 15px', padding: '15px', boxSizing: 'border-box', fontSize: '14px', borderRadius: '50px' }} type="text" defaultValue={currentUser.contact_no} placeholder="contact" onChange={handleChange} />
-                        <input style={{ fontFamily: 'Roboto', outline: '0', background: '#f2f2f2', width: '100%', border: '0', margin: '0 0 15px', padding: '15px', boxSizing: 'border-box', fontSize: '14px', borderRadius: '50px' }} type="password" defaultValue={currentUser.password} placeholder='password' onChange={handleChange} />
-                        <button style={{ fontFamily: '"Roboto", sans-serif', textTransform: 'uppercase', outline: '0', background: 'green', width: '100%', border: '0', padding: '15px', color: '#FFFFFF', fontSize: '14px', WebkitTransition: 'all 0.3 ease', transition: 'all 0.3 ease', cursor: 'pointer', borderRadius: '50px' }} >Update</button>
+                        <input id='username' style={{ fontFamily: 'Roboto', outline: '0', background: '#f2f2f2', width: '100%', border: '0', margin: '0 0 15px', padding: '15px', boxSizing: 'border-box', fontSize: '14px', borderRadius: '50px' }} type="text"  placeholder="username" onChange={handleChange} />
+                        <input id='email' style={{ fontFamily: 'Roboto', outline: '0', background: '#f2f2f2', width: '100%', border: '0', margin: '0 0 15px', padding: '15px', boxSizing: 'border-box', fontSize: '14px', borderRadius: '50px' }} type="text"  placeholder="email" onChange={handleChange} />
+                        <input id='contact_no' style={{ fontFamily: 'Roboto', outline: '0', background: '#f2f2f2', width: '100%', border: '0', margin: '0 0 15px', padding: '15px', boxSizing: 'border-box', fontSize: '14px', borderRadius: '50px' }} type="text"  placeholder="contact" onChange={handleChange} />
+                        <input id='password' style={{ fontFamily: 'Roboto', outline: '0', background: '#f2f2f2', width: '100%', border: '0', margin: '0 0 15px', padding: '15px', boxSizing: 'border-box', fontSize: '14px', borderRadius: '50px' }} type="password"  placeholder='password' onChange={handleChange} />
+                        <button id='button' style={{ fontFamily: '"Roboto", sans-serif', textTransform: 'uppercase', outline: '0', background: 'green', width: '100%', border: '0', padding: '15px', color: '#FFFFFF', fontSize: '14px', WebkitTransition: 'all 0.3 ease', transition: 'all 0.3 ease', cursor: 'pointer', borderRadius: '50px' }} >Update</button>
                     </form>
                 </div>
             </div>
