@@ -19,7 +19,7 @@ export const Navbar = () => {
                     <Link style={{textDecoration: 'none'}} href="/sell">
                         <li style={{ color: 'azure', margin: '0 15px',}}>Sell</li>
                     </Link>
-                    {currentUser ? (<Link style={{textDecoration: 'none'}} href="/profile">
+                    {currentUser ? (<Link style={{textDecoration: 'none'}} href='/profile'>
                     <li style={{ color: 'azure', margin: '0 15px',}}>{currentUser.username}</li>
                     </Link>) : (<Link style={{textDecoration: 'none'}} href="/signin">
                     <li style={{ color: 'azure', margin: '0 15px',}}>Signin</li>
