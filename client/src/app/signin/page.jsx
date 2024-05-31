@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInSuccess, signInFailure } from "@/store/features/user/userSlice.js";
@@ -12,7 +12,6 @@ export default function Signin() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { currentUser, loading, error } = useAppSelector((state) => state.user);
-
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -48,13 +47,12 @@ export default function Signin() {
   };
 
   return (
-    <div style={{ width: '360px', padding: '8% 0 0', margin: '150px auto' }}>
+    <div style={{ maxWidth: '400px', padding: '8% 0 0', margin: '150px auto' }}>
         <div
           style={{
             position: 'relative',
             zIndex: '1',
             background: '#FFFFFF',
-            maxWidth: '360px',
             margin: '0 auto 100px',
             padding: '45px',
             textAlign: 'center',

@@ -19,5 +19,6 @@ model User {
   email      String?  @unique
   password   String?
   contact_no String?  @unique
+  usertype   String?
   created_at DateTime @default(now())
 }

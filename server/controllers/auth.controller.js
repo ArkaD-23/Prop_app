@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import prisma from "../../db/db.config.js";
 
 export const signup = async (req, res, next) => {
-    const { username, email, password, contact_no} = req.body;
+    const { username, email, password, contact_no , usertype} = req.body;
     try {
         const alreadyUser = await prisma.user.findUnique({
             where:{
@@ -19,7 +19,7 @@ export const signup = async (req, res, next) => {
     catch (error) {
         next(error)
     } 
-    if (!username || !email || !password || !contact_no) {
+    if (!username || !email || !password || !contact_no || !usertype) {
         return errorHandeler(400, "Please fill up all the fields");
     }
     const hashedPassword = bcryptjs.hashSync(password, 10);
@@ -29,7 +29,8 @@ export const signup = async (req, res, next) => {
                 username:username,
                 email:email,
                 password:hashedPassword,
-                contact_no:contact_no
+                contact_no:contact_no,
+                usertype: usertype,
             }
         })
         res.json({status:200, data:newUser, message: "User created successfully......." });

@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState  } from 'react'
 import Propcard from "@/components/Propcard.jsx"
 import Link from 'next/link'
 import { signOut, updateUserFailure, updateUserStart, updateUserSuccess } from '@/store/features/user/userSlice.js'
