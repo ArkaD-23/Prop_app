@@ -1,4 +1,4 @@
-import prisma from "../../db/db.config";
+import prisma from "../../db/db.config.js";
 import { errorHandeler } from "../utils/error.js";
 
 export const createlisting = async (req, res, next) => {
@@ -10,7 +10,7 @@ export const createlisting = async (req, res, next) => {
             }
         });
         if(alreadyListed) {
-            return errorHandeler(400, "This address has already been listed");
+            return next(errorHandeler(400, "This address has already been listed"));
         }
     }
     catch (error) {

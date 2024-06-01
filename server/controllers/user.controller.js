@@ -8,7 +8,7 @@ export const test = (req, res) => {
 
 export const updateUser = async (req, res, next) => {
     if (req.user.id != req.params.id)
-        return errorHandeler(400, "You can update your profile only.....");
+        return next(errorHandeler(400, "You can update your profile only....."));
     try {
         if (req.body.password) {
             req.body.password = bcryptjs.hashSync(req.body.password, 10);

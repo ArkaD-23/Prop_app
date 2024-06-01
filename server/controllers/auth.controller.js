@@ -12,15 +12,14 @@ export const signup = async (req, res, next) => {
             }
         });
         if(alreadyUser) {
-            alert('This email is already registered!')
-            return errorHandeler(400, "Already registered");
+            return next(errorHandeler(400, "Already registered"));
         }
     }
     catch (error) {
         next(error)
     } 
     if (!username || !email || !password || !contact_no || !usertype) {
-        return errorHandeler(400, "Please fill up all the fields");
+        return next(errorHandeler(400, "Please fill up all the fields"));
     }
     const hashedPassword = bcryptjs.hashSync(password, 10);
     try {
