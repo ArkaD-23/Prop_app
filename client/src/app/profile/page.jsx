@@ -84,7 +84,7 @@ const Profile = () => {
                 <Link href="/sell" style={{ fontFamily: '"Roboto", sans-serif', textTransform: 'uppercase', outline: '0', background: 'green', width: '20%', border: '0', padding: '15px', color: '#FFFFFF', fontSize: '14px', WebkitTransition: 'all 0.3 ease', transition: 'all 0.3 ease', cursor: 'pointer', borderRadius: '50px', textDecoration: 'none', textAlign: 'center' }}>
                     Add Listing
                 </Link>
-                <Link href="/signin" onClick={handleSignout} style={{ fontFamily: '"Roboto", sans-serif', textTransform: 'uppercase', outline: '0', background: 'red', width: '20%', border: '0', padding: '15px', color: '#FFFFFF', fontSize: '14px', WebkitTransition: 'all 0.3 ease', transition: 'all 0.3 ease', cursor: 'pointer', borderRadius: '50px', textDecoration: 'none', textAlign: 'center' }} >Signout</Link>
+                <Link href="/" onClick={handleSignout} style={{ fontFamily: '"Roboto", sans-serif', textTransform: 'uppercase', outline: '0', background: 'red', width: '20%', border: '0', padding: '15px', color: '#FFFFFF', fontSize: '14px', WebkitTransition: 'all 0.3 ease', transition: 'all 0.3 ease', cursor: 'pointer', borderRadius: '50px', textDecoration: 'none', textAlign: 'center' }} >Signout</Link>
             </div>
 
         </div>
