@@ -29,10 +29,11 @@ model Listing {
   description String?
   address     String?  @unique
   Price       Float?
-  bathrooms   Int
-  bedrooms    Int
-  parking     Boolean
-  offer       Boolean
+  bathrooms   Int?
+  bedrooms    Int?
+  parking     Boolean?
+  offer       Boolean?
   imageUrls   String[]
-  Realtor     String
+  Realtor     String?
+  created_at  DateTime @default(now())
 }
