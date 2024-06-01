@@ -22,3 +22,17 @@ model User {
   usertype   String?
   created_at DateTime @default(now())
 }
+
+model Listing {
+  id          Int      @id @default(autoincrement())
+  name        String?
+  description String?
+  address     String?  @unique
+  Price       Float?
+  bathrooms   Int
+  bedrooms    Int
+  parking     Boolean
+  offer       Boolean
+  imageUrls   String[]
+  Realtor     String
+}
