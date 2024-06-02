@@ -40,7 +40,7 @@ export default function Signin() {
         return;
       }
       dispatch(signInSuccess(data));
-      router.push('/profile');
+      router.push('/');
     } catch (error) {
       dispatch(signInFailure(error));
     }

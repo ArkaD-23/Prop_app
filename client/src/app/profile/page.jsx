@@ -1,8 +1,8 @@
 'use client'
-import React, { useState  } from 'react'
+import React, { useState } from 'react'
 import Propcard from "@/components/Propcard.jsx"
 import Link from 'next/link'
-import { signOut, updateUserFailure, updateUserStart, updateUserSuccess } from '@/store/features/user/userSlice.js'
+import { signOut, updateUserFailure, updateUserStart, updateUserSuccess, deleteUserStart, deleteUserSuccess, deleteUserFailure } from '@/store/features/user/userSlice.js'
 import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks.js'
 import { useRouter } from 'next/navigation'
 
@@ -41,13 +41,34 @@ const Profile = () => {
         }
     }
 
+    const handleDeleteAccount = async () => {
+        try {
+            dispatch(deleteUserStart());
+            const res = await fetch(`../../server/user/delete/${currentUser.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = res.json();
+            console.log(data);
+            if (data.success === false) {
+                dispatch(deleteUserFailure(data));
+                return;
+            }
+            dispatch(deleteUserSuccess(data));
+        } catch (error) {
+            dispatch(deleteUserFailure(error));
+        }
+    }
+
 
     const handleSignout = async () => {
         try {
             await fetch("../../server/auth/signout");
             dispatch(signOut());
         } catch (error) {
-            next(error);
+            console.log(error);
         }
     }
 
@@ -65,28 +86,34 @@ const Profile = () => {
                     <form onSubmit={handleSubmit}>
                         <input id='username' style={{ fontFamily: 'Roboto', outline: '0', background: '#f2f2f2', width: '100%', border: '0', margin: '0 0 15px', padding: '15px', boxSizing: 'border-box', fontSize: '14px', borderRadius: '50px' }} type="text" defaultValue={currentUser ? currentUser.username : ''} placeholder="username" onChange={handleChange} />
                         <input id='email' style={{ fontFamily: 'Roboto', outline: '0', background: '#f2f2f2', width: '100%', border: '0', margin: '0 0 15px', padding: '15px', boxSizing: 'border-box', fontSize: '14px', borderRadius: '50px' }} type="text" defaultValue={currentUser ? currentUser.email : ''} placeholder="email" onChange={handleChange} />
-                        <input id='contact_no' style={{ fontFamily: 'Roboto', outline: '0', background: '#f2f2f2', width: '100%', border: '0', margin: '0 0 15px', padding: '15px', boxSizing: 'border-box', fontSize: '14px', borderRadius: '50px' }} type="text" defaultValue={currentUser ? currentUser.contact_no : ''}  placeholder="contact" onChange={handleChange} />
+                        <input id='contact_no' style={{ fontFamily: 'Roboto', outline: '0', background: '#f2f2f2', width: '100%', border: '0', margin: '0 0 15px', padding: '15px', boxSizing: 'border-box', fontSize: '14px', borderRadius: '50px' }} type="text" defaultValue={currentUser ? currentUser.contact_no : ''} placeholder="contact" onChange={handleChange} />
                         <input id='password' style={{ fontFamily: 'Roboto', outline: '0', background: '#f2f2f2', width: '100%', border: '0', margin: '0 0 15px', padding: '15px', boxSizing: 'border-box', fontSize: '14px', borderRadius: '50px' }} type="password" defaultValue={currentUser ? currentUser.password : ''} placeholder='password' onChange={handleChange} />
-                        <button id='button' style={{ fontFamily: '"Roboto", sans-serif', textTransform: 'uppercase', outline: '0', background: 'green', width: '100%', border: '0', padding: '15px', color: '#FFFFFF', fontSize: '14px', WebkitTransition: 'all 0.3 ease', transition: 'all 0.3 ease', cursor: 'pointer', borderRadius: '50px' }} >  {loading ? 'Loading....' : 'Update'}</button>
+                        <button id='button' style={{ fontFamily: '"Roboto", sans-serif', textTransform: 'uppercase', outline: '0', background: '#2980b9', width: '100%', border: '0', padding: '15px', color: '#FFFFFF', fontSize: '14px', WebkitTransition: 'all 0.3 ease', transition: 'all 0.3 ease', cursor: 'pointer', borderRadius: '50px' }} >  {loading ? 'Loading....' : 'Update'}</button>
                     </form>
-                </div>
-            </div>
-            <div>
-                <h1 style={{ textAlign: 'center' }}>My Listings</h1>
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <Propcard />
-                    <Propcard />
-                    <Propcard />
-                    <Propcard />
-                </div>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
-                <Link href="/sell" style={{ fontFamily: '"Roboto", sans-serif', textTransform: 'uppercase', outline: '0', background: 'green', width: '20%', border: '0', padding: '15px', color: '#FFFFFF', fontSize: '14px', WebkitTransition: 'all 0.3 ease', transition: 'all 0.3 ease', cursor: 'pointer', borderRadius: '50px', textDecoration: 'none', textAlign: 'center' }}>
-                    Add Listing
-                </Link>
-                <Link href="/" onClick={handleSignout} style={{ fontFamily: '"Roboto", sans-serif', textTransform: 'uppercase', outline: '0', background: 'red', width: '20%', border: '0', padding: '15px', color: '#FFFFFF', fontSize: '14px', WebkitTransition: 'all 0.3 ease', transition: 'all 0.3 ease', cursor: 'pointer', borderRadius: '50px', textDecoration: 'none', textAlign: 'center' }} >Signout</Link>
-            </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1.25rem' }}>
+                        <Link href="/"
+                            style={{ color: '#DC2626', cursor: 'pointer', textDecoration: error ? 'underline' : 'none' }}
+                            onClick={handleDeleteAccount}
+                        >
+                            Delete Account
+                        </Link>
 
+                        <Link href="/signin"
+                            onClick={handleSignout}
+                            style={{ color: '#DC2626', cursor: 'pointer', textDecoration: error ? 'underline' : 'none' }}
+                        >
+                            Sign Out
+                        </Link>
+                    </div>
+                    <p style={{ color: '#DC2626', marginTop: '1.25rem' }}>
+                        {error && "Something went wrong!"}
+                    </p>
+                    <p style={{ color: '#16A34A', marginTop: '1.25rem' }}>
+                        {updateSuccess && "User updated successfully!"}
+                    </p>
+
+                </div>
+            </div>
         </div>
     )
 }

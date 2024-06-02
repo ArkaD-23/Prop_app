@@ -29,3 +29,21 @@ export const updateUser = async (req, res, next) => {
     }
 };
 
+export const deleteUser = async (req, res, next) => {
+    if(req.user.id != req.params.id) {
+        return next(errorHandeler(401, "You can delete only your account!"));
+    }
+    try {
+         await prisma.user.delete({
+            where:{
+                id: Number(req.params.id),
+            }
+        });
+        res.clearCookie('access_token');
+        res.json({status: 200, message: "User has been deleted........."});
+    } catch (error) {
+        console.log(error);
+        next(errorHandeler(404, "Something went wrong!"))
+    }
+}
+

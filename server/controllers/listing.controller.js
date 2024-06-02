@@ -36,3 +36,12 @@ export const createlisting = async (req, res, next) => {
         next(error);
     }
 }
+
+export const getAllListing = async (req, res, next) => {
+    try {
+        const allusers = await prisma.listing.findMany();
+        res.status(200).json(allusers);
+    } catch (error) {
+        next(errorHandeler(401, "Cannot get the data......."));
+    }
+}
