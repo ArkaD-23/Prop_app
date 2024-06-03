@@ -29,8 +29,8 @@ model Listing {
   description String?
   address     String?  @unique
   Price       Float?
-  bathrooms   Int?
-  bedrooms    Int?
+  bathrooms   String?
+  bedrooms    String?
   parking     Boolean?
   offer       Boolean?
   imageUrls   String[]

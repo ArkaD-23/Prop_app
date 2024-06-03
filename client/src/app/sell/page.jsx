@@ -1,17 +1,19 @@
-'use client'
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react'
-import { useAppDispatch, useAppSelector } from '@/store/hooks/hooks.js'
+"use client";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { useAppSelector } from "@/store/hooks/hooks.js";
+import axios from "axios";
+import styles from "./sell.module.css";
 
-const sell = () => {
+const Sell = () => {
   const { currentUser } = useAppSelector((state) => state.user);
   const router = useRouter();
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
     imageUrls: [],
-    name: '',
-    description: '',
-    address: '',
+    name: "",
+    description: "",
+    address: "",
     bedrooms: 1,
     bathrooms: 1,
     Price: 50,
@@ -23,212 +25,235 @@ const sell = () => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleImageSubmit = (e) => { }
-  const storeImage = async () => { }
-  const handleRemoveImage = () => { }
-  const handleChange = (e) => { };
-  const handleSubmit = (e) => { };
+  const handleFileChange = (e) => {
+    setFiles(Array.from(e.target.files)); // Ensure files is an array
+  };
+
+  const handleImageSubmit = async () => {
+    if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
+      setUploading(true);
+      setImageUploadError(false);
+
+      try {
+        const urls = await Promise.all(files.map((file) => storeImage(file)));
+        setFormData((prevState) => ({
+          ...prevState,
+          imageUrls: prevState.imageUrls.concat(urls),
+        }));
+        setImageUploadError(false);
+      } catch (error) {
+        console.error("Image upload error: ", error);
+        setImageUploadError("Image upload failed (2 mb max per image)");
+      } finally {
+        setUploading(false);
+      }
+    } else {
+      setImageUploadError("You can only upload 6 images per listing");
+      setUploading(false);
+    }
+  };
+
+  const storeImage = async (file) => {
+    const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`;
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET);
+
+    try {
+      const response = await axios.post(url, formData);
+      const data = response.data;
+      if (data.secure_url) {
+        return data.secure_url;
+      } else {
+        throw new Error(data.error.message || "Failed to upload image to Cloudinary");
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const handleRemoveImage = (index) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      imageUrls: prevState.imageUrls.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleChange = (e) => {
+    const { id, value, checked, type } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [id]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (formData.imageUrls.length < 1) return setError("You must upload at least one image");
+      setLoading(true);
+      setError(false);
+      const res = await fetch("/server/listing/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          Realtor: currentUser.username,
+        }),
+      });
+      const data = await res.json();
+      setLoading(false);
+      if (!data.success) {
+        setError(data.message);
+      }
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
 
   return (
-    <main style={{ padding: '12px', maxWidth: '1024px', margin: '150px auto' }}>
-      <h1 style={{ fontSize: '1.875rem', fontWeight: '600', textAlign: 'center', margin: '28px 0' }}>
+    <main style={{ padding: "12px", maxWidth: "1024px", margin: "150px auto" }}>
+      <h1 style={{ fontSize: "1.875rem", fontWeight: "600", textAlign: "center", margin: "28px 0" }}>
         Create a Listing
       </h1>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: '1' }}>
+      <form onSubmit={handleSubmit} className={styles.container}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px", flex: "1" }}>
           <input
-            type='text'
-            placeholder='Name'
-            style={{
-              fontFamily: 'Roboto',
-              outline: '0',
-              background: '#f2f2f2',
-              width: '100%',
-              border: '0',
-              margin: '0 0 15px',
-              padding: '15px',
-              boxSizing: 'border-box',
-              fontSize: '14px',
-              borderRadius: '50px'
-            }}
-            id='name'
-            maxLength='62'
-            minLength='10'
+            type="text"
+            placeholder="Name"
+            id="name"
+            maxLength="62"
+            minLength="10"
             required
             onChange={handleChange}
             value={formData.name}
+            style={{ fontFamily: "Roboto", outline: "0", background: "#f2f2f2", width: "100%", border: "0", margin: "0 0 15px", padding: "15px", boxSizing: "border-box", fontSize: "14px", borderRadius: "50px" }}
           />
           <textarea
-            type='text'
-            placeholder='Description'
-            style={{
-              fontFamily: 'Roboto',
-              outline: '0',
-              background: '#f2f2f2',
-              width: '100%',
-              border: '0',
-              margin: '0 0 15px',
-              padding: '15px',
-              boxSizing: 'border-box',
-              fontSize: '14px',
-              borderRadius: '50px'
-            }}
-            id='description'
+            placeholder="Description"
+            id="description"
             required
             onChange={handleChange}
             value={formData.description}
+            style={{ fontFamily: "Roboto", outline: "0", background: "#f2f2f2", width: "100%", border: "0", margin: "0 0 15px", padding: "15px", boxSizing: "border-box", fontSize: "14px", borderRadius: "50px" }}
           />
           <input
-            type='text'
-            placeholder='Address'
-            style={{
-              fontFamily: 'Roboto',
-              outline: '0',
-              background: '#f2f2f2',
-              width: '100%',
-              border: '0',
-              margin: '0 0 15px',
-              padding: '15px',
-              boxSizing: 'border-box',
-              fontSize: '14px',
-              borderRadius: '50px'
-            }}
-            id='address'
+            type="text"
+            placeholder="Address"
+            id="address"
             required
             onChange={handleChange}
             value={formData.address}
+            style={{ fontFamily: "Roboto", outline: "0", background: "#f2f2f2", width: "100%", border: "0", margin: "0 0 15px", padding: "15px", boxSizing: "border-box", fontSize: "14px", borderRadius: "50px" }}
           />
-          <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: "8px" }}>
               <input
-                type='checkbox'
-                id='parking'
-                style={{ width: '20px' }}
+                type="checkbox"
+                id="parking"
+                style={{ width: "20px" }}
                 onChange={handleChange}
                 checked={formData.parking}
               />
               <span>Parking spot</span>
             </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: "flex", gap: "8px" }}>
               <input
-                type='checkbox'
-                id='offer'
-                style={{ width: '20px' }}
+                type="checkbox"
+                id="offer"
+                style={{ width: "20px" }}
                 onChange={handleChange}
                 checked={formData.offer}
               />
               <span>Offer</span>
             </div>
           </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "24px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <input
-                type='number'
-                id='bedrooms'
-                min='1'
-                max='10'
+                type="text"
+                id="bedrooms"
                 required
-                style={{ padding: '12px', border: '1px solid #D1D5DB', borderRadius: '8px' }}
                 onChange={handleChange}
                 value={formData.bedrooms}
+                style={{ fontFamily: "Roboto", outline: "0", background: "#f2f2f2", width: "100%", border: "0", margin: "0 0 15px", padding: "15px", boxSizing: "border-box", fontSize: "14px", borderRadius: "50px"}}
               />
-              <p>Bedrooms</p>
+              <p>Bedroom(s)</p>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <input
-                type='number'
-                id='bathrooms'
-                min='1'
-                max='10'
+                type="text"
+                id="bathrooms"
                 required
-                style={{ padding: '12px', border: '1px solid #D1D5DB', borderRadius: '8px' }}
                 onChange={handleChange}
                 value={formData.bathrooms}
+                style={{ fontFamily: "Roboto", outline: "0", background: "#f2f2f2", width: "100%", border: "0", margin: "0 0 15px", padding: "15px", boxSizing: "border-box", fontSize: "14px", borderRadius: "50px" }}
               />
-              <p>Bathrooms</p>
+              <p>Bathroom(s)</p>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <input
-                type='number'
-                id='regularPrice'
-                min='50'
-                max='10000000'
+                type="text"
+                id="Price"
                 required
-                style={{ padding: '12px', border: '1px solid #D1D5DB', borderRadius: '8px' }}
                 onChange={handleChange}
                 value={formData.Price}
+                style={{ fontFamily: "Roboto", outline: "0", background: "#f2f2f2", width: "100%", border: "0", margin: "0 0 15px", padding: "15px", boxSizing: "border-box", fontSize: "14px", borderRadius: "50px" }}
               />
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <p>Price</p>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <p>Price (Rs.)</p>
               </div>
             </div>
           </div>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', flex: '1', gap: '16px' }}>
-          <p style={{ fontWeight: '600' }}>
+        <div style={{ display: "flex", flexDirection: "column", flex: "1", gap: "16px" }}>
+          <p style={{ fontWeight: "600" }}>
             Images:
-            <span style={{ fontWeight: '400', color: '#718096', marginLeft: '8px' }}>
+            <span style={{ fontWeight: "400", color: "#718096", marginLeft: "8px" }}>
               The first image will be the cover (max 6)
             </span>
           </p>
-          <div style={{ display: 'flex', gap: '16px' }}>
+          <div style={{ display: "flex", gap: "16px" }}>
             <input
-              onChange={(e) => setFiles(e.target.files)}
-              style={{ padding: '12px', border: '1px solid #D1D5DB', borderRadius: '8px', width: '100%' }}
-              type='file'
-              id='images'
-              accept='image/*'
+              onChange={handleFileChange}
+              type="file"
+              id="images"
+              accept="image/*"
               multiple
+              style={{ padding: "12px", border: "1px solid #D1D5DB", borderRadius: "8px", width: "100%" }}
             />
             <button
-              type='button'
+              type="button"
               disabled={uploading}
               onClick={handleImageSubmit}
               style={{
-                padding: '12px',
-                color: '#2F855A',
-                border: '1px solid #2F855A',
-                borderRadius: '8px',
-                textTransform: 'uppercase',
-                cursor: uploading ? 'not-allowed' : 'pointer',
-                opacity: uploading ? '0.8' : '1',
-                boxShadow: uploading ? 'none' : '0px 2px 8px rgba(0, 0, 0, 0.15)',
+                padding: "12px",
+                color: "#2F855A",
+                border: "1px solid #2F855A",
+                borderRadius: "8px",
+                textTransform: "uppercase",
+                cursor: uploading ? "not-allowed" : "pointer",
+                opacity: uploading ? "0.8" : "1",
+                boxShadow: uploading ? "none" : "0px 2px 8px rgba(0, 0, 0, 0.15)",
               }}
             >
-              {uploading ? 'Uploading...' : 'Upload'}
+              {uploading ? "Uploading..." : "Upload"}
             </button>
           </div>
-          <p style={{ color: '#C53030', fontSize: '14px' }}>
+          <p style={{ color: "#C53030", fontSize: "14px" }}>
             {imageUploadError && imageUploadError}
           </p>
           {formData.imageUrls.length > 0 &&
             formData.imageUrls.map((url, index) => (
-              <div
-                key={url}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  padding: '12px',
-                  border: '1px solid #E2E8F0',
-                  alignItems: 'center',
-                }}
-              >
-                <img
-                  src={url}
-                  alt='listing image'
-                  style={{ width: '80px', height: '80px', objectFit: 'contain', borderRadius: '8px' }}
-                />
+              <div key={url} style={{ display: "flex", justifyContent: "space-between", padding: "12px", border: "1px solid #E2E8F0", alignItems: "center" }}>
+                <img src={url} alt="listing image" style={{ width: "80px", height: "80px", objectFit: "contain", borderRadius: "8px" }} />
                 <button
-                  type='button'
+                  type="button"
                   onClick={() => handleRemoveImage(index)}
-                  style={{
-                    padding: '12px',
-                    color: '#C53030',
-                    borderRadius: '8px',
-                    textTransform: 'uppercase',
-                    cursor: 'pointer',
-                    opacity: '1',
-                  }}
+                  style={{ padding: "12px", color: "#C53030", borderRadius: "8px", textTransform: "uppercase", cursor: "pointer", opacity: "1" }}
                 >
                   Delete
                 </button>
@@ -238,29 +263,29 @@ const sell = () => {
             disabled={loading || uploading}
             style={{
               fontFamily: '"Roboto", sans-serif',
-                textTransform: 'uppercase',
-                outline: '0',
-                background: 'green',
-                width: '100%',
-                border: '0',
-                padding: '15px',
-                color: '#FFFFFF',
-                fontSize: '14px',
-                WebkitTransition: 'all 0.3s ease',
-                transition: 'all 0.3s ease',
-                cursor: 'pointer',
-                borderRadius:'50px'
+              textTransform: "uppercase",
+              outline: "0",
+              background: "green",
+              width: "100%",
+              border: "0",
+              padding: "15px",
+              color: "#FFFFFF",
+              fontSize: "14px",
+              WebkitTransition: "all 0.3s ease",
+              transition: "all 0.3s ease",
+              cursor: "pointer",
+              borderRadius: "50px",
             }}
           >
-            {loading ? 'Creating...' : 'Create listing'}
+            {loading ? "Creating..." : "Create listing"}
           </button>
-          {error && <p style={{ color: '#C53030', fontSize: '14px' }}>{error}</p>}
+          {error && (
+            <p style={{ color: "#C53030", fontSize: "14px" }}>{error}</p>
+          )}
         </div>
-
       </form>
     </main>
+  );
+};
 
-  )
-}
-
-export default sell
+export default Sell;
