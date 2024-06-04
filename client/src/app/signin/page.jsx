@@ -50,8 +50,6 @@ export default function Signin() {
     <div style={{ maxWidth: '400px', padding: '8% 0 0', margin: '150px auto' }}>
         <div
           style={{
-            position: 'relative',
-            zIndex: '1',
             background: '#FFFFFF',
             margin: '0 auto 100px',
             padding: '45px',

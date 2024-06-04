@@ -1,0 +1,13 @@
+.container {
+    display: column;
+    margin-top: 90px;
+    flex-wrap: wrap;
+}
+
+@media ( max-width : 850px) {
+    .container {
+        display: flex;
+        flex-direction: column;
+        margin-top: 90px;
+    }
+}
