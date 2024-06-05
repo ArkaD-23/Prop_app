@@ -1,7 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import styles from "./buy.module.css";
+import Propcard from "@/components/Propcard.jsx";
 
 const Buy = () => {
   const [sidebardata, setSidebardata] = useState({
@@ -43,20 +46,29 @@ const Buy = () => {
     const fetchListings = async () => {
       setLoading(true);
       setShowMore(false);
-      const searchQuery = urlParams.toString();
-      const res = await fetch(`/api/listing/getall?${searchQuery}`);
-      const data = await res.json();
-      if (data.length > 8) {
-        setShowMore(true);
-      } else {
-        setShowMore(false);
+      try {
+        const searchQuery = urlParams.toString();
+        const res = await fetch(`/server/listing/getall?${searchQuery}`);
+        const data = await res.json();
+        console.log(data);
+        setListings(Array.isArray(data) ? data : []);
+        setLoading(false);
+        if (data.length > 8) {
+          setShowMore(true);
+        } else {
+          setShowMore(false);
+        }
+      } catch (error) {
+        console.error("Error fetching listings:", error);
+        setListings([]);
       }
-      setListings(data);
-      setLoading(false);
     };
 
     fetchListings();
+    
+    
   }, [location.search]);
+
 
   const handleChange = (e) => {
     if (e.target.id === "searchTerm") {
@@ -80,7 +92,7 @@ const Buy = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const urlParams = new URLSearchParams();
     urlParams.set("searchTerm", sidebardata.searchTerm);
@@ -89,7 +101,25 @@ const Buy = () => {
     urlParams.set("sort", sidebardata.sort);
     urlParams.set("order", sidebardata.order);
     const searchQuery = urlParams.toString();
-    router.push(`/buy?${searchQuery}`);
+    setLoading(true);
+    setShowMore(false);
+    try {
+      const searchQuery = urlParams.toString();
+      const res = await fetch(`/server/listing/getall?${searchQuery}`);
+      const data = await res.json();
+      console.log(data);
+      setListings(Array.isArray(data) ? data : []);
+      setLoading(false);
+      if (data.length > 8) {
+        setShowMore(true);
+      } else {
+        setShowMore(false);
+      }
+    } catch (error) {
+      console.error("Error fetching listings:", error);
+      setListings([]);
+    }
+    router.push(`/search?${searchQuery}`);
   };
 
   const onShowMoreClick = async () => {
@@ -98,7 +128,7 @@ const Buy = () => {
     const urlParams = new URLSearchParams(location.search);
     urlParams.set("startIndex", startIndex);
     const searchQuery = urlParams.toString();
-    const res = await fetch(`/api/listing/get?${searchQuery}`);
+    const res = await fetch(`/server/listing/get?${searchQuery}`);
     const data = await res.json();
     if (data.length < 9) {
       setShowMore(false);
@@ -251,11 +281,11 @@ const Buy = () => {
               Loading...
             </p>
           )}
-          {/*{!loading &&
+          {!loading &&
             listings &&
             listings.map((listing) => (
-              <ListingItem key={listing._id} listing={listing} />
-            ))}*/}
+              <Propcard key={listing.id} listing={listing} />
+            ))}
           {showMore && (
             <button
               onClick={onShowMoreClick}

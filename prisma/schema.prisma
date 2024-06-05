@@ -28,7 +28,7 @@ model Listing {
   name        String?
   description String?
   address     String?  @unique
-  Price       Float?
+  Price       String?
   bathrooms   String?
   bedrooms    String?
   parking     Boolean?

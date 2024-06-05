@@ -14,9 +14,9 @@ const Sell = () => {
     name: "",
     description: "",
     address: "",
-    bedrooms: 1,
-    bathrooms: 1,
-    Price: 50,
+    bedrooms: "1",
+    bathrooms: "1",
+    Price: "50",
     offer: false,
     parking: false,
   });
@@ -176,7 +176,6 @@ const Sell = () => {
               <input
                 type="text"
                 id="bedrooms"
-                required
                 onChange={handleChange}
                 value={formData.bedrooms}
                 style={{ fontFamily: "Roboto", outline: "0", background: "#f2f2f2", width: "100%", border: "0", margin: "0 0 15px", padding: "15px", boxSizing: "border-box", fontSize: "14px", borderRadius: "50px"}}
@@ -187,7 +186,6 @@ const Sell = () => {
               <input
                 type="text"
                 id="bathrooms"
-                required
                 onChange={handleChange}
                 value={formData.bathrooms}
                 style={{ fontFamily: "Roboto", outline: "0", background: "#f2f2f2", width: "100%", border: "0", margin: "0 0 15px", padding: "15px", boxSizing: "border-box", fontSize: "14px", borderRadius: "50px" }}
@@ -198,7 +196,6 @@ const Sell = () => {
               <input
                 type="text"
                 id="Price"
-                required
                 onChange={handleChange}
                 value={formData.Price}
                 style={{ fontFamily: "Roboto", outline: "0", background: "#f2f2f2", width: "100%", border: "0", margin: "0 0 15px", padding: "15px", boxSizing: "border-box", fontSize: "14px", borderRadius: "50px" }}

@@ -7,7 +7,7 @@ import { useAppSelector } from "@/store/hooks/hooks";
 export default function Home() {
 
   const { currentUser , loading } = useAppSelector((state) => state.user);
-  const linkToUser = (currentUser && (currentUser.usertype === 'Customer')) ? '/buy' : '/sell'; 
+  const linkToUser = (currentUser && (currentUser.usertype === 'Customer')) ? '/search' : '/sell'; 
   const linkTo = currentUser ? linkToUser : '/signin';
   return (
     <>

@@ -16,7 +16,7 @@ export const Navbar = () => {
                     {currentUser && (
                         <>
                             {currentUser.usertype === 'Customer' && (
-                                <Link href="/buy" style={{textDecoration:'none'}}>
+                                <Link href="/search" style={{textDecoration:'none'}}>
                                     <li style={{ color: 'azure', margin: '0 15px' }}>Buy</li>
                                 </Link>
                             )}
