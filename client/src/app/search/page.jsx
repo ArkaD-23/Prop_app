@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useNavigate } from "react-router-dom";
 import styles from "./buy.module.css";
 import Propcard from "@/components/Propcard.jsx";
+import HoverButtonWrapper from "@/components/HoverButtonWrapper";
 
 const Buy = () => {
   const [sidebardata, setSidebardata] = useState({
@@ -65,10 +66,7 @@ const Buy = () => {
     };
 
     fetchListings();
-    
-    
   }, [location.search]);
-
 
   const handleChange = (e) => {
     if (e.target.id === "searchTerm") {
@@ -222,25 +220,27 @@ const Buy = () => {
               <option value="createdAt_asc">Oldest</option>
             </select>
           </div>
-          <button
-            style={{
-              fontFamily: '"Roboto", sans-serif',
-              textTransform: "uppercase",
-              outline: "0",
-              background: "#2980b9",
-              width: "100%",
-              border: "0",
-              padding: "15px",
-              color: "#FFFFFF",
-              fontSize: "14px",
-              WebkitTransition: "all 0.3s ease",
-              transition: "all 0.3s ease",
-              cursor: "pointer",
-              borderRadius: "50px",
-            }}
-          >
-            Search
-          </button>
+          <HoverButtonWrapper>
+            <button
+              style={{
+                fontFamily: '"Roboto", sans-serif',
+                textTransform: "uppercase",
+                outline: "0",
+                background: "#2980b9",
+                width: "100%",
+                border: "0",
+                padding: "15px",
+                color: "#FFFFFF",
+                fontSize: "14px",
+                WebkitTransition: "all 0.3s ease",
+                transition: "all 0.3s ease",
+                cursor: "pointer",
+                borderRadius: "50px",
+              }}
+            >
+              Search
+            </button>
+          </HoverButtonWrapper>
         </form>
       </div>
       <div style={{ flex: 1 }}>

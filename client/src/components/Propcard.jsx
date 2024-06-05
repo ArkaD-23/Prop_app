@@ -80,7 +80,7 @@ export default function Propcard({ listing }) {
               fontWeight: "600",
             }}
           >
-            {listing.Price}
+            Rs.{listing.Price}
           </p>
           <div
             style={{
@@ -91,13 +91,13 @@ export default function Propcard({ listing }) {
           >
             <div style={{ fontWeight: "700", fontSize: "0.75rem" }}>
               {listing.bedrooms > 1
-                ? `${listing.bedrooms} beds `
-                : `${listing.bedrooms} bed `}
+                ? `${listing.bedrooms} bedrooms `
+                : `${listing.bedrooms} bedroom `}
             </div>
             <div style={{ fontWeight: "700", fontSize: "0.75rem" }}>
               {listing.bathrooms > 1
-                ? `${listing.bathrooms} baths `
-                : `${listing.bathrooms} bath `}
+                ? `${listing.bathrooms} bathrooms `
+                : `${listing.bathrooms} bathroom `}
             </div>
           </div>
         </div>

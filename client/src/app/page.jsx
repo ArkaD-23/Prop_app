@@ -3,6 +3,7 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import Link from "next/link";
 import { useAppSelector } from "@/store/hooks/hooks";
+import HoverButtonWrapper from "@/components/HoverButtonWrapper";
 
 export default function Home() {
 
@@ -22,8 +23,10 @@ export default function Home() {
           We have a wide range of properties for you to choose from.
         </div>
         <Link href={linkTo} style={{textDecoration:'none'}}>
+          <HoverButtonWrapper>
           <button style={{ fontFamily: '"Roboto", sans-serif', textTransform: 'uppercase',        outline: '0', background: '#2980b9', width: '200px', border: '0', padding: '15px', color: '#FFFFFF', fontSize: '14px', WebkitTransition: 'all 0.3 ease', transition: 'all 0.3 ease', cursor: 'pointer', borderRadius: '50px' }} >{loading ? 'Loading....' : "Let's get started..."}
           </button>
+          </HoverButtonWrapper>
         </Link>
       </div>
 
