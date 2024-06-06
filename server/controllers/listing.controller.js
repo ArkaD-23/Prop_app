@@ -58,7 +58,7 @@ export const getListings = async (req, res, next) => {
     const offer = req.query.offer !== undefined && req.query.offer !== 'false' ? req.query.offer === 'true' : undefined;
     const parking = req.query.parking !== undefined && req.query.parking !== 'false' ? req.query.parking === 'true' : undefined;
     const searchTerm = req.query.searchTerm || '';
-    const sort = req.query.sort || 'created_at';
+    const sort = req.query.sort || 'createdAt';
     const order = req.query.order || 'desc';
     const whereClause = {
       name: { contains: searchTerm, mode: 'insensitive' },

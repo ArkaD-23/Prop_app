@@ -39,7 +39,7 @@ const Buy = () => {
         searchTerm: searchTermFromUrl || "",
         parking: parkingFromUrl === "true" ? true : false,
         offer: offerFromUrl === "true" ? true : false,
-        sort: sortFromUrl || "created_at",
+        sort: sortFromUrl || "createdAt",
         order: orderFromUrl || "desc",
       });
     }
@@ -66,9 +66,10 @@ const Buy = () => {
     };
 
     fetchListings();
-  }, [location.search]);
+  }, []);
 
   const handleChange = (e) => {
+    e.preventDefault();
     if (e.target.id === "searchTerm") {
       setSidebardata({ ...sidebardata, searchTerm: e.target.value });
     }
@@ -82,7 +83,7 @@ const Buy = () => {
     }
 
     if (e.target.id === "sort_order") {
-      const sort = e.target.value.split("_")[0] || "created_at";
+      const sort = e.target.value.split("_")[0] || "createdAt";
 
       const order = e.target.value.split("_")[1] || "desc";
 
@@ -102,10 +103,9 @@ const Buy = () => {
     setLoading(true);
     setShowMore(false);
     try {
-      const searchQuery = urlParams.toString();
+    //  const searchQuery = urlParams.toString();
       const res = await fetch(`/server/listing/getall?${searchQuery}`);
       const data = await res.json();
-      console.log(data);
       setListings(Array.isArray(data) ? data : []);
       setLoading(false);
       if (data.length > 8) {
@@ -113,11 +113,11 @@ const Buy = () => {
       } else {
         setShowMore(false);
       }
+      router.push(`/search?${searchQuery}`);
     } catch (error) {
       console.error("Error fetching listings:", error);
       setListings([]);
     }
-    router.push(`/search?${searchQuery}`);
   };
 
   const onShowMoreClick = async () => {
@@ -205,17 +205,17 @@ const Buy = () => {
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <select
-              onChange={handleChange}
-              defaultValue={"created_at_desc"}
+              defaultValue={"createdAt_desc"}
               id="sort_order"
               style={{
                 border: "1px solid",
                 borderRadius: "0.5rem",
                 padding: "0.75rem",
-              }}
+                }}
+              onChange={handleChange}
             >
-              <option value="regularPrice_desc">Price high to low</option>
-              <option value="regularPrice_asc">Price low to high</option>
+              <option value="Price_desc">Price high to low</option>
+              <option value="Price_asc">Price low to high</option>
               <option value="createdAt_desc">Latest</option>
               <option value="createdAt_asc">Oldest</option>
             </select>

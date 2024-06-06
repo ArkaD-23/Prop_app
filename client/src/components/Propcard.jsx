@@ -1,107 +1,167 @@
-import Link from "next/link";
+import React from "react";
 import { MdLocationOn } from "react-icons/md";
 
-export default function Propcard({ listing }) {
+const Propcard = ({ listing }) => {
   return (
     <div
       style={{
-        backgroundColor: "white",
-        boxShadow: '0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)',
-        transition: "box-shadow 0.3s",
-        overflow: "hidden",
-        borderRadius: "0.5rem",
-        width: "100%",
-        maxWidth: "330px",
-        margin: "15px"
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
       }}
     >
-      <Link href={`/listing/${listing.id}`} style={{textDecoration:'none'}}>
-        <img src={listing.imageUrls[0]} alt="listing cover" style={{height: "320px",width: "100%",objectFit: "cover",transition: "transform 0.3s"}}/> 
+      <div style={{ maxWidth: "24rem", width: "100%" ,boxShadow:
+          "0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)",}}>
         <div
           style={{
-            padding: "1rem",
-            display: "flex",
-            flexDirection: "column",
-            gap: "0.5rem",
-            width: "100%",
+            backgroundColor: "white",
+            //  boxShadow: "0 10px 15px rgba(0, 0, 0, 0.1)",
+            borderRadius: "0.5rem",
+            overflow: "hidden",
           }}
         >
+          <img
+            src={listing.imageUrls[0]}
+            alt="listing cover"
+            style={{
+              height: "320px",
+              width: "100%",
+              objectFit: "cover",
+              transition: "transform 0.3s",
+            }}
+          />
+        </div>
+        <div style={{ padding: "1rem", }}>
           <p
             style={{
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-              fontSize: "1.125rem",
-              fontWeight: "600",
-              color: "#475569",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              fontWeight: "bold",
+              color: "#4B5563",
             }}
           >
             {listing.name}
           </p>
+          <p style={{ fontSize: "1.875rem", color: "#1F2937" }}>
+            Rs.{listing.Price}
+          </p>
+          <div style={{display: "flex",alignItems: "center", gap: "0.25rem",
+            }}>
+
+          <MdLocationOn
+              style={{ height: "1rem", width: "1rem", color: "#047857" }}
+            />
+          <p style={{ color: "#4B5563" }}>{listing.address}</p>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            padding: "1rem",
+            borderTop: "1px solid #D1D5DB",
+            color: "#4B5563",
+          }}
+        >
+          <div
+            style={{ display: "inline-flex", alignItems: "center", flex: "1" }}
+          >
+            <svg
+              style={{
+                height: "1.5rem",
+                width: "1.5rem",
+                color: "#4B5563",
+                fill: "currentcolor",
+                marginRight: "0.75rem",
+              }}
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path d="M0 16L3 5V1a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v4l3 11v5a1 1 0 0 1-1 1v2h-1v-2H2v2H1v-2a1 1 0 0 1-1-1v-5zM19 5h1V1H4v4h1V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1h2V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1zm0 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V6h-2v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6H3.76L1.04 16h21.92L20.24 6H19zM1 17v4h22v-4H1zM6 4v4h4V4H6zm8 0v4h4V4h-4z"></path>
+            </svg>
+            <p>
+              <span style={{ color: "#1F2937", fontWeight: "bold" }}>
+                {listing.bedrooms}
+              </span>{" "}
+              Bedroom(s)
+            </p>
+          </div>
+          <div
+            style={{ display: "inline-flex", alignItems: "center", flex: "1" }}
+          >
+            <svg
+              style={{
+                height: "1.5rem",
+                width: "1.5rem",
+                color: "#4B5563",
+                fill: "currentcolor",
+                marginRight: "0.75rem",
+              }}
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fillRule="evenodd"
+                d="M17.03 21H7.97a4 4 0 0 1-1.3-.22l-1.22 2.44-.9-.44 1.22-2.44a4 4 0 0 1-1.38-1.55L.5 11h7.56a4 4 0 0 1 1.78.42l2.32 1.16a4 4 0 0 0 1.78.42h9.56l-2.9 5.79a4 4 0 0 1-1.37 1.55l1.22 2.44-.9.44-1.22-2.44a4 4 0 0 1-1.3.22zM21 11h2.5a.5.5 0 1 1 0 1h-9.06a4.5 4.5 0 0 1-2-.48l-2.32-1.15A3.5 3.5 0 0 0 8.56 10H.5a.5.5 0 0 1 0-1h8.06c.7 0 1.38.16 2 .48l2.32 1.15a3.5 3.5 0 0 0 1.56.37H20V2a1 1 0 0 0-1.74-.67c.64.97.53 2.29-.32 3.14l-.35.36-3.54-3.54.35-.35a2.5 2.5 0 0 1 3.15-.32A2 2 0 0 1 21 2v9zm-5.48-9.65l2 2a1.5 1.5 0 0 0-2-2zm-10.23 17A3 3 0 0 0 7.97 20h9.06a3 3 0 0 0 2.68-1.66L21.88 14h-7.94a5 5 0 0 1-2.23-.53L9.4 12.32A3 3 0 0 0 8.06 12H2.12l3.17 6.34z"
+              ></path>
+            </svg>
+            <p>
+              <span style={{ color: "#1F2937", fontWeight: "bold" }}>
+                {listing.bathrooms}
+              </span>{" "}
+              Bathroom(s)
+            </p>
+          </div>
+        </div>
+        <div
+          style={{
+            padding: "1rem",
+            paddingTop: "0.75rem",
+            paddingBottom: "1rem",
+            borderTop: "1px solid #D1D5DB",
+            backgroundColor: "#F3F4F6",
+            borderRadius: "0.5rem",
+          }}
+        >
+          <div
+            style={{
+              fontSize: "0.75rem",
+              textTransform: "uppercase",
+              fontWeight: "bold",
+              color: "#6B7280",
+              letterSpacing: "0.05em",
+            }}
+          >
+            Realtor
+          </div>
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "0.25rem",
+              paddingTop: "0.5rem",
             }}
           >
-            <MdLocationOn
-              style={{ height: "1rem", width: "1rem", color: "#047857" }}
-            />
-            <p
+            <div
               style={{
-                fontSize: "0.875rem",
-                color: "#4B5563",
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                textOverflow: "ellipsis",
-                width: "100%",
+                backgroundColor: "green",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                width: "2.5rem",
+                height: "2.5rem",
+                borderRadius: "9999px",
+                marginRight: "0.75rem",
               }}
-            >
-              {listing.address}
-            </p>
-          </div>
-          <p
-            style={{
-              fontSize: "0.875rem",
-              color: "#4B5563",
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
-          >
-            {listing.description}
-          </p>
-          <p
-            style={{
-              color: "#64748B",
-              marginTop: "0.5rem",
-              fontWeight: "600",
-            }}
-          >
-            Rs.{listing.Price}
-          </p>
-          <div
-            style={{
-              color: "#475569",
-              display: "flex",
-              gap: "1rem",
-            }}
-          >
-            <div style={{ fontWeight: "700", fontSize: "0.75rem" }}>
-              {listing.bedrooms > 1
-                ? `${listing.bedrooms} bedrooms `
-                : `${listing.bedrooms} bedroom `}
-            </div>
-            <div style={{ fontWeight: "700", fontSize: "0.75rem" }}>
-              {listing.bathrooms > 1
-                ? `${listing.bathrooms} bathrooms `
-                : `${listing.bathrooms} bathroom `}
+            ></div>
+            <div>
+              <p style={{ fontWeight: "bold", color: "#1F2937" }}>
+                {listing.Realtor}
+              </p>
             </div>
           </div>
         </div>
-      </Link>
+      </div>
     </div>
   );
-}
+};
+
+export default Propcard;

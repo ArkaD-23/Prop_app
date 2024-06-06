@@ -24,10 +24,10 @@ model User {
 }
 
 model Listing {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String?
   description String?
-  address     String?  @unique
+  address     String?   @unique
   Price       String?
   bathrooms   String?
   bedrooms    String?
@@ -35,5 +35,5 @@ model Listing {
   offer       Boolean?
   imageUrls   String[]
   Realtor     String?
-  created_at  DateTime @default(now())
+  createdAt   DateTime  @default(now())
 }
