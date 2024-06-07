@@ -8,15 +8,18 @@ const Propcard = ({ listing }) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "100vh",
+        //minHeight: "100vh",
       }}
     >
-      <div style={{ maxWidth: "24rem", width: "100%" ,boxShadow:
-          "0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)",}}>
+      <div
+        style={{
+          width: "24rem",  // Fixed width
+          boxShadow: "0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)",
+        }}
+      >
         <div
           style={{
             backgroundColor: "white",
-            //  boxShadow: "0 10px 15px rgba(0, 0, 0, 0.1)",
             borderRadius: "0.5rem",
             overflow: "hidden",
           }}
@@ -25,14 +28,13 @@ const Propcard = ({ listing }) => {
             src={listing.imageUrls[0]}
             alt="listing cover"
             style={{
-              height: "320px",
-              width: "100%",
-              objectFit: "cover",
-              transition: "transform 0.3s",
+              width: "100%",  // Ensures the image fills the width of the container
+              height: "250px",  // Adjusted height to make the card smaller
+              objectFit: "cover",  // Ensures the image covers the area without distortion
             }}
           />
         </div>
-        <div style={{ padding: "1rem", }}>
+        <div style={{ padding: "1rem" }}>
           <p
             style={{
               textTransform: "uppercase",
@@ -46,13 +48,17 @@ const Propcard = ({ listing }) => {
           <p style={{ fontSize: "1.875rem", color: "#1F2937" }}>
             Rs.{listing.Price}
           </p>
-          <div style={{display: "flex",alignItems: "center", gap: "0.25rem",
-            }}>
-
-          <MdLocationOn
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.25rem",
+            }}
+          >
+            <MdLocationOn
               style={{ height: "1rem", width: "1rem", color: "#047857" }}
             />
-          <p style={{ color: "#4B5563" }}>{listing.address}</p>
+            <p style={{ color: "#4B5563" }}>{listing.address}</p>
           </div>
         </div>
         <div

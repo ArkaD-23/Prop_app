@@ -2,10 +2,12 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useNavigate } from "react-router-dom";
 import styles from "./buy.module.css";
 import Propcard from "@/components/Propcard.jsx";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import Link from "next/link";
 
 const Buy = () => {
   const [sidebardata, setSidebardata] = useState({
@@ -103,7 +105,7 @@ const Buy = () => {
     setLoading(true);
     setShowMore(false);
     try {
-    //  const searchQuery = urlParams.toString();
+      //  const searchQuery = urlParams.toString();
       const res = await fetch(`/server/listing/getall?${searchQuery}`);
       const data = await res.json();
       setListings(Array.isArray(data) ? data : []);
@@ -211,7 +213,7 @@ const Buy = () => {
                 border: "1px solid",
                 borderRadius: "0.5rem",
                 padding: "0.75rem",
-                }}
+              }}
               onChange={handleChange}
             >
               <option value="Price_desc">Price high to low</option>
@@ -261,7 +263,7 @@ const Buy = () => {
             padding: "1.75rem",
             display: "flex",
             flexWrap: "wrap",
-            gap: "1rem",
+            gap: "8rem",
           }}
         >
           {!loading && listings.length === 0 && (
@@ -281,10 +283,13 @@ const Buy = () => {
               Loading...
             </p>
           )}
+
           {!loading &&
             listings &&
             listings.map((listing) => (
-              <Propcard key={listing.id} listing={listing} />
+              <Link href="/listing" style={{textDecoration:'none'}}>
+                <Propcard key={listing.id} listing={listing} />
+              </Link>
             ))}
           {showMore && (
             <button
