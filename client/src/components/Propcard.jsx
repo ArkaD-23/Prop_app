@@ -43,11 +43,9 @@ const Propcard = ({ listing }) => {
               color: "#4B5563",
             }}
           >
-            {listing.name}
+            {listing.name} : Rs.{listing.Price}
           </p>
-          <p style={{ fontSize: "1.875rem", color: "#1F2937" }}>
-            Rs.{listing.Price}
-          </p>
+          {/*<p style={{ fontSize: "1.875rem", color: "#1F2937" }}></p>*/}
           <div
             style={{
               display: "flex",
