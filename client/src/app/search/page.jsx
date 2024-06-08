@@ -14,7 +14,7 @@ const Buy = () => {
     searchTerm: "",
     parking: false,
     offer: false,
-    sort: "created_at",
+    sort: "createdAt",
     order: "desc",
   });
   const [loading, setLoading] = useState(false);

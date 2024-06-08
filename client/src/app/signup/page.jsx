@@ -6,15 +6,21 @@ import {
   signUpStart,
   signUpSuccess,
   signUpFailure,
+  signInStart,
+  signInSuccess,
+  signInFailure,
 } from "@/store/features/user/userSlice.js";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks.js";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
+import { MdDisabledVisible, MDVisible } from "react-icons/md";
+import { DisableVisibility, EnableVisibility } from "@/components/PasswordVisibility";
 
 export default function Signup() {
   const [formData, setFormData] = useState({});
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { error, loading } = useAppSelector((state) => state.user);
+  const [visible, setVisible] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -32,6 +38,21 @@ export default function Signup() {
       return;
     }
 
+    const emailChecker = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailChecker.test(formData.email)) {
+      alert("Please enter correct email address");
+      return;
+    }
+
+    const passwordPattern =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordPattern.test(formData.password)) {
+      alert(
+        "Your password should be atleast: 8 characters long, contains atleast a uppercase, a lowercase, a number and a special character and no spacing!"
+      );
+      return;
+    }
+
     try {
       dispatch(signUpStart());
       const res = await fetch("../../server/auth/signup", {
@@ -42,14 +63,32 @@ export default function Signup() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      console.log(data);
       if (data.success === false) {
         dispatch(signUpFailure(data));
-        alert("This email has already been registered!");
+        alert(data.message);
         return;
       }
       dispatch(signUpSuccess(data));
-      router.push("/signin");
+      try {
+        dispatch(signInStart());
+        const res = await fetch("../../server/auth/signin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+        const data = await res.json();
+        if (data.success === false) {
+          dispatch(signInFailure(data));
+          alert(data.message);
+          return;
+        }
+        dispatch(signInSuccess(data));
+        router.push("/");
+      } catch (error) {
+        dispatch(signInFailure(error));
+      }
     } catch (error) {
       dispatch(signUpFailure(error));
     }
@@ -107,24 +146,6 @@ export default function Signup() {
             placeholder="email"
           />
           <input
-            id="password"
-            onChange={handleChange}
-            style={{
-              fontFamily: "Roboto",
-              outline: "0",
-              background: "#f2f2f2",
-              width: "100%",
-              border: "0",
-              margin: "0 0 15px",
-              padding: "15px",
-              boxSizing: "border-box",
-              fontSize: "14px",
-              borderRadius: "50px",
-            }}
-            type="password"
-            placeholder="password"
-          />
-          <input
             id="contact_no"
             onChange={handleChange}
             style={{
@@ -162,6 +183,44 @@ export default function Signup() {
             <option value="Realtor">Realtor</option>
             <option value="Customer">Customer</option>
           </select>
+          <div style={{display:"flex", justifyContent:"space-between", alignItems:"center",background: "#f2f2f2",
+              width: "100%",
+              border: "0",
+              padding: "15px",
+              boxSizing: "border-box",
+              fontSize: "14px",
+              borderRadius: "50px",
+              fontFamily: "Roboto",
+            }}>
+          <input
+            id="password"
+            onChange={handleChange}
+            style={{border: "0",
+              background: "#f2f2f2",
+              outline: "0",
+              //margin: "0 0 15px",
+            }}
+            type={visible ? "text" : "password"}
+            placeholder="password"
+          />
+          <div onClick={(e) => { e.preventDefault(); setVisible(!visible)}} style={{outline:"0", border:"0"}}>
+            {visible ? <EnableVisibility /> : <DisableVisibility />}
+          </div>
+          </div>
+          <p
+            style={{
+              margin: "0px 10px 15px",
+              fontSize: "10px",
+              fontWeight: "1",
+              textAlign: "left",
+              opacity: "0.5",
+
+            }}
+          >
+            [Your password should be atleast: 8 characters long, contains
+            atleast a uppercase, a lowercase, a number and a special character
+            and no spacing]
+          </p>
 
           <HoverButtonWrapper>
             <button

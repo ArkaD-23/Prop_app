@@ -28,6 +28,12 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.email) {
+      if (!formData.email.includes(".com") || !formData.email.includes("@")) {
+        alert("Please enter valid email address!");
+        return;
+      }
+    }
     try {
       dispatch(updateUserStart());
       const res = await fetch(`../../server/user/update/${currentUser.id}`, {

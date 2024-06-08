@@ -34,17 +34,19 @@ const Propcard = ({ listing }) => {
             }}
           />
         </div>
-        <div style={{ padding: "1rem" }}>
+        <div style={{ padding: " 0 1rem" }}>
           <p
             style={{
-              textTransform: "uppercase",
               letterSpacing: "0.05em",
               fontWeight: "bold",
               color: "#4B5563",
+              fontSize:"30px",
+              margin:"0px"
             }}
           >
-            {listing.name} : Rs.{listing.Price}
+            Rs.{listing.Price}
           </p>
+          <p style={{margin:"10px 0",marginBottom:"0px", color: "#4B5563" }}>{listing.address}</p>
           {/*<p style={{ fontSize: "1.875rem", color: "#1F2937" }}></p>*/}
           <div
             style={{
@@ -56,13 +58,13 @@ const Propcard = ({ listing }) => {
             <MdLocationOn
               style={{ height: "1rem", width: "1rem", color: "#047857" }}
             />
-            <p style={{ color: "#4B5563" }}>{listing.address}</p>
+            <p style={{ margin:'10px', color: "#4B5563" }}>{listing.address}</p>
           </div>
         </div>
         <div
           style={{
             display: "flex",
-            padding: "1rem",
+            padding: " 0 1rem",
             borderTop: "1px solid #D1D5DB",
             color: "#4B5563",
           }}
@@ -119,9 +121,8 @@ const Propcard = ({ listing }) => {
         </div>
         <div
           style={{
-            padding: "1rem",
-            paddingTop: "0.75rem",
-            paddingBottom: "1rem",
+            paddingTop: "0.5rem",
+            paddingBottom: "0.5rem",
             borderTop: "1px solid #D1D5DB",
             backgroundColor: "#F3F4F6",
             borderRadius: "0.5rem",
@@ -134,33 +135,10 @@ const Propcard = ({ listing }) => {
               fontWeight: "bold",
               color: "#6B7280",
               letterSpacing: "0.05em",
+              padding: "1rem 1rem"
             }}
           >
-            Realtor
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              paddingTop: "0.5rem",
-            }}
-          >
-            <div
-              style={{
-                backgroundColor: "green",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                width: "2.5rem",
-                height: "2.5rem",
-                borderRadius: "9999px",
-                marginRight: "0.75rem",
-              }}
-            ></div>
-            <div>
-              <p style={{ fontWeight: "bold", color: "#1F2937" }}>
-                {listing.Realtor}
-              </p>
-            </div>
+            Realtor : {listing.Realtor}
           </div>
         </div>
       </div>
