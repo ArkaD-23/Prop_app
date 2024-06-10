@@ -1,53 +1,40 @@
-import prisma from "../../db/db.config.js";
 import { errorHandeler } from "../utils/error.js";
+import Listing from "../models/listings.model.js"; 
 
 export const createlisting = async (req, res, next) => {
-  const {
-    name,
-    description,
-    address,
-    Price,
-    bathrooms,
-    bedrooms,
-    parking,
-    offer,
-    imageUrls,
-    Realtor,
-  } = req.body;
+  const {name,description,address,Price,bathrooms,bedrooms,parking,offer,imageUrls,Realtor,} = req.body;
+
   try {
-    const alreadyListed = await prisma.listing.findUnique({
-      where: {
-        address: address,
-      },
-    });
-    if (alreadyListed) {
-      return next(errorHandeler(400, "This address has already been listed"));
+    const alreadyListed = await Listing.findOne({ address });
+    if(alreadyListed) {
+      return next(errorHandeler("This address has already been listed"));
     }
   } catch (error) {
-    next(error);
+    return next(errorHandeler(error));
   }
+
   try {
-    const newListing = await prisma.listing.create({
-      data: {
-        name: name,
-        description: description,
-        address: address,
-        Price: Price,
-        bathrooms: bathrooms,
-        bedrooms: bedrooms,
-        parking: parking,
-        offer: offer,
-        imageUrls: imageUrls,
-        Realtor: Realtor,
-      },
+    const newListing = new Listing({
+      name,
+      description,
+      address,
+      Price,
+      bathrooms,
+      bedrooms,
+      parking,
+      offer,
+      imageUrls,
+      Realtor,
     });
+    await newListing.save();
+
     res.json({
       status: 200,
       data: newListing,
       message: "Listing created successfully!",
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
@@ -59,18 +46,19 @@ export const getListings = async (req, res, next) => {
     const parking = req.query.parking !== undefined && req.query.parking !== 'false' ? req.query.parking === 'true' : undefined;
     const searchTerm = req.query.searchTerm || '';
     const sort = req.query.sort || 'createdAt';
-    const order = req.query.order || 'desc';
+    const order = req.query.order === 'asc' ? 1 : -1;
+
     const whereClause = {
-      name: { contains: searchTerm, mode: 'insensitive' },
+      name: { $regex: searchTerm, $options: 'i' }, 
       ...(offer !== undefined && { offer }),
       ...(parking !== undefined && { parking }),
     };
-    const listings = await prisma.listing.findMany({
-      where: whereClause,
-      orderBy: { [sort]: order },
-      skip: startIndex,
-      take: limit,
-    });
+
+    const listings = await Listing.find(whereClause)
+      .sort({ [sort]: order })
+      .skip(startIndex)
+      .limit(limit);
+
     return res.status(200).json(listings);
   } catch (error) {
     next(error);

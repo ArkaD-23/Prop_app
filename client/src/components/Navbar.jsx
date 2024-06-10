@@ -15,12 +15,12 @@ export const Navbar = () => {
                 <ul style={{ display: 'flex', listStyle: 'none', fontWeight: '600' }}>
                     {currentUser && (
                         <>
-                            {currentUser.usertype === 'Customer' && (
+                            {currentUser.userType === 'Customer' && (
                                 <Link href="/search" style={{textDecoration:'none'}}>
                                     <li style={{ color: 'azure', margin: '0 15px' }}>Buy</li>
                                 </Link>
                             )}
-                            {currentUser.usertype === 'Realtor' && (
+                            {currentUser.userType === 'Realtor' && (
                                 <Link href="/sell" style={{textDecoration:'none'}}>
                                     <li style={{ color: 'azure', margin: '0 15px' }}>Sell</li>
                                 </Link>
@@ -28,7 +28,7 @@ export const Navbar = () => {
                         </>
                     )}
 
-                    {currentUser ? (<Link style={{ textDecoration: 'none' }} href='/profile'>
+                    {currentUser ? (<Link style={{ textDecoration: 'none' }} href={`/profile/${currentUser._id}`}>
                         <li style={{ color: 'azure', margin: '0 15px', }}>Profile</li>
                     </Link>) : (<Link style={{ textDecoration: 'none' }} href="/signin">
                         <li style={{ color: 'azure', margin: '0 15px', }}>Signin</li>

@@ -28,15 +28,9 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.email) {
-      if (!formData.email.includes(".com") || !formData.email.includes("@")) {
-        alert("Please enter valid email address!");
-        return;
-      }
-    }
     try {
       dispatch(updateUserStart());
-      const res = await fetch(`../../server/user/update/${currentUser.id}`, {
+      const res = await fetch(`../../server/user/update/${currentUser._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,14 +52,13 @@ const Profile = () => {
   const handleDeleteAccount = async () => {
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`../../server/user/delete/${currentUser.id}`, {
+      const res = await fetch(`../../server/user/delete/${currentUser._id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
       });
       const data = res.json();
-      console.log(data);
       if (data.success === false) {
         dispatch(deleteUserFailure(data));
         return;
@@ -81,7 +74,7 @@ const Profile = () => {
       await fetch("../../server/auth/signout");
       dispatch(signOut());
     } catch (error) {
-      console.log(error);
+      alert(error.message);
     }
   };
 
@@ -221,7 +214,7 @@ const Profile = () => {
               style={{
                 color: "#DC2626",
                 cursor: "pointer",
-                textDecoration: error ? "underline" : "none",
+                textDecoration: "none",
               }}
               onClick={handleDeleteAccount}
             >
@@ -234,17 +227,17 @@ const Profile = () => {
               style={{
                 color: "#DC2626",
                 cursor: "pointer",
-                textDecoration: error ? "underline" : "none",
+                textDecoration: "none",
               }}
             >
               Sign Out
             </Link>
           </div>
-          <p style={{ color: "#DC2626", marginTop: "1.25rem" }}>
-            {error && "Something went wrong!"}
-          </p>
+          {error ? (
+            <p style={{ color: "#C53030", fontSize: "14px" }}>{error.message}</p>
+          ) : ""}
           <p style={{ color: "#16A34A", marginTop: "1.25rem" }}>
-            {updateSuccess && "User updated successfully!"}
+            {updateSuccess ? "User updated successfully!" : ""}
           </p>
         </div>
       </div>

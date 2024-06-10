@@ -10,12 +10,17 @@ import {
 } from "@/store/features/user/userSlice.js";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks.js";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
+import {
+  DisableVisibility,
+  EnableVisibility,
+} from "@/components/PasswordVisibility";
 
 export default function Signin() {
   const [formData, setFormData] = useState({});
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { currentUser, loading, error } = useAppSelector((state) => state.user);
+  const [visible, setVisible] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -23,10 +28,6 @@ export default function Signin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.email || !formData.password) {
-      alert("Please fill all the fields!");
-      return;
-    }
     try {
       dispatch(signInStart());
       const res = await fetch("../../server/auth/signin", {
@@ -40,7 +41,6 @@ export default function Signin() {
       console.log(data);
       if (data.success === false) {
         dispatch(signInFailure(data));
-        alert("Please enter correct credentials");
         return;
       }
       dispatch(signInSuccess(data));
@@ -82,24 +82,44 @@ export default function Signin() {
             type="text"
             placeholder="email"
           />
-          <input
-            id="password"
-            onChange={handleChange}
+           <div
             style={{
-              fontFamily: "Roboto",
-              outline: "0",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
               background: "#f2f2f2",
               width: "100%",
               border: "0",
-              margin: "0 0 15px",
               padding: "15px",
               boxSizing: "border-box",
               fontSize: "14px",
               borderRadius: "50px",
+              fontFamily: "Roboto",
+              margin:"0 0 15px"
             }}
-            type="password"
-            placeholder="password"
-          />
+          >
+            <input
+              id="password"
+              onChange={handleChange}
+              style={{
+                border: "0",
+                background: "#f2f2f2",
+                outline: "0",
+                //margin: "0 0 15px",
+              }}
+              type={visible ? "text" : "password"}
+              placeholder="password"
+            />
+            <div
+              onClick={(e) => {
+                e.preventDefault();
+                setVisible(!visible);
+              }}
+              style={{ outline: "0", border: "0" }}
+            >
+              {visible ? <EnableVisibility /> : <DisableVisibility />}
+            </div>
+          </div>
           <HoverButtonWrapper>
             <button
               id="button"
@@ -137,6 +157,9 @@ export default function Signin() {
               Create an account
             </Link>
           </p>
+          {error ? (
+            <p style={{ color: "#C53030", fontSize: "14px" }}>{error.message}</p>
+          ) : ""}
         </form>
       </div>
     </div>

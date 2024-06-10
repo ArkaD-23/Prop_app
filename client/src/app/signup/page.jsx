@@ -12,8 +12,10 @@ import {
 } from "@/store/features/user/userSlice.js";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks.js";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
-import { MdDisabledVisible, MDVisible } from "react-icons/md";
-import { DisableVisibility, EnableVisibility } from "@/components/PasswordVisibility";
+import {
+  DisableVisibility,
+  EnableVisibility,
+} from "@/components/PasswordVisibility";
 
 export default function Signup() {
   const [formData, setFormData] = useState({});
@@ -27,32 +29,6 @@ export default function Signup() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      !formData.username ||
-      !formData.email ||
-      !formData.password ||
-      !formData.contact_no ||
-      !formData.usertype
-    ) {
-      alert("Please fill all the fields!");
-      return;
-    }
-
-    const emailChecker = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailChecker.test(formData.email)) {
-      alert("Please enter correct email address");
-      return;
-    }
-
-    const passwordPattern =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    if (!passwordPattern.test(formData.password)) {
-      alert(
-        "Your password should be atleast: 8 characters long, contains atleast a uppercase, a lowercase, a number and a special character and no spacing!"
-      );
-      return;
-    }
-
     try {
       dispatch(signUpStart());
       const res = await fetch("../../server/auth/signup", {
@@ -65,7 +41,6 @@ export default function Signup() {
       const data = await res.json();
       if (data.success === false) {
         dispatch(signUpFailure(data));
-        alert(data.message);
         return;
       }
       dispatch(signUpSuccess(data));
@@ -81,7 +56,6 @@ export default function Signup() {
         const data = await res.json();
         if (data.success === false) {
           dispatch(signInFailure(data));
-          alert(data.message);
           return;
         }
         dispatch(signInSuccess(data));
@@ -142,7 +116,7 @@ export default function Signup() {
               fontSize: "14px",
               borderRadius: "50px",
             }}
-            type="text"
+            type="email"
             placeholder="email"
           />
           <input
@@ -164,7 +138,7 @@ export default function Signup() {
             placeholder="contact no"
           />
           <select
-            id="usertype"
+            id="userType"
             onChange={handleChange}
             style={{
               fontFamily: "Roboto",
@@ -179,11 +153,16 @@ export default function Signup() {
               borderRadius: "50px",
             }}
           >
-            <option value="">Select user type</option>
-            <option value="Realtor">Realtor</option>
-            <option value="Customer">Customer</option>
+            <option value="">What you are here for?</option>
+            <option value="Realtor">To Sell</option>
+            <option value="Customer">To Buy</option>
           </select>
-          <div style={{display:"flex", justifyContent:"space-between", alignItems:"center",background: "#f2f2f2",
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              background: "#f2f2f2",
               width: "100%",
               border: "0",
               padding: "15px",
@@ -191,21 +170,29 @@ export default function Signup() {
               fontSize: "14px",
               borderRadius: "50px",
               fontFamily: "Roboto",
-            }}>
-          <input
-            id="password"
-            onChange={handleChange}
-            style={{border: "0",
-              background: "#f2f2f2",
-              outline: "0",
-              //margin: "0 0 15px",
             }}
-            type={visible ? "text" : "password"}
-            placeholder="password"
-          />
-          <div onClick={(e) => { e.preventDefault(); setVisible(!visible)}} style={{outline:"0", border:"0"}}>
-            {visible ? <EnableVisibility /> : <DisableVisibility />}
-          </div>
+          >
+            <input
+              id="password"
+              onChange={handleChange}
+              style={{
+                border: "0",
+                background: "#f2f2f2",
+                outline: "0",
+                //margin: "0 0 15px",
+              }}
+              type={visible ? "text" : "password"}
+              placeholder="password"
+            />
+            <div
+              onClick={(e) => {
+                e.preventDefault();
+                setVisible(!visible);
+              }}
+              style={{ outline: "0", border: "0" }}
+            >
+              {visible ? <EnableVisibility /> : <DisableVisibility />}
+            </div>
           </div>
           <p
             style={{
@@ -214,12 +201,11 @@ export default function Signup() {
               fontWeight: "1",
               textAlign: "left",
               opacity: "0.5",
-
             }}
           >
-            [Your password should be atleast: 8 characters long, contains
-            atleast a uppercase, a lowercase, a number and a special character
-            and no spacing]
+            Your password should be atleast: 8 characters long, contains atleast
+            a uppercase, a lowercase, a number and a special character and no
+            spacing
           </p>
 
           <HoverButtonWrapper>
@@ -243,6 +229,9 @@ export default function Signup() {
               {loading ? "Loading...." : "Signup"}
             </button>
           </HoverButtonWrapper>
+          {error ? (
+            <p style={{ color: "#C53030", fontSize: "14px" }}>{error.message}</p>
+          ) : ""}
         </form>
       </div>
     </div>

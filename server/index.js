@@ -5,8 +5,18 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.router.js";
 import userRoutes from "./routes/user.router.js"
 import listRoutes from "./routes/listing.router.js"
+import mongoose from "mongoose";
 
 dotenv.config();
+
+mongoose
+    .connect(process.env.MONGO_URL)
+    .then(() => {
+        console.log("Connected to the database........")
+    })
+    .catch((err) => {
+        console.log(err);
+    })
 
 const app = express();
 
