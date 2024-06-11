@@ -14,6 +14,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks.js";
 import { useRouter } from "next/navigation";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
+import PrivateRoute from "@/components/PrivateRoute";
 
 const Profile = () => {
   const dispatch = useAppDispatch();

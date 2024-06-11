@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   signUpStart,
@@ -21,8 +21,20 @@ export default function Signup() {
   const [formData, setFormData] = useState({});
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { error, loading } = useAppSelector((state) => state.user);
+  const { currentUser, error, loading } = useAppSelector((state) => state.user);
   const [visible, setVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useLayoutEffect(() => {
+    if (currentUser) {
+      router.push("/");
+    } 
+    else setIsLoading(false);
+  }, [currentUser, router]);
+
+  if (isLoading) {
+    return <div>Loading...</div>; 
+  }
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });

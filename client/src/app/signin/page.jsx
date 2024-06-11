@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -21,6 +21,20 @@ export default function Signin() {
   const dispatch = useAppDispatch();
   const { currentUser, loading, error } = useAppSelector((state) => state.user);
   const [visible, setVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useLayoutEffect(() => {
+    if (currentUser) {
+      router.push('/');
+    } else {
+      setIsLoading(false);
+    }
+  }, [currentUser, router]);
+
+  if (isLoading) {
+    return <div>Loading...</div>; 
+  }
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
