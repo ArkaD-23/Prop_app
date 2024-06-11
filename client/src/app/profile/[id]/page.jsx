@@ -15,13 +15,17 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks.js";
 import { useRouter } from "next/navigation";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
 import PrivateRoute from "@/components/PrivateRoute";
+import {
+  DisableVisibility,
+  EnableVisibility,
+} from "@/components/PasswordVisibility";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
   const { currentUser, error, loading } = useAppSelector((state) => state.user);
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [formData, setFormData] = useState({});
-  const router = useRouter();
+  const [visible, setVisible] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -41,12 +45,14 @@ const Profile = () => {
       const data = await res.json();
       if (data.success === false) {
         dispatch(updateUserFailure(data));
+        setUpdateSuccess(false);
         return;
       }
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
     } catch (error) {
       dispatch(updateUserFailure(error));
+      setUpdateSuccess(false);
     }
   };
 
@@ -160,25 +166,56 @@ const Profile = () => {
               placeholder="contact"
               onChange={handleChange}
             />
-            <input
-              id="password"
+            <div
               style={{
-                fontFamily: "Roboto",
-                outline: "0",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
                 background: "#f2f2f2",
                 width: "100%",
                 border: "0",
-                margin: "0 0 15px",
                 padding: "15px",
                 boxSizing: "border-box",
                 fontSize: "14px",
                 borderRadius: "50px",
+                fontFamily: "Roboto",
               }}
-              type="password"
-              defaultValue={currentUser ? currentUser.password : ""}
-              placeholder="password"
-              onChange={handleChange}
-            />
+            >
+              <input
+                id="password"
+                onChange={handleChange}
+                style={{
+                  border: "0",
+                  background: "#f2f2f2",
+                  outline: "0",
+                  //margin: "0 0 15px",
+                }}
+                type={visible ? "text" : "password"}
+                placeholder="password"
+              />
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  setVisible(!visible);
+                }}
+                style={{ outline: "0", border: "0" }}
+              >
+                {visible ? <EnableVisibility /> : <DisableVisibility />}
+              </div>
+            </div>
+            <p
+              style={{
+                margin: "0px 10px 15px",
+                fontSize: "10px",
+                fontWeight: "1",
+                textAlign: "left",
+                opacity: "0.5",
+              }}
+            >
+              Your password should be atleast: 8 characters long, contains
+              atleast a uppercase, a lowercase, a number and a special character
+              and no spacing
+            </p>
             <HoverButtonWrapper>
               <button
                 id="button"
@@ -235,8 +272,12 @@ const Profile = () => {
             </Link>
           </div>
           {error ? (
-            <p style={{ color: "#C53030", fontSize: "14px" }}>{error.message}</p>
-          ) : ""}
+            <p style={{ color: "#C53030", fontSize: "14px" }}>
+              {error.message}
+            </p>
+          ) : (
+            ""
+          )}
           <p style={{ color: "#16A34A", marginTop: "1.25rem" }}>
             {updateSuccess ? "User updated successfully!" : ""}
           </p>

@@ -8,7 +8,7 @@ import HoverButtonWrapper from "@/components/HoverButtonWrapper";
 export default function Home() {
   const { currentUser, loading } = useAppSelector((state) => state.user);
   const linkToUser =
-    currentUser && currentUser.usertype === "Customer" ? "/search" : "/sell";
+    currentUser && currentUser.userType === "Customer" ? "/search" : "/sell";
   const linkTo = currentUser ? linkToUser : "/signin";
   return (
     <>
