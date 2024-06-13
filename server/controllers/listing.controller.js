@@ -64,3 +64,17 @@ export const getListings = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getOneListing = async (req, res, next) => {
+  try {
+    const { address } = req.body;
+    if(!address) {
+      return next(errorHandeler(404, "The listing with the following address was not find !"))
+    }
+    const listing = await Listing.findOne({ address });
+    res.json({status: 200, data: listing, message: "Listing returned successfully"})    
+  } catch (error) {
+    return next(errorHandeler(404, "Something went wrong !"));
+  }
+};
+

@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Listing" ALTER COLUMN "bathrooms" SET DATA TYPE TEXT,
-ALTER COLUMN "bedrooms" SET DATA TYPE TEXT;
