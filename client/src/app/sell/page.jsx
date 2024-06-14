@@ -5,6 +5,8 @@ import { useAppSelector } from "@/store/hooks/hooks.js";
 import axios from "axios";
 import styles from "./sell.module.css";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
+import { MdDelete } from "react-icons/md";
+
 
 const Sell = () => {
   const { currentUser } = useAppSelector((state) => state.user);
@@ -386,7 +388,7 @@ const Sell = () => {
                     opacity: "1",
                   }}
                 >
-                  Delete
+                  <MdDelete />
                 </button>
               </div>
             ))}

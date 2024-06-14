@@ -5,8 +5,6 @@ import { useRouter } from "next/navigation";
 import styles from "./buy.module.css";
 import Propcard from "@/components/Propcard.jsx";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
 import Link from "next/link";
 
 const Buy = () => {
@@ -287,8 +285,8 @@ const Buy = () => {
           {!loading &&
             listings &&
             listings.map((listing) => (
-              <Link href="/listing" style={{textDecoration:'none'}}>
-                <Propcard key={listing.id} listing={listing} />
+              <Link href={`/listing/${listing._id}`} style={{textDecoration:'none'}}>
+                <Propcard key={listing._id} listing={listing} />
               </Link>
             ))}
           {showMore && (

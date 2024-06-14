@@ -13,7 +13,7 @@ const Propcard = ({ listing }) => {
     >
       <div
         style={{
-          width: "24rem",  // Fixed width
+          width: "24rem",  
           boxShadow: "0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)",
         }}
       >
@@ -28,9 +28,9 @@ const Propcard = ({ listing }) => {
             src={listing.imageUrls[0]}
             alt="listing cover"
             style={{
-              width: "100%",  // Ensures the image fills the width of the container
-              height: "250px",  // Adjusted height to make the card smaller
-              objectFit: "cover",  // Ensures the image covers the area without distortion
+              width: "100%",  
+              height: "250px", 
+              objectFit: "cover", 
             }}
           />
         </div>

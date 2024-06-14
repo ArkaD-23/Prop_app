@@ -67,14 +67,13 @@ export const getListings = async (req, res, next) => {
 
 export const getOneListing = async (req, res, next) => {
   try {
-    const { address } = req.body;
-    if(!address) {
-      return next(errorHandeler(404, "The listing with the following address was not find !"))
+    const listing = await Listing.findById(req.params.id);
+    if (!listing) {
+      return next(errorHandler(404, 'Listing not found!'));
     }
-    const listing = await Listing.findOne({ address });
-    res.json({status: 200, data: listing, message: "Listing returned successfully"})    
+    res.status(200).json(listing);
   } catch (error) {
-    return next(errorHandeler(404, "Something went wrong !"));
+    next(error);
   }
 };
 
