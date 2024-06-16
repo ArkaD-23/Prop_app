@@ -7,7 +7,6 @@ import styles from "./sell.module.css";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
 import { MdDelete } from "react-icons/md";
 
-
 const Sell = () => {
   const { currentUser } = useAppSelector((state) => state.user);
   const router = useRouter();
@@ -97,7 +96,30 @@ const Sell = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
+      const encodedAddress = encodeURIComponent(formData.address);
+      const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodedAddress}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}&limit=1`;
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data.features[0].center[1]);
+
+      if (data.features.length === 0) {
+        throw new Error("Location not found");
+      }
+
+      const coordinates = {
+        latitude: data.features[0].center[1],
+        longitude: data.features[0].center[0],
+      };
+      console.log(coordinates);
+
       if (formData.imageUrls.length < 1)
         return setError("You must upload at least one image");
       setLoading(true);
@@ -110,12 +132,16 @@ const Sell = () => {
         body: JSON.stringify({
           ...formData,
           Realtor: currentUser.username,
+          coordinates: {
+            latitude: coordinates.latitude,
+            longitude: coordinates.longitude,
+          },
         }),
       });
-      const data = await res.json();
+      const datas = await res.json();
       setLoading(false);
-      if (!data.success) {
-        setError(data.message);
+      if (!datas.success) {
+        setError(datas.message);
       }
     } catch (error) {
       setError(error.message);

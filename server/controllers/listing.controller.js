@@ -2,7 +2,7 @@ import { errorHandeler } from "../utils/error.js";
 import Listing from "../models/listings.model.js"; 
 
 export const createlisting = async (req, res, next) => {
-  const {name,description,address,Price,bathrooms,bedrooms,parking,offer,imageUrls,Realtor,} = req.body;
+  const {name,description,address,Price,bathrooms,bedrooms,parking,offer,imageUrls,Realtor,coordinates} = req.body;
 
   try {
     const alreadyListed = await Listing.findOne({ address });
@@ -25,6 +25,7 @@ export const createlisting = async (req, res, next) => {
       offer,
       imageUrls,
       Realtor,
+      coordinates
     });
     await newListing.save();
 

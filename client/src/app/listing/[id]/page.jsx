@@ -7,14 +7,14 @@ import { useParams } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { MdLocationOn, MdBathroom, MdBed } from "react-icons/md";
+import Map from "@/components/Map";
 
 const Listing = () => {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  
-  
+
   const { id } = useParams();
 
   useEffect(() => {
@@ -47,9 +47,9 @@ const Listing = () => {
       setIsMobile(window.innerWidth <= 640);
     };
     handleResize();
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -61,13 +61,13 @@ const Listing = () => {
   };
 
   const divStyle = {
-    display: isMobile ? "column" : "flex",
+    display: isMobile ? "grid" : "flex",
     alignItems: "center",
-    justifyContent: "space-between"
-  }
+    justifyContent: "space-between",
+  };
 
   return (
-    <div >
+    <div>
       <div
         style={{
           marginLeft: "25px",
@@ -124,143 +124,161 @@ const Listing = () => {
                 ))}
               </Swiper>
             </div>
-            <div style={{ padding: "20px" }}>
-              <p
-                style={{
-                  color: "#374151",
-                  marginTop: "1rem",
-                  fontSize: "2rem",
-                }}
-              >
-                {listing.name}
-              </p>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+            <div style={divStyle}>
+              <div style={{ padding: "20px" }}>
                 <p
-                style={{
-                  color: "#374151",
-                  marginTop: "1rem",
-                  fontSize: "1.5rem",
+                  style={{
+                    color: "#374151",
+                    marginTop: "1rem",
+                    fontSize: "2rem",
                   }}
+                >
+                  {listing.name}
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <p
+                    style={{
+                      color: "#374151",
+                      marginTop: "1rem",
+                      fontSize: "1.5rem",
+                    }}
                   >
-                <MdLocationOn style={{color:"green"}}/> {listing.name}
-              </p>
+                    <MdLocationOn style={{ color: "green" }} />{" "}
+                    {listing.address}
+                  </p>
+                </div>
+                <p style={{ color: "#374151", marginTop: "1rem" }}>
+                  <span style={{ fontWeight: "bold", color: "black" }}>
+                    Description -{" "}
+                  </span>
+                  {listing.description}
+                </p>
+                <div style={{ display: "flex" }}>
+                  <p style={{ fontWeight: "bold", color: "black" }}>
+                    Highlights -
+                  </p>
+                  <ul
+                    style={{
+                      color: "#34d399",
+                      fontWeight: "bold",
+                      fontSize: "0.875rem",
+                      alignItems: "center",
+                    }}
+                  >
+                    <li
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.25rem",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <MdBed />
+                      {listing.bedrooms > 1
+                        ? `${listing.bedrooms} bedrooms `
+                        : `${listing.bedrooms} bedroom `}
+                    </li>
+                    <li
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.25rem",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <MdBathtub />
+                      {listing.bathrooms > 1
+                        ? `${listing.bathrooms} bathrooms `
+                        : `${listing.bathrooms} bathroom `}
+                    </li>
+                    <li
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.25rem",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {listing.parking ? <MdDone /> : ""}
+                      {listing.parking ? "Parking spot" : ""}
+                    </li>
+                    <li
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.25rem",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {listing.offer ? <MdDone /> : ""}
+                      {listing.offer ? "Offer" : ""}
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <p style={{ color: "#374151", marginTop: "1rem" }}>
-                <span style={{ fontWeight: "bold", color: "black" }}>
-                  Description -{" "}
-                </span>
-                {listing.description}
-              </p>
-              <div style={{display:"flex"}}>
-              <p style={{ fontWeight: "bold", color: "black" }}>
-                  Highlights -
-              </p> 
-              <ul
+              <div
                 style={{
-                  color: "#34d399",
-                  fontWeight: "bold",
-                  fontSize: "0.875rem",
-                  alignItems: "center",
+                  width: "250px",
+                  marginRight: "20px",
+                  marginBottom: "20px",
                 }}
               >
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.25rem",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <MdBed />
-                  {listing.bedrooms > 1
-                    ? `${listing.bedrooms} bedrooms `
-                    : `${listing.bedrooms} bedroom `}
-                </li>
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.25rem",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <MdBathtub />
-                  {listing.bathrooms > 1
-                    ? `${listing.bathrooms} bathrooms `
-                    : `${listing.bathrooms} bathroom `}
-                </li>
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.25rem",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {listing.parking ? <MdDone/> : ""}
-                  {listing.parking ? "Parking spot" : ""}
-                </li>
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.25rem",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {listing.offer ? <MdDone/> : ""}
-                  {listing.offer ? "Offer" : ""}
-                </li>
-              </ul>
+                <HoverButtonWrapper>
+                  <button
+                    style={{
+                      fontFamily: '"Roboto", sans-serif',
+                      textTransform: "uppercase",
+                      outline: "0",
+                      background: "#2980b9",
+                      width: "100%",
+                      border: "0",
+                      padding: "15px",
+                      color: "#FFFFFF",
+                      fontSize: "14px",
+                      WebkitTransition: "all 0.3s ease",
+                      transition: "all 0.3s ease",
+                      cursor: "pointer",
+                      borderRadius: "50px",
+                      marginBottom: "20px",
+                    }}
+                  >
+                    Add to favourites
+                  </button>
+                </HoverButtonWrapper>
+                <HoverButtonWrapper>
+                  <button
+                    style={{
+                      fontFamily: '"Roboto", sans-serif',
+                      textTransform: "uppercase",
+                      outline: "0",
+                      background: "#2980b9",
+                      width: "100%",
+                      border: "0",
+                      padding: "15px",
+                      color: "#FFFFFF",
+                      fontSize: "14px",
+                      WebkitTransition: "all 0.3s ease",
+                      transition: "all 0.3s ease",
+                      cursor: "pointer",
+                      borderRadius: "50px",
+                    }}
+                  >
+                    Buy now
+                  </button>
+                </HoverButtonWrapper>
               </div>
+            </div>
+            <div>
+              <Map coordinates={listing.coordinates} styleURL="mapbox://styles/mapbox/streets-v12"/>
             </div>
           </div>
         )}
-      </div>
-      <div style={{width:"250px",marginLeft:"20px",marginBottom:"20px"}}>
-      <HoverButtonWrapper>
-            <button
-              style={{
-                fontFamily: '"Roboto", sans-serif',
-                textTransform: "uppercase",
-                outline: "0",
-                background: "#2980b9",
-                width: "100%",
-                border: "0",
-                padding: "15px",
-                color: "#FFFFFF",
-                fontSize: "14px",
-                WebkitTransition: "all 0.3s ease",
-                transition: "all 0.3s ease",
-                cursor: "pointer",
-                borderRadius: "50px",
-                marginBottom:"20px"
-              }}
-            >
-              Add to favourites
-            </button>
-          </HoverButtonWrapper>
-          <HoverButtonWrapper>
-            <button
-              style={{
-                fontFamily: '"Roboto", sans-serif',
-                textTransform: "uppercase",
-                outline: "0",
-                background: "#2980b9",
-                width: "100%",
-                border: "0",
-                padding: "15px",
-                color: "#FFFFFF",
-                fontSize: "14px",
-                WebkitTransition: "all 0.3s ease",
-                transition: "all 0.3s ease",
-                cursor: "pointer",
-                borderRadius: "50px",
-              }}
-            >
-              Buy now
-            </button>
-          </HoverButtonWrapper>
       </div>
     </div>
   );
