@@ -24,7 +24,7 @@ const Sell = () => {
   });
   const [imageUploadError, setImageUploadError] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e) => {
@@ -104,14 +104,14 @@ const Sell = () => {
       const response = await fetch(url);
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        setError(`HTTP error! Status: ${response.status}`);
       }
 
       const data = await response.json();
       console.log(data.features[0].center[1]);
 
       if (data.features.length === 0) {
-        throw new Error("Location not found");
+        setError("Location not found");
       }
 
       const coordinates = {
@@ -139,12 +139,16 @@ const Sell = () => {
         }),
       });
       const datas = await res.json();
+      console.log(datas)
       setLoading(false);
       if (!datas.success) {
         setError(datas.message);
+        console.log(error);
+        return;
       }
     } catch (error) {
       setError(error.message);
+      console.log(error);
       setLoading(false);
     }
   };

@@ -1,20 +1,18 @@
 "use client";
-import HoverButtonWrapper from "@/components/HoverButtonWrapper";
+import HoverButtonWrapper from "@/components/HoverButtonWrapper.jsx";
 import React from "react";
-import { MdBathtub, MdDone, MdOutlineReply } from "react-icons/md";
+import { MdBathtub, MdDone, MdLocationOn, MdOutlineReply, MdBed } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { MdLocationOn, MdBathroom, MdBed } from "react-icons/md";
-import Map from "@/components/Map";
+import Map from "@/components/Map.jsx";
 
 const Listing = () => {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
   const { id } = useParams();
 
   useEffect(() => {

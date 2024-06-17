@@ -1,16 +1,24 @@
 import { errorHandeler } from "../utils/error.js";
-import Listing from "../models/listings.model.js"; 
+import Listing from "../models/listings.model.js";
 
 export const createlisting = async (req, res, next) => {
-  const {name,description,address,Price,bathrooms,bedrooms,parking,offer,imageUrls,Realtor,coordinates} = req.body;
+  const {
+    name,
+    description,
+    address,
+    Price,
+    bathrooms,
+    bedrooms,
+    parking,
+    offer,
+    imageUrls,
+    Realtor,
+    coordinates,
+  } = req.body;
 
-  try {
-    const alreadyListed = await Listing.findOne({ address });
-    if(alreadyListed) {
-      return next(errorHandeler("This address has already been listed"));
-    }
-  } catch (error) {
-    return next(errorHandeler(error));
+  const alreadyListed = await Listing.findOne({ address });
+  if (alreadyListed) {
+    return next(errorHandeler(403, "This address has already been listed"));
   }
 
   try {
@@ -25,7 +33,7 @@ export const createlisting = async (req, res, next) => {
       offer,
       imageUrls,
       Realtor,
-      coordinates
+      coordinates,
     });
     await newListing.save();
 
@@ -35,7 +43,7 @@ export const createlisting = async (req, res, next) => {
       message: "Listing created successfully!",
     });
   } catch (error) {
-    return next(error);
+    return next(errorHandeler(error));
   }
 };
 
@@ -43,14 +51,20 @@ export const getListings = async (req, res, next) => {
   try {
     const limit = parseInt(req.query.limit) || 9;
     const startIndex = parseInt(req.query.startIndex) || 0;
-    const offer = req.query.offer !== undefined && req.query.offer !== 'false' ? req.query.offer === 'true' : undefined;
-    const parking = req.query.parking !== undefined && req.query.parking !== 'false' ? req.query.parking === 'true' : undefined;
-    const searchTerm = req.query.searchTerm || '';
-    const sort = req.query.sort || 'createdAt';
-    const order = req.query.order === 'asc' ? 1 : -1;
+    const offer =
+      req.query.offer !== undefined && req.query.offer !== "false"
+        ? req.query.offer === "true"
+        : undefined;
+    const parking =
+      req.query.parking !== undefined && req.query.parking !== "false"
+        ? req.query.parking === "true"
+        : undefined;
+    const searchTerm = req.query.searchTerm || "";
+    const sort = req.query.sort || "createdAt";
+    const order = req.query.order === "asc" ? 1 : -1;
 
     const whereClause = {
-      name: { $regex: searchTerm, $options: 'i' }, 
+      name: { $regex: searchTerm, $options: "i" },
       ...(offer !== undefined && { offer }),
       ...(parking !== undefined && { parking }),
     };
@@ -62,7 +76,7 @@ export const getListings = async (req, res, next) => {
 
     return res.status(200).json(listings);
   } catch (error) {
-    next(error);
+    next(errorHandeler(error));
   }
 };
 
@@ -70,11 +84,10 @@ export const getOneListing = async (req, res, next) => {
   try {
     const listing = await Listing.findById(req.params.id);
     if (!listing) {
-      return next(errorHandler(404, 'Listing not found!'));
+      return next(errorHandeler(404, "Listing not found!"));
     }
     res.status(200).json(listing);
   } catch (error) {
-    next(error);
+    return next(errorHandeler(error));
   }
 };
-
