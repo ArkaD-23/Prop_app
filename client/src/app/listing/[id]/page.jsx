@@ -1,7 +1,13 @@
 "use client";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper.jsx";
 import React from "react";
-import { MdBathtub, MdDone, MdLocationOn, MdOutlineReply, MdBed } from "react-icons/md";
+import {
+  MdBathtub,
+  MdDone,
+  MdLocationOn,
+  MdOutlineReply,
+  MdBed,
+} from "react-icons/md";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -122,6 +128,13 @@ const Listing = () => {
                 ))}
               </Swiper>
             </div>
+            <hr
+              style={{
+                border: "none",
+                borderTop: "2px solid grey", 
+                width: "100%", 
+              }}
+            />
             <div style={divStyle}>
               <div style={{ padding: "20px" }}>
                 <p
@@ -273,7 +286,10 @@ const Listing = () => {
               </div>
             </div>
             <div>
-              <Map coordinates={listing.coordinates} styleURL="mapbox://styles/mapbox/streets-v12"/>
+              <Map
+                coordinates={listing.coordinates}
+                styleURL="mapbox://styles/mapbox/streets-v12"
+              />
             </div>
           </div>
         )}

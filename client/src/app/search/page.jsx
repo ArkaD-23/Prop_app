@@ -4,8 +4,8 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import styles from "./buy.module.css";
 import Propcard from "@/components/Propcard.jsx";
-import HoverButtonWrapper from "@/components/HoverButtonWrapper";
 import Link from "next/link";
+import { MdSearch } from "react-icons/md";
 
 const Buy = () => {
   const [sidebardata, setSidebardata] = useState({
@@ -91,8 +91,7 @@ const Buy = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     const urlParams = new URLSearchParams();
     urlParams.set("searchTerm", sidebardata.searchTerm);
     urlParams.set("parking", sidebardata.parking);
@@ -120,6 +119,48 @@ const Buy = () => {
     }
   };
 
+  const handleChangeAndSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setShowMore(false);
+  
+    const updatedData = { ...sidebardata };
+  
+    if (e.target.id === "parking" || e.target.id === "offer") {
+      updatedData[e.target.id] = e.target.checked;
+    }
+  
+    if (e.target.id === "sort_order") {
+      const [sort, order] = e.target.value.split("_");
+      updatedData.sort = sort || "createdAt";
+      updatedData.order = order || "desc";
+    }
+  
+    setSidebardata(updatedData);
+  
+    const urlParams = new URLSearchParams();
+    urlParams.set("searchTerm", updatedData.searchTerm);
+    urlParams.set("parking", updatedData.parking);
+    urlParams.set("offer", updatedData.offer);
+    urlParams.set("sort", updatedData.sort);
+    urlParams.set("order", updatedData.order);
+    const searchQuery = urlParams.toString();
+  
+    try {
+      const res = await fetch(`/server/listing/getall?${searchQuery}`);
+      const data = await res.json();
+      setListings(Array.isArray(data) ? data : []);
+      setShowMore(data.length > 8);
+      router.push(`/search?${searchQuery}`);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching listings:", error);
+      setListings([]);
+      setLoading(false);
+    }
+  };
+  
+
   const onShowMoreClick = async () => {
     const numberOfListings = listings.length;
     const startIndex = numberOfListings;
@@ -135,7 +176,15 @@ const Buy = () => {
   };
 
   return (
+    
     <div className={styles.container}>
+       <hr
+              style={{
+                border: "none",
+                borderTop: "2px solid lightgrey", 
+                width: "100%", 
+              }}
+            />
       <div
         style={{
           padding: "1.75rem",
@@ -143,16 +192,17 @@ const Buy = () => {
           justifyContent: "center",
         }}
       >
-        <form
-          onSubmit={handleSubmit}
+        <div
           style={{
             display: "flex",
-            flexDirection: "column",
-            width: "360px",
+            width: "100%",
             gap: "2rem",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem",background: "#f2f2f2",
+                padding: "10px",
+                boxSizing: "border-box",
+                borderRadius: "50px", }}>
             <input
               type="text"
               id="searchTerm"
@@ -163,8 +213,6 @@ const Buy = () => {
                 background: "#f2f2f2",
                 width: "100%",
                 border: "0",
-                margin: "0 0 15px",
-                padding: "15px",
                 boxSizing: "border-box",
                 fontSize: "14px",
                 borderRadius: "50px",
@@ -172,6 +220,9 @@ const Buy = () => {
               value={sidebardata.searchTerm}
               onChange={handleChange}
             />
+            <div style={{border:"0", hover:"0"}} onClick={handleSubmit}>
+              <MdSearch />
+            </div>
           </div>
           <div
             style={{
@@ -187,7 +238,7 @@ const Buy = () => {
                 type="checkbox"
                 id="parking"
                 style={{ width: "1.25rem" }}
-                onChange={handleChange}
+                onChange={handleChangeAndSubmit}
                 checked={sidebardata.parking}
               />
               <span>Parking</span>
@@ -197,7 +248,7 @@ const Buy = () => {
                 type="checkbox"
                 id="offer"
                 style={{ width: "1.25rem" }}
-                onChange={handleChange}
+                onChange={handleChangeAndSubmit}
                 checked={sidebardata.offer}
               />
               <span>Offer</span>
@@ -212,7 +263,7 @@ const Buy = () => {
                 borderRadius: "0.5rem",
                 padding: "0.75rem",
               }}
-              onChange={handleChange}
+              onChange={handleChangeAndSubmit}
             >
               <option value="Price_desc">Price high to low</option>
               <option value="Price_asc">Price low to high</option>
@@ -220,42 +271,16 @@ const Buy = () => {
               <option value="createdAt_asc">Oldest</option>
             </select>
           </div>
-          <HoverButtonWrapper>
-            <button
-              style={{
-                fontFamily: '"Roboto", sans-serif',
-                textTransform: "uppercase",
-                outline: "0",
-                background: "#2980b9",
-                width: "100%",
-                border: "0",
-                padding: "15px",
-                color: "#FFFFFF",
-                fontSize: "14px",
-                WebkitTransition: "all 0.3s ease",
-                transition: "all 0.3s ease",
-                cursor: "pointer",
-                borderRadius: "50px",
-              }}
-            >
-              Search
-            </button>
-          </HoverButtonWrapper>
-        </form>
+        </div>
       </div>
+      <hr
+              style={{
+                border: "none",
+                borderTop: "2px solid lightgrey", 
+                width: "100%", 
+              }}
+            />
       <div style={{ flex: 1 }}>
-        <h1
-          style={{
-            fontSize: "1.875rem",
-            fontWeight: "600",
-            borderBottom: "1px solid",
-            padding: "0.75rem",
-            color: "#2f4f4f",
-            marginTop: "1.25rem",
-          }}
-        >
-          Listing results:
-        </h1>
         <div
           style={{
             padding: "1.75rem",
@@ -285,7 +310,10 @@ const Buy = () => {
           {!loading &&
             listings &&
             listings.map((listing) => (
-              <Link href={`/listing/${listing._id}`} style={{textDecoration:'none'}}>
+              <Link
+                href={`/listing/${listing._id}`}
+                style={{ textDecoration: "none" }}
+              >
                 <Propcard key={listing._id} listing={listing} />
               </Link>
             ))}
