@@ -124,21 +124,21 @@ const Buy = () => {
     e.preventDefault();
     setLoading(true);
     setShowMore(false);
-  
+
     const updatedData = { ...sidebardata };
-  
+
     if (e.target.id === "parking" || e.target.id === "offer") {
       updatedData[e.target.id] = e.target.checked;
     }
-  
+
     if (e.target.id === "sort_order") {
       const [sort, order] = e.target.value.split("_");
       updatedData.sort = sort || "createdAt";
       updatedData.order = order || "desc";
     }
-  
+
     setSidebardata(updatedData);
-  
+
     const urlParams = new URLSearchParams();
     urlParams.set("searchTerm", updatedData.searchTerm);
     urlParams.set("parking", updatedData.parking);
@@ -146,7 +146,7 @@ const Buy = () => {
     urlParams.set("sort", updatedData.sort);
     urlParams.set("order", updatedData.order);
     const searchQuery = urlParams.toString();
-  
+
     try {
       const res = await fetch(`/server/listing/getall?${searchQuery}`);
       const data = await res.json();
@@ -160,7 +160,6 @@ const Buy = () => {
       setLoading(false);
     }
   };
-  
 
   const onShowMoreClick = async () => {
     const numberOfListings = listings.length;
@@ -177,20 +176,20 @@ const Buy = () => {
   };
 
   return (
-    
     <div className={styles.container}>
-       <hr
-              style={{
-                border: "none",
-                borderTop: "2px solid lightgrey", 
-                width: "100%", 
-              }}
-            />
+      <hr
+        style={{
+          border: "none",
+          borderTop: "2px solid lightgrey",
+          width: "100%",
+        }}
+      />
       <div
         style={{
           padding: "1.75rem",
           display: "flex",
           justifyContent: "center",
+          flexWrap: "wrap",
         }}
       >
         <div
@@ -198,12 +197,22 @@ const Buy = () => {
             display: "flex",
             width: "100%",
             gap: "2rem",
+            flexWrap: "wrap",
+            alignItems: "center",
+            //justifyContent:"center"
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem",background: "#f2f2f2",
-                padding: "10px",
-                boxSizing: "border-box",
-                borderRadius: "50px", }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              background: "#f2f2f2",
+              padding: "10px",
+              height: "23px",
+              borderRadius: "50px",
+            }}
+          >
             <input
               type="text"
               id="searchTerm"
@@ -221,40 +230,32 @@ const Buy = () => {
               value={sidebardata.searchTerm}
               onChange={handleChange}
             />
-            <div style={{border:"0", hover:"0"}} onClick={handleSubmit}>
+            <div style={{ border: "0", hover: "0" }} onClick={handleSubmit}>
               <MdSearch />
             </div>
           </div>
-          <div
-            style={{
-              display: "flex",
-              gap: "0.5rem",
-              flexWrap: "wrap",
-              alignItems: "center",
-            }}
-          >
-            <label style={{ fontWeight: "600" }}>Amenities:</label>
-            <div style={{ display: "flex", gap: "0.5rem" }}>
-              <input
-                type="checkbox"
-                id="parking"
-                style={{ width: "1.25rem" }}
-                onChange={handleChangeAndSubmit}
-                checked={sidebardata.parking}
-              />
-              <span>Parking</span>
-            </div>
-            <div style={{ display: "flex", gap: "0.5rem" }}>
-              <input
-                type="checkbox"
-                id="offer"
-                style={{ width: "1.25rem" }}
-                onChange={handleChangeAndSubmit}
-                checked={sidebardata.offer}
-              />
-              <span>Offer</span>
-            </div>
+
+          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+            <input
+              type="checkbox"
+              id="parking"
+              style={{ width: "1.25rem" }}
+              onChange={handleChangeAndSubmit}
+              checked={sidebardata.parking}
+            />
+            <span>Parking</span>
           </div>
+          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+            <input
+              type="checkbox"
+              id="offer"
+              style={{ width: "1.25rem" }}
+              onChange={handleChangeAndSubmit}
+              checked={sidebardata.offer}
+            />
+            <span>Offer</span>
+          </div>
+
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <select
               defaultValue={"createdAt_desc"}
@@ -275,59 +276,64 @@ const Buy = () => {
         </div>
       </div>
       <hr
-              style={{
-                border: "none",
-                borderTop: "2px solid lightgrey", 
-                width: "100%", 
-              }}
-            />
-        <Map listings={listings} styleURL="mapbox://styles/mapbox/streets-v12"/>
-      <div style={{ flex: 1 }}>
-        <div
-          style={{
-            padding: "1.75rem",
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "1rem",
-          }}
-        >
-          {!loading && listings.length === 0 && (
-            <p style={{ fontSize: "1.25rem", color: "#2f4f4f" }}>
-              No listing found!
-            </p>
-          )}
-          {loading && (
-            <p
-              style={{
-                fontSize: "1.25rem",
-                color: "#2f4f4f",
-                textAlign: "center",
-                width: "100%",
-              }}
-            >
-              Loading...
-            </p>
-          )}
-
-          {!loading &&
-            listings &&
-            listings.map((listing) => (
-              <Link
-                href={`/listing/${listing._id}`}
-                style={{ textDecoration: "none" }}
+        style={{
+          border: "none",
+          borderTop: "2px solid lightgrey",
+          width: "100%",
+        }}
+      />
+      <div style={{display:"flex"}}>
+        <div style={{ flex: 1 }}>
+          <div
+            style={{
+              padding: "0 2rem 2rem 2rem",
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "2rem",
+            }}
+          >
+            {!loading && listings.length === 0 && (
+              <p style={{ fontSize: "1.25rem", color: "#2f4f4f" }}>
+                No listing found!
+              </p>
+            )}
+            {loading && (
+              <p
+                style={{
+                  fontSize: "1.25rem",
+                  color: "#2f4f4f",
+                  textAlign: "center",
+                  width: "100%",
+                }}
               >
-                <Propcard key={listing._id} listing={listing} />
-              </Link>
-            ))}
-          {showMore && (
-            <button
-              onClick={onShowMoreClick}
-              className="text-green-700 hover:underline p-7 text-center w-full"
-            >
-              Show more
-            </button>
-          )}
+                Loading...
+              </p>
+            )}
+
+            {!loading &&
+              listings &&
+              listings.map((listing) => (
+                <Link
+                  href={`/listing/${listing._id}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Propcard key={listing._id} listing={listing} />
+                </Link>
+              ))}
+            {showMore && (
+              <button
+                onClick={onShowMoreClick}
+                className="text-green-700 hover:underline p-7 text-center w-full"
+              >
+                Show more
+              </button>
+            )}
+          </div>
         </div>
+        <Map
+          listings={listings}
+          styleURL="mapbox://styles/mapbox/streets-v12"
+        />
       </div>
     </div>
   );

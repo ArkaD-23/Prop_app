@@ -13,7 +13,7 @@ const Propcard = ({ listing }) => {
     >
       <div
         style={{
-          width: "24rem",  
+          width: "20rem",  
           boxShadow: "0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)",
         }}
       >
@@ -29,7 +29,7 @@ const Propcard = ({ listing }) => {
             alt="listing cover"
             style={{
               width: "100%",  
-              height: "250px", 
+              height: "180px", 
               objectFit: "cover", 
             }}
           />
@@ -121,8 +121,6 @@ const Propcard = ({ listing }) => {
         </div>
         <div
           style={{
-            paddingTop: "0.5rem",
-            paddingBottom: "0.5rem",
             borderTop: "1px solid #D1D5DB",
             backgroundColor: "#F3F4F6",
             borderRadius: "0.5rem",

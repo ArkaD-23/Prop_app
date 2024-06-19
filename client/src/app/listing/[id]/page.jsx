@@ -147,7 +147,7 @@ const Listing = () => {
             <hr
               style={{
                 border: "none",
-                borderTop: "2px solid grey", 
+                borderTop: "2px solid lightgrey", 
                 width: "100%", 
               }}
             />
