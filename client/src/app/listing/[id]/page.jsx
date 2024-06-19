@@ -19,6 +19,7 @@ const Listing = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [allListings, setAllListings] = useState([]);
   const { id } = useParams();
 
   useEffect(() => {
@@ -43,7 +44,22 @@ const Listing = () => {
         console.log("second");
       }
     };
+
+    const fetchAllListings = async () => {
+      try {
+        const res = await fetch("/server/listing/getall");
+        const data = await res.json();
+        console.log(data);
+        setAllListings(Array.isArray(data) ? data : []);
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch all listings", error);
+        setAllListings([]);
+      }
+    };
+
     fetchListing();
+    fetchAllListings();
   }, [id]);
 
   useEffect(() => {
@@ -286,10 +302,7 @@ const Listing = () => {
               </div>
             </div>
             <div>
-              <Map
-                coordinates={listing.coordinates}
-                styleURL="mapbox://styles/mapbox/streets-v12"
-              />
+            <Map listings={allListings} styleURL="mapbox://styles/mapbox/streets-v12" highlightedListingId={id} />
             </div>
           </div>
         )}

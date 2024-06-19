@@ -1,16 +1,13 @@
-// components/Map.js
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css'; // Import Mapbox GL CSS
 import { createRoot } from 'react-dom/client';
-import Propcard from './Propcard'; // Make sure to import your Propcard component
 import Mapcard from './Mapcard';
 
-const Map = ({ listings, styleURL }) => {
+const Map = ({ listings, styleURL, highlightedListingId }) => {
   const mapContainerRef = useRef(null);
-
   useEffect(() => {
-    if (listings.length === 0) return; // Ensure listings is not empty
+    if (!listings || listings.length === 0) return;
 
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
     const map = new mapboxgl.Map({
@@ -22,20 +19,21 @@ const Map = ({ listings, styleURL }) => {
 
     listings.forEach(listing => {
       const popupNode = document.createElement('div');
-      //popupNode.style.backgroundColor="lightblue";
       const root = createRoot(popupNode);
       root.render(<Mapcard listing={listing} />);
-
-      new mapboxgl.Marker()
+    
+      const highlighted = (listing._id === highlightedListingId);
+    
+      new mapboxgl.Marker({ color: highlighted ? "#b40219" : "#3bb2d0"})
         .setLngLat([listing.coordinates.longitude, listing.coordinates.latitude])
         .setPopup(
           new mapboxgl.Popup({ offset: 25 }).setDOMContent(popupNode)
         )
         .addTo(map);
     });
-
+    
     return () => map.remove();
-  }, [listings, styleURL]); // Add styleURL to dependencies
+  }, [listings, styleURL, highlightedListingId]);
 
   return (
     <div
