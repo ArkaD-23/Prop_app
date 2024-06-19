@@ -6,6 +6,7 @@ import styles from "./buy.module.css";
 import Propcard from "@/components/Propcard.jsx";
 import Link from "next/link";
 import { MdSearch } from "react-icons/md";
+import Map from "@/components/Map";
 
 const Buy = () => {
   const [sidebardata, setSidebardata] = useState({
@@ -280,13 +281,14 @@ const Buy = () => {
                 width: "100%", 
               }}
             />
+        <Map listings={listings} styleURL="mapbox://styles/mapbox/streets-v12"/>
       <div style={{ flex: 1 }}>
         <div
           style={{
             padding: "1.75rem",
             display: "flex",
             flexWrap: "wrap",
-            gap: "8rem",
+            gap: "1rem",
           }}
         >
           {!loading && listings.length === 0 && (
