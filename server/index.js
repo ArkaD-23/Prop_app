@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth.router.js";
 import userRoutes from "./routes/user.router.js"
 import listRoutes from "./routes/listing.router.js"
 import mongoose from "mongoose";
+import { deleteListing } from "./controllers/listing.controller.js";
 
 dotenv.config();
 
@@ -25,7 +26,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.listen(3000, () => {
-    console.log("Server is running on port 3000..........")
+    console.log("Server is running on port 3000..........");
 });
 
 app.use("/server/user",userRoutes);

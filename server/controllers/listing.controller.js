@@ -91,3 +91,54 @@ export const getOneListing = async (req, res, next) => {
     return next(errorHandeler(error));
   }
 };
+
+export const updateListing = async (req, res, next) => {
+  const listing = await Listing.findById(req.params.id);
+  if (!listing) {
+    return next(errorHandeler(404, "Listing not found!"));
+  };
+  const { address } = req.body;
+  const alreadyListed = await Listing.findOne({ address });
+  if (alreadyListed) {
+    return next(errorHandeler(403, "This address has already been listed"));
+  }
+
+  try {
+    const updatedListing = await Listing.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          name:req.body.name,
+          description:req.body.description,
+          address:req.body.address,
+          Price:req.body.Price,
+          bathrooms:req.body.bathrooms,
+          bedrooms:req.body.bedrooms,
+          parking:req.body.parking,
+          offer:req.body.offer,
+          imageUrls:req.body.imageUrls,
+          Realtor:req.body.Realtor,
+          coordinates:req.body.coordinates,
+        },
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedListing);
+  } catch (error) {
+    next(errorHandeler(error));
+  }
+};
+
+export const deleteListing = async (req, res, next) => {
+  const listing = await Listing.findById(req.params.id);
+  if (!listing) {
+    return next(errorHandeler(404, "Listing not found!"));
+  }
+
+  try {
+    await Listing.findByIdAndDelete(req.params.id);
+    res.status(200).json("Listing has been deleted!");
+  } catch (error) {
+    next(errorHandeler(error));
+  }
+};
