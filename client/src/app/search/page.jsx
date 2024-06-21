@@ -330,10 +330,12 @@ const Buy = () => {
             )}
           </div>
         </div>
+        <div style={{width:"800px"}}>
         <Map
           listings={listings}
           styleURL="mapbox://styles/mapbox/streets-v12"
         />
+        </div>
       </div>
     </div>
   );
