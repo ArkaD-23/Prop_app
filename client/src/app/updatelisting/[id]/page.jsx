@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { useAppSelector } from "@/store/hooks/hooks.js";
 import axios from "axios";
 import styles from "./update.module.css";
@@ -10,13 +10,23 @@ import { MdDelete } from "react-icons/md";
 const Update = () => {
   const { currentUser } = useAppSelector((state) => state.user);
   const [files, setFiles] = useState([]);
-  const [formData, setFormData] = useState({});
   const [imageUploadError, setImageUploadError] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [listing, setListing] = useState(null);
   const { id } = useParams();
+  const [formData, setFormData] = useState({
+    imageUrls: [],
+    name: '',
+    description: '',
+    address: '',
+    bedrooms: 1,
+    bathrooms: 1,
+    Price: 50,
+    offer: false,
+    parking: false,
+  });
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -30,6 +40,7 @@ const Update = () => {
           setLoading(false);
           return;
         }
+        setFormData(data);
         setListing(data);
         setLoading(false);
         setError(false);

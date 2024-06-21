@@ -16,9 +16,9 @@ const Sell = () => {
     name: "",
     description: "",
     address: "",
-    bedrooms: "1",
-    bathrooms: "1",
-    Price: "50",
+    bedrooms: 1,
+    bathrooms: 1,
+    Price: 50,
     offer: false,
     parking: false,
   });
@@ -104,21 +104,19 @@ const Sell = () => {
       const response = await fetch(url);
 
       if (!response.ok) {
-        setError(`HTTP error! Status: ${response.status}`);
+        alert("Something went wrong!");
       }
 
       const data = await response.json();
-      console.log(data.features[0].center[1]);
 
       if (data.features.length === 0) {
-        setError("Location not found");
+        alert("Location not found");
       }
 
       const coordinates = {
         latitude: data.features[0].center[1],
         longitude: data.features[0].center[0],
       };
-      console.log(coordinates);
 
       if (formData.imageUrls.length < 1)
         return setError("You must upload at least one image");
@@ -147,7 +145,6 @@ const Sell = () => {
         return;
       }
     } catch (error) {
-      setError(error.message);
       console.log(error);
       setLoading(false);
     }

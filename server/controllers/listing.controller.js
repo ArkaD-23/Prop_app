@@ -97,11 +97,6 @@ export const updateListing = async (req, res, next) => {
   if (!listing) {
     return next(errorHandeler(404, "Listing not found!"));
   };
-  const { address } = req.body;
-  const alreadyListed = await Listing.findOne({ address });
-  if (alreadyListed) {
-    return next(errorHandeler(403, "This address has already been listed"));
-  }
 
   try {
     const updatedListing = await Listing.findByIdAndUpdate(
@@ -123,9 +118,9 @@ export const updateListing = async (req, res, next) => {
       },
       { new: true }
     );
-    res.status(200).json(updatedListing);
+    res.status(200).json({data:updatedListing , message:"Listing has been updated!"});
   } catch (error) {
-    next(errorHandeler(error));
+    next(errorHandeler(404, "Something went wrong!"));
   }
 };
 

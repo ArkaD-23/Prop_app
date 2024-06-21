@@ -138,7 +138,7 @@ const AllListings = () => {
                         >
                           Delete
                         </button>
-                        <Link href={`/update-listing/${listing._id}`}>
+                        <Link href={`/updatelisting/${listing._id}`}>
                           <button
                             style={{
                               color: "#38a169",

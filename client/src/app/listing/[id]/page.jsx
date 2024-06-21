@@ -13,6 +13,7 @@ import { useParams } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import Map from "@/components/Map.jsx";
+import { useAppSelector } from "@/store/hooks/hooks";
 
 const Listing = () => {
   const [listing, setListing] = useState(null);
@@ -21,6 +22,7 @@ const Listing = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [allListings, setAllListings] = useState([]);
   const { id } = useParams();
+  const { currentUser } = useAppSelector((state) => state.user);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -147,8 +149,8 @@ const Listing = () => {
             <hr
               style={{
                 border: "none",
-                borderTop: "2px solid lightgrey", 
-                width: "100%", 
+                borderTop: "2px solid lightgrey",
+                width: "100%",
               }}
             />
             <div style={divStyle}>
@@ -249,61 +251,69 @@ const Listing = () => {
                   </ul>
                 </div>
               </div>
-              <div
-                style={{
-                  width: "250px",
-                  marginRight: "20px",
-                  marginBottom: "20px",
-                }}
-              >
-                <HoverButtonWrapper>
-                  <button
-                    style={{
-                      fontFamily: '"Roboto", sans-serif',
-                      textTransform: "uppercase",
-                      outline: "0",
-                      background: "#2980b9",
-                      width: "100%",
-                      border: "0",
-                      padding: "15px",
-                      color: "#FFFFFF",
-                      fontSize: "14px",
-                      WebkitTransition: "all 0.3s ease",
-                      transition: "all 0.3s ease",
-                      cursor: "pointer",
-                      borderRadius: "50px",
-                      marginBottom: "20px",
-                    }}
-                  >
-                    Add to favourites
-                  </button>
-                </HoverButtonWrapper>
-                <HoverButtonWrapper>
-                  <button
-                    style={{
-                      fontFamily: '"Roboto", sans-serif',
-                      textTransform: "uppercase",
-                      outline: "0",
-                      background: "#2980b9",
-                      width: "100%",
-                      border: "0",
-                      padding: "15px",
-                      color: "#FFFFFF",
-                      fontSize: "14px",
-                      WebkitTransition: "all 0.3s ease",
-                      transition: "all 0.3s ease",
-                      cursor: "pointer",
-                      borderRadius: "50px",
-                    }}
-                  >
-                    Buy now
-                  </button>
-                </HoverButtonWrapper>
+              {currentUser.userType === "Customer" && (
+                <div
+                  style={{
+                    width: "250px",
+                    marginRight: "20px",
+                    marginBottom: "20px",
+                  }}
+                >
+                  <HoverButtonWrapper>
+                    <button
+                      style={{
+                        fontFamily: '"Roboto", sans-serif',
+                        textTransform: "uppercase",
+                        outline: "0",
+                        background: "#2980b9",
+                        width: "100%",
+                        border: "0",
+                        padding: "15px",
+                        color: "#FFFFFF",
+                        fontSize: "14px",
+                        WebkitTransition: "all 0.3s ease",
+                        transition: "all 0.3s ease",
+                        cursor: "pointer",
+                        borderRadius: "50px",
+                        marginBottom: "20px",
+                      }}
+                    >
+                      Add to favourites
+                    </button>
+                  </HoverButtonWrapper>
+                  <HoverButtonWrapper>
+                    <button
+                      style={{
+                        fontFamily: '"Roboto", sans-serif',
+                        textTransform: "uppercase",
+                        outline: "0",
+                        background: "#2980b9",
+                        width: "100%",
+                        border: "0",
+                        padding: "15px",
+                        color: "#FFFFFF",
+                        fontSize: "14px",
+                        WebkitTransition: "all 0.3s ease",
+                        transition: "all 0.3s ease",
+                        cursor: "pointer",
+                        borderRadius: "50px",
+                      }}
+                    >
+                      Buy now
+                    </button>
+                  </HoverButtonWrapper>
+                </div>
+              )}
+            </div>
+            {currentUser.userType === "Customer" && (
+              <div>
+                <Map
+                  listings={allListings}
+                  styleURL="mapbox://styles/mapbox/streets-v12"
+                  highlightedListingId={id}
+                />
               </div>
-            </div>
-            <div>
-            <Map listings={allListings} styleURL="mapbox://styles/mapbox/streets-v12" highlightedListingId={id} />
-            </div>
+            )}
           </div>
         )}
       </div>
