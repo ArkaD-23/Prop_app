@@ -10,8 +10,6 @@ import {
 } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
 import Map from "@/components/Map.jsx";
 import { useAppSelector } from "@/store/hooks/hooks";
 import ImageSlider from "@/components/ImageSlider";

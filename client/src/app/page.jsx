@@ -1,15 +1,60 @@
 "use client";
-import Image from "next/image";
 import styles from "./page.module.css";
 import Link from "next/link";
 import { useAppSelector } from "@/store/hooks/hooks";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
+import { useState, useEffect } from "react";
+import ImageSlider from "@/components/ImageSlider";
 
 export default function Home() {
   const { currentUser, loading } = useAppSelector((state) => state.user);
+  const [listings, setListings] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
+  const [images, setImages] = useState([]);
   const linkToUser =
     currentUser && currentUser.userType === "Customer" ? "/search" : "/sell";
   const linkTo = currentUser ? linkToUser : "/signin";
+
+  useEffect(() => {
+    const fetchListings = async () => {
+      try {
+        const res = await fetch("/server/listing/getall");
+        const data = await res.json();
+        console.log(data);
+        setListings(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Error fetching listings:", error);
+        setListings([]);
+      }
+    };
+    fetchListings();
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (listings.length < 6) {
+      const imageUrls = listings.map((listing) => listing.imageUrls[0]);
+      setImages(imageUrls);
+    }
+    else {
+      const imageUrls = listings.map((listing) => listing.imageUrls[0].slice(0,6));
+      setImages(imageUrls);
+    }
+  }, [listings]);
+
+  const containerStyles = {
+    width: "100%",
+    height: isMobile ? "30vh" : "70vh",
+  };
+
   return (
     <>
       <div className={styles.container}>
@@ -47,6 +92,9 @@ export default function Home() {
           </HoverButtonWrapper>
         </Link>
       </div>
+        <div style={containerStyles}>
+          <ImageSlider slides={images} />
+        </div>
     </>
   );
 }

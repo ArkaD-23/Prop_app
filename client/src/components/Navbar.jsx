@@ -35,6 +35,9 @@ export const Navbar = () => {
           </h1>
         </Link>
         <ul style={{ display: "flex", listStyle: "none", fontWeight: "600" }}>
+          <Link href="/" style={{ textDecoration: "none" }}>
+            <li style={{ color: "azure", margin: "0 15px" }}>Home</li>
+          </Link>
           {currentUser && (
             <>
               {currentUser.userType === "Customer" && (
@@ -42,8 +45,13 @@ export const Navbar = () => {
                   <Link href="/search" style={{ textDecoration: "none" }}>
                     <li style={{ color: "azure", margin: "0 15px" }}>Buy</li>
                   </Link>
-                  <Link href={`/favourites/${currentUser._id}`} style={{ textDecoration: "none" }}>
-                    <li style={{ color: "azure", margin: "0 15px" }}>Favourites</li>
+                  <Link
+                    href={`/favourites/${currentUser._id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <li style={{ color: "azure", margin: "0 15px" }}>
+                      Favourites
+                    </li>
                   </Link>
                 </>
               )}
@@ -52,7 +60,10 @@ export const Navbar = () => {
                   <Link href="/sell" style={{ textDecoration: "none" }}>
                     <li style={{ color: "azure", margin: "0 15px" }}>Sell</li>
                   </Link>
-                  <Link href={`/alllistings/${currentUser._id}`} style={{ textDecoration: "none" }}>
+                  <Link
+                    href={`/alllistings/${currentUser._id}`}
+                    style={{ textDecoration: "none" }}
+                  >
                     <li style={{ color: "azure", margin: "0 15px" }}>
                       Listings
                     </li>

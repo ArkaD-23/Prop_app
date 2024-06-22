@@ -41,7 +41,6 @@ const dotsContainerStyles = {
   display: "flex",
   justifyContent: "center",
   marginTop: "10px",
-  //color: "#fff"
 };
 
 const dotStyle = {
@@ -76,7 +75,7 @@ const ImageSlider = ({ slides }) => {
       <div onClick={goToPrevious} style={leftArrowStyles}>
         ❰
       </div>
-      <img src={slides[currentIndex]} alt="Slide" style={slideStyles} />
+      <img src={slides[currentIndex]} alt="Loading..." style={slideStyles} />
       <div onClick={goToNext} style={rightArrowStyles}>
         ❱
       </div>
