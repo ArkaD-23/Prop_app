@@ -165,7 +165,7 @@ export default function Signup() {
               borderRadius: "50px",
             }}
           >
-            <option value="">What you are here for?</option>
+            <option value="">What are you here for?</option>
             <option value="Realtor">To Sell</option>
             <option value="Customer">To Buy</option>
           </select>

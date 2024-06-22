@@ -14,6 +14,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import Map from "@/components/Map.jsx";
 import { useAppSelector } from "@/store/hooks/hooks";
+import ImageSlider from "@/components/ImageSlider";
 
 const Listing = () => {
   const [listing, setListing] = useState(null);
@@ -88,12 +89,18 @@ const Listing = () => {
     justifyContent: "space-between",
   };
 
+  const containerStyles = {
+    width: "100%",
+    height: isMobile ? "30vh" : "70vh",
+  };
+
   return (
     <div>
       <div
         style={{
           marginLeft: "25px",
           marginTop: "100px",
+          marginBottom: "25px",
           display: "flex",
           alignItems: "center",
           justifyContent: "left",
@@ -132,22 +139,12 @@ const Listing = () => {
         )}
         {listing && !loading && !error && (
           <div>
-            <div>
-              <Swiper
-                spaceBetween={50}
-                slidesPerView={1}
-                navigation
-                pagination={{ clickable: true }}
-              >
-                {listing.imageUrls.map((url, index) => (
-                  <SwiperSlide key={index}>
-                    <img src={url} alt={`Slide ${index}`} style={imageStyle} />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+            <div style={containerStyles}>
+              <ImageSlider slides={listing.imageUrls} />
             </div>
             <hr
               style={{
+                marginTop: "50px",
                 border: "none",
                 borderTop: "2px solid lightgrey",
                 width: "100%",
