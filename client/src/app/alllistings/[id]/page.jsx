@@ -1,6 +1,5 @@
 "use client";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
-import Propcard from "@/components/Propcard";
 import { useAppSelector } from "@/store/hooks/hooks";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -38,6 +37,24 @@ const AllListings = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  const handleListingDelete = async (listingId) => {
+    try {
+      const res = await fetch(`/server/listing/delete/${listingId}`, {
+        method:"DELETE"
+      });
+      const data = res.json();
+      if(data.success === false) {
+        alert("Something went wrong!");
+        return;
+      };
+      setListings((prev) =>
+        prev.filter((listing) => listing._id !== listingId)
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const cardStyle = {
     display: "flex",
