@@ -28,7 +28,7 @@ const Listing = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.user);
-  const [formData, setFormData] = useState(currentUser);
+  //const [formData, setFormData] = useState(currentUser);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -92,25 +92,14 @@ const Listing = () => {
   };
 
   const addToFavourites = async () => {
-    setFormData((prevState) => {
-      const updatedFavourites = prevState.favourites.concat(id);
-      return {
-        ...prevState,
-        favourites: updatedFavourites,
-      };
-    });
+    dispatch(updateUserStart);
     try {
-      dispatch(updateUserStart());
-      const updatedFormData = {
-        ...formData,
-        favourites: formData.favourites.concat(id),
-      };
-      const res = await fetch(`../../server/user/update/${currentUser._id}`, {
+      const res = await fetch(`../../server/user/favourites/${currentUser._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedFormData),
+        body: JSON.stringify({id}),
       });
       const data = await res.json();
       console.log(data);
@@ -118,10 +107,11 @@ const Listing = () => {
         dispatch(updateUserFailure(data));
         return;
       }
-      dispatch(updateUserSuccess(data));
-      alert("Added to favourites");
+      dispatch(updateUserSuccess({ ...currentUser, favourites: data.favourites }));
+      alert(data.message);
     } catch (error) {
       dispatch(updateUserFailure(error));
+      alert(error.message);
     }
   };
 

@@ -1,11 +1,11 @@
-"use client";
+"use client"
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
-import { useAppSelector } from "@/store/hooks/hooks";
+import { useAppSelector } from "@/store/hooks/hooks.js";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const AllListings = () => {
+const FavouriteListings = () => {
+  let count = 0;
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(false);
   const { currentUser } = useAppSelector((state) => state.user);
@@ -37,32 +37,12 @@ const AllListings = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  const handleListingDelete = async (listingId) => {
-    try {
-      const res = await fetch(`/server/listing/delete/${listingId}`, {
-        method:"DELETE"
-      });
-      const data = res.json();
-      if(data.success === false) {
-        alert("Something went wrong!");
-        return;
-      };
-      setListings((prev) =>
-        prev.filter((listing) => listing._id !== listingId)
-      );
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   const cardStyle = {
     display: "flex",
     flexDirection: "column",
     gap: "1rem",
     margin: isMobile ? "20px 20px" : "30px 22%",
   };
-
   return (
     <div>
       <h1
@@ -73,7 +53,7 @@ const AllListings = () => {
           marginTop: "150px",
         }}
       >
-        My Listings
+        My Favourites
       </h1>
       <div>
         {loading ? (
@@ -96,7 +76,8 @@ const AllListings = () => {
         {listings && listings.length > 0 && (
           <div style={cardStyle}>
             {listings.map((listing) => {
-              if (listing.Realtor === currentUser.username) {
+              if (currentUser.favourites.includes(listing._id)) {
+                count++;
                 return (
                   <HoverButtonWrapper>
                     <div
@@ -153,21 +134,8 @@ const AllListings = () => {
                             cursor: "pointer",
                           }}
                         >
-                          Delete
+                          Remove
                         </button>
-                        <Link href={`/updatelisting/${listing._id}`}>
-                          <button
-                            style={{
-                              color: "#38a169",
-                              textTransform: "uppercase",
-                              background: "none",
-                              border: "none",
-                              cursor: "pointer",
-                            }}
-                          >
-                            Edit
-                          </button>
-                        </Link>
                       </div>
                     </div>
                   </HoverButtonWrapper>
@@ -181,4 +149,4 @@ const AllListings = () => {
   );
 };
 
-export default AllListings;
+export default FavouriteListings;
