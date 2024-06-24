@@ -55,6 +55,7 @@ export const updateUser = async (req, res, next) => {
           email: req.body.email,
           password: hashedPassword,
           contact_no: req.body.contact_no,
+          favourites: req.body.favourites,
         },
       },
       { new: true }

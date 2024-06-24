@@ -22,7 +22,10 @@ const userSchema = new mongoose.Schema({
     userType:{
         type: String,
         required: true,
-    }
+    },
+    favourites:{
+        type: Array,
+    },
 } , {timestamps : true});
 
 const User = mongoose.model('User',userSchema);

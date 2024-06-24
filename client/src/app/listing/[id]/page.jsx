@@ -11,8 +11,13 @@ import {
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Map from "@/components/Map.jsx";
-import { useAppSelector } from "@/store/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 import ImageSlider from "@/components/ImageSlider";
+import {
+  updateUserFailure,
+  updateUserStart,
+  updateUserSuccess,
+} from "@/store/features/user/userSlice.js";
 
 const Listing = () => {
   const [listing, setListing] = useState(null);
@@ -21,7 +26,9 @@ const Listing = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [allListings, setAllListings] = useState([]);
   const { id } = useParams();
+  const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.user);
+  const [formData, setFormData] = useState(currentUser);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -50,7 +57,6 @@ const Listing = () => {
       try {
         const res = await fetch("/server/listing/getall");
         const data = await res.json();
-        console.log(data);
         setAllListings(Array.isArray(data) ? data : []);
         setLoading(false);
       } catch (error) {
@@ -74,13 +80,6 @@ const Listing = () => {
     };
   }, []);
 
-  const imageStyle = {
-    width: "100%",
-    height: isMobile ? "30vh" : "70vh",
-    objectFit: "center",
-    padding: "20px 0",
-  };
-
   const divStyle = {
     display: isMobile ? "grid" : "flex",
     alignItems: "center",
@@ -90,6 +89,40 @@ const Listing = () => {
   const containerStyles = {
     width: "100%",
     height: isMobile ? "30vh" : "70vh",
+  };
+
+  const addToFavourites = async () => {
+    setFormData((prevState) => {
+      const updatedFavourites = prevState.favourites.concat(id);
+      return {
+        ...prevState,
+        favourites: updatedFavourites,
+      };
+    });
+    try {
+      dispatch(updateUserStart());
+      const updatedFormData = {
+        ...formData,
+        favourites: formData.favourites.concat(id),
+      };
+      const res = await fetch(`../../server/user/update/${currentUser._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedFormData),
+      });
+      const data = await res.json();
+      console.log(data);
+      if (data.success === false) {
+        dispatch(updateUserFailure(data));
+        return;
+      }
+      dispatch(updateUserSuccess(data));
+      alert("Added to favourites");
+    } catch (error) {
+      dispatch(updateUserFailure(error));
+    }
   };
 
   return (
@@ -272,6 +305,7 @@ const Listing = () => {
                         borderRadius: "50px",
                         marginBottom: "20px",
                       }}
+                      onClick={addToFavourites}
                     >
                       Add to favourites
                     </button>

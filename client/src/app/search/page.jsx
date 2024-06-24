@@ -177,19 +177,12 @@ const Buy = () => {
 
   return (
     <div className={styles.container}>
-      <hr
-        style={{
-          border: "none",
-          borderTop: "2px solid lightgrey",
-          width: "100%",
-        }}
-      />
       <div
         style={{
           padding: "1.75rem",
-          display: "flex",
           justifyContent: "center",
           flexWrap: "wrap",
+          //backgroundColor: "#ffffff",
         }}
       >
         <div
@@ -279,10 +272,11 @@ const Buy = () => {
         style={{
           border: "none",
           borderTop: "2px solid lightgrey",
+          margin: "20px 0px",
           width: "100%",
         }}
       />
-      <div style={{display:"flex"}}>
+      <div style={{ display: "flex" }}>
         <div style={{ flex: 1 }}>
           <div
             style={{
@@ -330,11 +324,11 @@ const Buy = () => {
             )}
           </div>
         </div>
-        <div style={{width:"800px"}}>
-        <Map
-          listings={listings}
-          styleURL="mapbox://styles/mapbox/streets-v12"
-        />
+        <div style={{ width: "800px"}}>
+          <Map
+            listings={listings}
+            styleURL="mapbox://styles/mapbox/streets-v12"
+          />
         </div>
       </div>
     </div>
