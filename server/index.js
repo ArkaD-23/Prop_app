@@ -2,11 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import authRoutes from "./routes/auth.router.js";
-import userRoutes from "./routes/user.router.js"
-import listRoutes from "./routes/listing.router.js"
+import authRoutes from "./routes/auth.route.js";
+import userRoutes from "./routes/user.route.js"
+import listRoutes from "./routes/listing.route.js"
 import mongoose from "mongoose";
-import { deleteListing } from "./controllers/listing.controller.js";
 
 dotenv.config();
 
