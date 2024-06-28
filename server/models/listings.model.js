@@ -50,6 +50,9 @@ const listingSchema = new mongoose.Schema({
             type: Number,
         },
     },
+    userRef: {
+        type: String,
+    },
 }, {timestamps: true});
 
 const Listing = new mongoose.model('Listing', listingSchema);

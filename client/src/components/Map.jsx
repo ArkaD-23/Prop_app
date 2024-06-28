@@ -38,7 +38,7 @@ const Map = ({ listings, styleURL, highlightedListingId }) => {
   return (
     <div
       ref={mapContainerRef}
-      style={{ height: '550px', border: 'solid 2px black' }}
+      style={{ height: '550px', border: 'solid 2px black', borderRadius:"20px"}}
     />
   );
 };

@@ -107,3 +107,14 @@ export const deleteUser = async (req, res, next) => {
     return next(errorHandeler(404, "Something went wrong !"));
   }
 };
+
+export const getUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if(!user) 
+      next(errorHandeler(404, "User not found !"));
+    res.json({status: 200, data: user, message: "User found and sent"});
+  } catch (error) {
+     return next(errorHandeler(404, error.message));
+  }
+}

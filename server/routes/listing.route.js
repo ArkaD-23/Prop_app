@@ -10,5 +10,4 @@ router.get("/getone/:id", getOneListing);
 router.post("/update/:id", verifyToken, updateListing);
 router.delete("/delete/:id", verifyToken, deleteListing);
 
-
 export default router;

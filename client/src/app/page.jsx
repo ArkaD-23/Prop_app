@@ -52,7 +52,7 @@ export default function Home() {
 
   const containerStyles = {
     width: "100%",
-    height: isMobile ? "30vh" : "70vh",
+    height: isMobile ? "30vh" : "80vh",
   };
 
   return (

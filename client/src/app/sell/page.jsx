@@ -130,6 +130,7 @@ const Sell = () => {
         body: JSON.stringify({
           ...formData,
           Realtor: currentUser.username,
+          userRef: currentUser._id,
           coordinates: {
             latitude: coordinates.latitude,
             longitude: coordinates.longitude,

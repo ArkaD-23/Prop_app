@@ -8,6 +8,7 @@ import {
   MdOutlineReply,
   MdBed,
 } from "react-icons/md";
+import { IoMdHeartEmpty, IoMdHeart } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Map from "@/components/Map.jsx";
@@ -18,6 +19,7 @@ import {
   updateUserStart,
   updateUserSuccess,
 } from "@/store/features/user/userSlice.js";
+import Link from "next/link";
 
 const Listing = () => {
   const [listing, setListing] = useState(null);
@@ -28,6 +30,8 @@ const Listing = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.user);
+  const [landlord, setLandlord] = useState({});
+
   //const [formData, setFormData] = useState(currentUser);
 
   useEffect(() => {
@@ -83,52 +87,73 @@ const Listing = () => {
   const divStyle = {
     display: isMobile ? "grid" : "flex",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
+    gap: "2rem",
+    marginBottom: "5rem",
   };
 
   const containerStyles = {
-    width: "100%",
+    width: isMobile ? "100%" : "60%",
     height: isMobile ? "30vh" : "70vh",
   };
 
   const addToFavourites = async () => {
     dispatch(updateUserStart);
     try {
-      const res = await fetch(`../../server/user/favourites/${currentUser._id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({id}),
-      });
+      const res = await fetch(
+        `../../server/user/favourites/${currentUser._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id }),
+        }
+      );
       const data = await res.json();
       console.log(data);
       if (data.success === false) {
         dispatch(updateUserFailure(data));
         return;
       }
-      dispatch(updateUserSuccess({ ...currentUser, favourites: data.favourites }));
+      dispatch(
+        updateUserSuccess({ ...currentUser, favourites: data.favourites })
+      );
       alert(data.message);
     } catch (error) {
       dispatch(updateUserFailure(error));
       alert(error.message);
     }
   };
+  useEffect(() => {
+    const fetchLandlord = async () => {
+      try {
+        const res = await fetch(`/server/user/${listing.userRef}`);
+        const data = await res.json();
+        setLandlord(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchLandlord();
+  }, []);
 
   return (
     <div>
       <div
         style={{
-          marginLeft: "25px",
+          marginLeft: "20px",
+          marginRight:"20px",
           marginTop: "100px",
           marginBottom: "25px",
           display: "flex",
           alignItems: "center",
-          justifyContent: "left",
+          justifyContent: "space-between",
         }}
       >
         <HoverButtonWrapper>
           <button
+          title="Back"
             style={{
               padding: "12px",
               color: "#ffffff",
@@ -140,6 +165,22 @@ const Listing = () => {
             onClick={() => window.history.back()}
           >
             <MdOutlineReply />
+          </button>
+        </HoverButtonWrapper>
+        <HoverButtonWrapper>
+          <button
+            title="Add to favourites"
+            style={{
+              padding: "12px",
+              color: "#ffffff",
+              borderRadius: "8px",
+              background: "#2980b9",
+              cursor: "pointer",
+              opacity: "1",
+            }}
+            onClick={addToFavourites}
+          >
+            <IoMdHeartEmpty />
           </button>
         </HoverButtonWrapper>
       </div>
@@ -160,172 +201,180 @@ const Listing = () => {
         )}
         {listing && !loading && !error && (
           <div>
-            <div style={containerStyles}>
-              <ImageSlider slides={listing.imageUrls} />
-            </div>
-            <hr
-              style={{
-                marginTop: "50px",
-                border: "none",
-                borderTop: "2px solid lightgrey",
-                width: "100%",
-              }}
-            />
             <div style={divStyle}>
-              <div style={{ padding: "20px" }}>
-                <p
+              <div style={containerStyles}>
+                <ImageSlider slides={listing.imageUrls} />
+              </div>
+              {isMobile && (
+                <hr
                   style={{
-                    color: "#374151",
-                    marginTop: "1rem",
-                    fontSize: "2rem",
+                    marginTop: isMobile ? "" : "50px",
+                    border: "none",
+                    borderTop: "2px solid lightgrey",
+                    width: "100%",
                   }}
-                >
-                  {listing.name}
-                </p>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
+                />
+              )}
+              <div style={{ flex: "grid" }}>
+                <div style={{ padding: "20px" }}>
                   <p
                     style={{
                       color: "#374151",
                       marginTop: "1rem",
-                      fontSize: "1.5rem",
+                      fontSize: "2rem",
                     }}
                   >
-                    <MdLocationOn style={{ color: "green" }} />{" "}
-                    {listing.address}
+                    {listing.name}
                   </p>
-                </div>
-                <p style={{ color: "#374151", marginTop: "1rem" }}>
-                  <span style={{ fontWeight: "bold", color: "black" }}>
-                    Description -{" "}
-                  </span>
-                  {listing.description}
-                </p>
-                <div style={{ display: "flex" }}>
-                  <p style={{ fontWeight: "bold", color: "black" }}>
-                    Highlights -
-                  </p>
-                  <ul
+                  <div
                     style={{
-                      color: "#34d399",
-                      fontWeight: "bold",
-                      fontSize: "0.875rem",
+                      display: "flex",
                       alignItems: "center",
+                      justifyContent: "space-between",
                     }}
                   >
-                    <li
+                    <p
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.25rem",
-                        whiteSpace: "nowrap",
+                        color: "#374151",
+                        marginTop: "1rem",
+                        fontSize: "1.5rem",
                       }}
                     >
-                      <MdBed />
-                      {listing.bedrooms > 1
-                        ? `${listing.bedrooms} bedrooms `
-                        : `${listing.bedrooms} bedroom `}
-                    </li>
-                    <li
+                      <MdLocationOn style={{ color: "green" }} />{" "}
+                      {listing.address}
+                    </p>
+                  </div>
+                  <p style={{ color: "#374151", marginTop: "1rem" }}>
+                    <span style={{ fontWeight: "bold", color: "black" }}>
+                      Description -{" "}
+                    </span>
+                    {listing.description}
+                  </p>
+                  <div style={{ display: "flex" }}>
+                    <p style={{ fontWeight: "bold", color: "black" }}>
+                      Highlights -
+                    </p>
+                    <ul
                       style={{
-                        display: "flex",
+                        color: "#34d399",
+                        fontWeight: "bold",
+                        fontSize: "0.875rem",
                         alignItems: "center",
-                        gap: "0.25rem",
-                        whiteSpace: "nowrap",
                       }}
                     >
-                      <MdBathtub />
-                      {listing.bathrooms > 1
-                        ? `${listing.bathrooms} bathrooms `
-                        : `${listing.bathrooms} bathroom `}
-                    </li>
-                    <li
+                      <li
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.25rem",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        <MdBed />
+                        {listing.bedrooms > 1
+                          ? `${listing.bedrooms} bedrooms `
+                          : `${listing.bedrooms} bedroom `}
+                      </li>
+                      <li
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.25rem",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        <MdBathtub />
+                        {listing.bathrooms > 1
+                          ? `${listing.bathrooms} bathrooms `
+                          : `${listing.bathrooms} bathroom `}
+                      </li>
+                      <li
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.25rem",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {listing.parking ? <MdDone /> : ""}
+                        {listing.parking ? "Parking spot" : ""}
+                      </li>
+                      <li
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.25rem",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {listing.offer ? <MdDone /> : ""}
+                        {listing.offer ? "Offer" : ""}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div>
+                  {currentUser.userType === "Customer" && (
+                    <div
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.25rem",
-                        whiteSpace: "nowrap",
+                        width: "250px",
+                        marginRight: "20px",
+                        marginBottom: "20px",
+                        marginLeft: "20px",
                       }}
                     >
-                      {listing.parking ? <MdDone /> : ""}
-                      {listing.parking ? "Parking spot" : ""}
-                    </li>
-                    <li
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.25rem",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {listing.offer ? <MdDone /> : ""}
-                      {listing.offer ? "Offer" : ""}
-                    </li>
-                  </ul>
+                      <HoverButtonWrapper>
+                        <Link href={`mailto:${landlord.email}?subject=Negotiation regarding ${listing.name}`}>
+                          <button
+                            style={{
+                              fontFamily: '"Roboto", sans-serif',
+                              textTransform: "uppercase",
+                              outline: "0",
+                              background: "#2980b9",
+                              width: "100%",
+                              border: "0",
+                              padding: "15px",
+                              color: "#FFFFFF",
+                              fontSize: "14px",
+                              WebkitTransition: "all 0.3s ease",
+                              transition: "all 0.3s ease",
+                              cursor: "pointer",
+                              borderRadius: "50px",
+                              marginBottom: "20px",
+                            }}
+                          >
+                            Negotiate
+                          </button>
+                        </Link>
+                      </HoverButtonWrapper>
+                      <HoverButtonWrapper>
+                        <button
+                          style={{
+                            fontFamily: '"Roboto", sans-serif',
+                            textTransform: "uppercase",
+                            outline: "0",
+                            background: "#2980b9",
+                            width: "100%",
+                            border: "0",
+                            padding: "15px",
+                            color: "#FFFFFF",
+                            fontSize: "14px",
+                            WebkitTransition: "all 0.3s ease",
+                            transition: "all 0.3s ease",
+                            cursor: "pointer",
+                            borderRadius: "50px",
+                          }}
+                        >
+                          Buy now
+                        </button>
+                      </HoverButtonWrapper>
+                    </div>
+                  )}
                 </div>
               </div>
-              {currentUser.userType === "Customer" && (
-                <div
-                  style={{
-                    width: "250px",
-                    marginRight: "20px",
-                    marginBottom: "20px",
-                  }}
-                >
-                  <HoverButtonWrapper>
-                    <button
-                      style={{
-                        fontFamily: '"Roboto", sans-serif',
-                        textTransform: "uppercase",
-                        outline: "0",
-                        background: "#2980b9",
-                        width: "100%",
-                        border: "0",
-                        padding: "15px",
-                        color: "#FFFFFF",
-                        fontSize: "14px",
-                        WebkitTransition: "all 0.3s ease",
-                        transition: "all 0.3s ease",
-                        cursor: "pointer",
-                        borderRadius: "50px",
-                        marginBottom: "20px",
-                      }}
-                      onClick={addToFavourites}
-                    >
-                      Add to favourites
-                    </button>
-                  </HoverButtonWrapper>
-                  <HoverButtonWrapper>
-                    <button
-                      style={{
-                        fontFamily: '"Roboto", sans-serif',
-                        textTransform: "uppercase",
-                        outline: "0",
-                        background: "#2980b9",
-                        width: "100%",
-                        border: "0",
-                        padding: "15px",
-                        color: "#FFFFFF",
-                        fontSize: "14px",
-                        WebkitTransition: "all 0.3s ease",
-                        transition: "all 0.3s ease",
-                        cursor: "pointer",
-                        borderRadius: "50px",
-                      }}
-                    >
-                      Buy now
-                    </button>
-                  </HoverButtonWrapper>
-                </div>
-              )}
             </div>
             {currentUser.userType === "Customer" && (
-              <div>
+              <div style={{ containerStyles }}>
                 <Map
                   listings={allListings}
                   styleURL="mapbox://styles/mapbox/streets-v12"

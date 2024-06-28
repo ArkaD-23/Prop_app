@@ -14,6 +14,7 @@ export const createlisting = async (req, res, next) => {
     imageUrls,
     Realtor,
     coordinates,
+    userRef
   } = req.body;
 
   const alreadyListed = await Listing.findOne({ address });
@@ -34,6 +35,7 @@ export const createlisting = async (req, res, next) => {
       imageUrls,
       Realtor,
       coordinates,
+      userRef,
     });
     await newListing.save();
 

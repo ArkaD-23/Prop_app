@@ -29,15 +29,12 @@ export const Navbar = () => {
           margin: "auto",
         }}
       >
-        <Link style={{ textDecoration: "none" }} href="/">
+        <Link title="Home" style={{ textDecoration: "none" }} href="/">
           <h1 style={{ color: "azure", fontSize: "27px", fontWeight: "600" }}>
             PropApp
           </h1>
         </Link>
         <ul style={{ display: "flex", listStyle: "none", fontWeight: "600" }}>
-          <Link href="/" style={{ textDecoration: "none" }}>
-            <li style={{ color: "azure", margin: "0 15px" }}>Home</li>
-          </Link>
           {currentUser && (
             <>
               {currentUser.userType === "Customer" && (
