@@ -31,12 +31,13 @@ const Listing = () => {
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.user);
   const [landlord, setLandlord] = useState({});
-
+  let isFavourite;
   //const [formData, setFormData] = useState(currentUser);
 
   useEffect(() => {
     const fetchListing = async () => {
       if (!id) return;
+
       try {
         setLoading(true);
         const res = await fetch(`/server/listing/getone/${id}`);
@@ -72,6 +73,23 @@ const Listing = () => {
     fetchListing();
     fetchAllListings();
   }, [id]);
+
+  useEffect(() => {
+    const fetchLandlord = async () => {
+      if (!listing) return;
+
+      try {
+        const res = await fetch(`/server/user/${listing.userRef}`);
+        const data = await res.json();
+        setLandlord(data);
+        console.log(landlord);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchLandlord();
+  }, [listing]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -114,36 +132,25 @@ const Listing = () => {
       console.log(data);
       if (data.success === false) {
         dispatch(updateUserFailure(data));
+        alert(data.message);
         return;
       }
       dispatch(
         updateUserSuccess({ ...currentUser, favourites: data.favourites })
       );
-      alert(data.message);
     } catch (error) {
       dispatch(updateUserFailure(error));
       alert(error.message);
     }
   };
-  useEffect(() => {
-    const fetchLandlord = async () => {
-      try {
-        const res = await fetch(`/server/user/${listing.userRef}`);
-        const data = await res.json();
-        setLandlord(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchLandlord();
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <div>
       <div
         style={{
           marginLeft: "20px",
-          marginRight:"20px",
+          marginRight: "20px",
           marginTop: "100px",
           marginBottom: "25px",
           display: "flex",
@@ -153,7 +160,7 @@ const Listing = () => {
       >
         <HoverButtonWrapper>
           <button
-          title="Back"
+            title="Back"
             style={{
               padding: "12px",
               color: "#ffffff",
@@ -180,7 +187,11 @@ const Listing = () => {
             }}
             onClick={addToFavourites}
           >
-            <IoMdHeartEmpty />
+            {currentUser.favourites.includes(id) ? (
+              <IoMdHeart />
+            ) : (
+              <IoMdHeartEmpty />
+            )}
           </button>
         </HoverButtonWrapper>
       </div>
@@ -324,7 +335,9 @@ const Listing = () => {
                       }}
                     >
                       <HoverButtonWrapper>
-                        <Link href={`mailto:${landlord.email}?subject=Negotiation regarding ${listing.name}`}>
+                        {landlord && landlord.email && <Link
+                          href={`mailto:${landlord.email}?subject=Negotiation regarding ${listing.name}`}
+                        >
                           <button
                             style={{
                               fontFamily: '"Roboto", sans-serif',
@@ -345,7 +358,7 @@ const Listing = () => {
                           >
                             Negotiate
                           </button>
-                        </Link>
+                        </Link>}
                       </HoverButtonWrapper>
                       <HoverButtonWrapper>
                         <button

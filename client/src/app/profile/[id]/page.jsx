@@ -111,6 +111,7 @@ const Profile = () => {
           <form onSubmit={handleSubmit}>
             <input
               id="username"
+              required
               style={{
                 fontFamily: "Roboto",
                 outline: "0",

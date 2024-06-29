@@ -25,7 +25,7 @@ export const addToFavourites = async (req, res, next) => {
 
       // Check if the favourites array includes the id
       if (user.favourites.includes(id)) {
-        return res.status(400).json({ message: "Already in favourites" });
+        return res.status(400).json({ message: "Already in favourites" , favourites: user.favourites});
       }
 
       // Add the new favourite
@@ -111,9 +111,10 @@ export const deleteUser = async (req, res, next) => {
 export const getUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
-    if(!user) 
+    if(!user) {
       next(errorHandeler(404, "User not found !"));
-    res.json({status: 200, data: user, message: "User found and sent"});
+    }
+    res.json({status: 200, user, message: "User found and sent"});
   } catch (error) {
      return next(errorHandeler(404, error.message));
   }
