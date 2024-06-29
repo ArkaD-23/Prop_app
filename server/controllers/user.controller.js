@@ -114,7 +114,7 @@ export const getUser = async (req, res, next) => {
     if(!user) {
       next(errorHandeler(404, "User not found !"));
     }
-    res.json({status: 200, user, message: "User found and sent"});
+    res.json({status: 200, user:user, message: "User found and sent"});
   } catch (error) {
      return next(errorHandeler(404, error.message));
   }

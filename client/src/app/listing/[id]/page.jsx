@@ -31,7 +31,7 @@ const Listing = () => {
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.user);
   const [landlord, setLandlord] = useState({});
-  let isFavourite;
+  const [landlordLoading, setLandlordLoading] = useState(false);
   //const [formData, setFormData] = useState(currentUser);
 
   useEffect(() => {
@@ -76,19 +76,25 @@ const Listing = () => {
 
   useEffect(() => {
     const fetchLandlord = async () => {
-      if (!listing) return;
+      if(!loading) {
+      setLandlordLoading(true);
+      if (!listing || !listing.userRef) {
+        console.log("hello")
+        return;
+      }
 
       try {
         const res = await fetch(`/server/user/${listing.userRef}`);
         const data = await res.json();
-        setLandlord(data);
-        console.log(landlord);
+        setLandlord(data.user);
+        console.log(landlord)
+        setLandlordLoading(false);
       } catch (error) {
         console.log(error);
-      }
+      } 
     };
-
-    fetchLandlord();
+  }
+  fetchLandlord();
   }, [listing]);
 
   useEffect(() => {
@@ -143,7 +149,6 @@ const Listing = () => {
       alert(error.message);
     }
   };
-  useEffect(() => {}, []);
 
   return (
     <div>
@@ -182,10 +187,11 @@ const Listing = () => {
               color: "#ffffff",
               borderRadius: "8px",
               background: "#2980b9",
-              cursor: "pointer",
-              opacity: "1",
+              cursor: currentUser.favourites.includes(id) ? "not-allowed" : "pointer",
+              opacity: 1,
             }}
             onClick={addToFavourites}
+            disabled={currentUser.favourites.includes(id)}
           >
             {currentUser.favourites.includes(id) ? (
               <IoMdHeart />
@@ -334,53 +340,61 @@ const Listing = () => {
                         marginLeft: "20px",
                       }}
                     >
-                      <HoverButtonWrapper>
-                        {landlord && landlord.email && <Link
-                          href={`mailto:${landlord.email}?subject=Negotiation regarding ${listing.name}`}
-                        >
-                          <button
-                            style={{
-                              fontFamily: '"Roboto", sans-serif',
-                              textTransform: "uppercase",
-                              outline: "0",
-                              background: "#2980b9",
-                              width: "100%",
-                              border: "0",
-                              padding: "15px",
-                              color: "#FFFFFF",
-                              fontSize: "14px",
-                              WebkitTransition: "all 0.3s ease",
-                              transition: "all 0.3s ease",
-                              cursor: "pointer",
-                              borderRadius: "50px",
-                              marginBottom: "20px",
-                            }}
-                          >
-                            Negotiate
-                          </button>
-                        </Link>}
-                      </HoverButtonWrapper>
-                      <HoverButtonWrapper>
-                        <button
-                          style={{
-                            fontFamily: '"Roboto", sans-serif',
-                            textTransform: "uppercase",
-                            outline: "0",
-                            background: "#2980b9",
-                            width: "100%",
-                            border: "0",
-                            padding: "15px",
-                            color: "#FFFFFF",
-                            fontSize: "14px",
-                            WebkitTransition: "all 0.3s ease",
-                            transition: "all 0.3s ease",
-                            cursor: "pointer",
-                            borderRadius: "50px",
-                          }}
-                        >
-                          Buy now
-                        </button>
-                      </HoverButtonWrapper>
+                      {landlordLoading ? (
+                        <p>...</p>
+                      ) : (
+                        <>
+                          <HoverButtonWrapper>
+                            <Link href="#">
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  window.location.href = `mailto:${landlord.email}?subject=Negotiation regarding ${listing.name}`;
+                                }}
+                                style={{
+                                  fontFamily: '"Roboto", sans-serif',
+                                  textTransform: "uppercase",
+                                  outline: "0",
+                                  background: "#2980b9",
+                                  width: "100%",
+                                  border: "0",
+                                  padding: "15px",
+                                  color: "#FFFFFF",
+                                  fontSize: "14px",
+                                  WebkitTransition: "all 0.3s ease",
+                                  transition: "all 0.3s ease",
+                                  cursor: "pointer",
+                                  borderRadius: "50px",
+                                  marginBottom: "20px",
+                                }}
+                              >
+                                Negotiate
+                              </button>
+                            </Link>
+                          </HoverButtonWrapper>
+                          <HoverButtonWrapper>
+                            <button
+                              style={{
+                                fontFamily: '"Roboto", sans-serif',
+                                textTransform: "uppercase",
+                                outline: "0",
+                                background: "#2980b9",
+                                width: "100%",
+                                border: "0",
+                                padding: "15px",
+                                color: "#FFFFFF",
+                                fontSize: "14px",
+                                WebkitTransition: "all 0.3s ease",
+                                transition: "all 0.3s ease",
+                                cursor: "pointer",
+                                borderRadius: "50px",
+                              }}
+                            >
+                              Buy now
+                            </button>
+                          </HoverButtonWrapper>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
