@@ -15,31 +15,40 @@ export const test = (req, res) => {
 export const addToFavourites = async (req, res, next) => {
   const { id } = req.body;
     try {
-      // Find the user by their ID
       const user = await User.findById(req.params.id);
-
-      // Check if the user exists
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-
-      // Check if the favourites array includes the id
       if (user.favourites.includes(id)) {
         return res.status(400).json({ message: "Already in favourites" , favourites: user.favourites});
       }
-
-      // Add the new favourite
       user.favourites.push(id);
       await user.save();
-
-      // Respond with success message and updated favourites array
       return res
         .status(200)
         .json({ message: "Added to favourites", favourites: user.favourites });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: "Server error" });
+      return next(errorHandeler(404, "Server error !"))
     }
+}
+
+export const removeFavourite = async (req, res, next) => {
+  try {
+    const { id } = req.body;
+    const user = await User.findById(req.params.id);
+    if(!user) {
+      return next(errorHandeler(404, "User not found !"));
+    }
+    if(user.favourites.includes(id)) {
+      return next(errorHandeler(404, "The listing is not in favourites !"));    
+    }
+    user.favourites = user.favourites.filter(fav => fav !== id);
+    await user.save();
+    return res.status(200).json({message:"Listing removed from favourites .", favourites:user.favourites});
+  } catch (error) {
+    return next(errorHandeler(400, "Server error !"));
+  }
 }
 
 export const updateUser = async (req, res, next) => {

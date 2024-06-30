@@ -77,7 +77,6 @@ const FavouriteListings = () => {
           <div style={cardStyle}>
             {listings.map((listing) => {
               if (currentUser.favourites.includes(listing._id)) {
-                count++;
                 return (
                   <HoverButtonWrapper>
                     <div
