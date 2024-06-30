@@ -40,7 +40,7 @@ export const removeFavourite = async (req, res, next) => {
     if(!user) {
       return next(errorHandeler(404, "User not found !"));
     }
-    if(user.favourites.includes(id)) {
+    if(!user.favourites.includes(id)) {
       return next(errorHandeler(404, "The listing is not in favourites !"));    
     }
     user.favourites = user.favourites.filter(fav => fav !== id);

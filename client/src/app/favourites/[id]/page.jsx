@@ -1,16 +1,18 @@
 "use client"
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
-import { useAppSelector } from "@/store/hooks/hooks.js";
+import { updateUserFailure, updateUserStart, updateUserSuccess } from "@/store/features/user/userSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks.js";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 const FavouriteListings = () => {
-  let count = 0;
+  const dispatch = useAppDispatch();
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(false);
   const { currentUser } = useAppSelector((state) => state.user);
   const [isMobile, setIsMobile] = useState(false);
-
+  
   useEffect(() => {
     const fetchListings = async () => {
       setLoading(true);
@@ -43,6 +45,34 @@ const FavouriteListings = () => {
     gap: "1rem",
     margin: isMobile ? "20px 20px" : "30px 22%",
   };
+
+  const removeFavourite = async (id) => {
+    dispatch(updateUserStart());
+    try {
+      const res = await fetch(`/server/user/remove/${currentUser._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type" : "application/json"
+          },
+          body: JSON.stringify({ id }),
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+      if(data.success === false) {
+        dispatch(updateUserFailure(...currentUser, data));
+        console.log(data);
+        return;
+      }
+      dispatch(updateUserSuccess({...currentUser, favourites: data.favourites}));
+      return;
+    } catch (error) {
+      dispatch(updateUserFailure(error));
+      console.log(error);
+    }
+  }
+
   return (
     <div>
       <h1
@@ -124,7 +154,7 @@ const FavouriteListings = () => {
                         }}
                       >
                         <button
-                          onClick={() => handleListingDelete(listing._id)}
+                          onClick={() => removeFavourite(listing._id)}
                           style={{
                             color: "#c53030",
                             textTransform: "uppercase",
@@ -139,6 +169,11 @@ const FavouriteListings = () => {
                     </div>
                   </HoverButtonWrapper>
                 );
+              }
+              else {
+                return (
+                  <div></div>
+                )
               }
             })}
           </div>

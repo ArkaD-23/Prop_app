@@ -122,7 +122,32 @@ const Listing = () => {
   };
 
   const addToFavourites = async () => {
-    dispatch(updateUserStart);
+    dispatch(updateUserStart());
+    if(currentUser.favourites.includes(id)) {
+      try {
+        const res = await fetch(`/server/user/remove/${currentUser._id}`,
+          {
+            method:"POST",
+            headers:{
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id }),
+          }
+        );
+        const data = await res.json();
+        console.log(data);
+        if(data.success === false) {
+          dispatch(updateUserFailure({...currentUser, data}));
+          console.log(data);
+          return;
+        }
+        dispatch(updateUserSuccess({ ...currentUser, favourites: data.favourites }));
+        return;
+      } catch (error) {
+        console.log(error);
+        dispatch(updateUserFailure(error));
+      }
+    }
     try {
       const res = await fetch(
         `../../server/user/favourites/${currentUser._id}`,
@@ -187,11 +212,10 @@ const Listing = () => {
               color: "#ffffff",
               borderRadius: "8px",
               background: "#2980b9",
-              cursor: currentUser.favourites.includes(id) ? "not-allowed" : "pointer",
+              cursor: "pointer",
               opacity: 1,
             }}
             onClick={addToFavourites}
-            disabled={currentUser.favourites.includes(id)}
           >
             {currentUser.favourites.includes(id) ? (
               <IoMdHeart />
