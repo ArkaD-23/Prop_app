@@ -19,7 +19,6 @@ const Buy = () => {
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
   const [showMore, setShowMore] = useState(false);
-  const searchParams = useSearchParams();
   const router = useRouter();
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -324,7 +323,7 @@ const Buy = () => {
             )}
           </div>
         </div>
-        <div style={{ width: "800px"}}>
+        <div style={{ width: "700px", marginRight: "20px"}}>
           <Map
             listings={listings}
             styleURL="mapbox://styles/mapbox/streets-v12"

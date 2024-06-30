@@ -2,7 +2,6 @@
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
 import { useAppSelector } from "@/store/hooks/hooks";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const AllListings = () => {
