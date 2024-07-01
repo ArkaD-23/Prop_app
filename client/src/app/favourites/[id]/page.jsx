@@ -3,7 +3,7 @@ import HoverButtonWrapper from "@/components/HoverButtonWrapper";
 import { updateUserFailure, updateUserStart, updateUserSuccess } from "@/store/features/user/userSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks.js";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { MdOutlineReply } from "react-icons/md";
 import React, { useState, useEffect } from "react";
 
 const FavouriteListings = () => {
@@ -75,12 +75,40 @@ const FavouriteListings = () => {
 
   return (
     <div>
+    <div
+        style={{
+          marginLeft: "20px",
+          marginRight: "20px",
+          marginTop: "100px",
+          marginBottom: "25px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <HoverButtonWrapper>
+          <button
+            title="Back"
+            style={{
+              padding: "12px",
+              color: "#ffffff",
+              borderRadius: "8px",
+              background: "#2980b9",
+              cursor: "pointer",
+              opacity: "1",
+            }}
+            onClick={() => window.history.back()}
+          >
+            <MdOutlineReply />
+          </button>
+        </HoverButtonWrapper>
+        </div>
       <h1
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          marginTop: "150px",
+          //marginTop: "50px",
         }}
       >
         My Favourites
