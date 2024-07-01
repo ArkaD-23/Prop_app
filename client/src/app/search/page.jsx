@@ -178,7 +178,7 @@ const Buy = () => {
     <div className={styles.container}>
       <div
         style={{
-          padding: "1.75rem",
+          padding: "0rem 1.75rem",
           justifyContent: "center",
           flexWrap: "wrap",
           //backgroundColor: "#ffffff",
