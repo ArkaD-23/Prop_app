@@ -150,7 +150,7 @@ const Listing = () => {
     }
     try {
       const res = await fetch(
-        `../../server/user/favourites/${currentUser._id}`,
+        `/server/user/favourites/${currentUser._id}`,
         {
           method: "POST",
           headers: {
@@ -174,6 +174,34 @@ const Listing = () => {
       alert(error.message);
     }
   };
+
+  const Pay = async () => {
+    try {
+      const res = await fetch(`/server/listing/create-checkout-session/${id}`, {
+        method:"POST",
+        headers:{
+          "Content-Type" : "application/json"
+        },
+        body:JSON.stringify({id}),
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error("Error from server:", errorData);
+        alert("Something went wrong!");
+        return;
+      }
+      const data = await res.json();
+      if(data.success === false) {
+        alert("Something went wrong !");
+        return;
+      } 
+      window.location.href = data.url;
+      return;
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  }
 
   return (
     <div>
@@ -413,6 +441,7 @@ const Listing = () => {
                                 cursor: "pointer",
                                 borderRadius: "50px",
                               }}
+                              onClick={Pay}
                             >
                               Buy now
                             </button>

@@ -24,6 +24,7 @@
     "mongoose": "^8.3.4",
     "nodemon": "^3.1.0",
     "prisma": "^5.14.0",
+    "stripe": "^16.1.0",
     "styled-components": "^6.1.11"
   },
   "devDependencies": {

@@ -1,5 +1,6 @@
 import { errorHandeler } from "../utils/error.js";
 import Listing from "../models/listings.model.js";
+import Stripe from "stripe";
 
 export const createlisting = async (req, res, next) => {
   const {
@@ -128,6 +129,7 @@ export const updateListing = async (req, res, next) => {
 
 export const deleteListing = async (req, res, next) => {
   const listing = await Listing.findById(req.params.id);
+
   if (!listing) {
     return next(errorHandeler(404, "Listing not found!"));
   }
@@ -137,5 +139,36 @@ export const deleteListing = async (req, res, next) => {
     res.status(200).json("Listing has been deleted!");
   } catch (error) {
     next(errorHandeler(error));
+  }
+};
+
+export const paymentSession = async (req, res, next) => {
+  const listing = await Listing.findById(req.body.id);
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+  if (!listing) {
+    return next(errorHandeler(404, "Listing not found!"));
+  }
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items: [{
+        price_data: {
+          currency: "inr",
+          product_data: {
+            name: listing.name
+          },
+          unit_amount: listing.Price, // Stripe expects the amount in the smallest currency unit
+        },
+        quantity: 1,
+      }],
+      success_url: "https://your-success-url.com",
+      cancel_url: "https://your-cancel-url.com",    
+    });
+    res.status(200).json({ url: session.url });
+  } catch (error) {
+    next(errorHandeler(500, error.message)); // Adjust the status code as needed
   }
 };
