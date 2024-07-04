@@ -164,11 +164,24 @@ export const paymentSession = async (req, res, next) => {
         },
         quantity: 1,
       }],
-      success_url: "http://localhost:3001/success",
-      cancel_url: "http://localhost:3001/failure",    
+      success_url: `${process.env.HOST_URL}/success`,
+      cancel_url: `${process.env.HOST_URL}/failure`, 
+      metadata: {
+        listing_id: listing._id.toString(), 
+      },   
     });
     res.status(200).json({ url: session.url });
   } catch (error) {
     next(errorHandeler(500, error.message)); // Adjust the status code as needed
   }
 };
+
+export const removeAfterPayment = async (req, res, next) => {
+  try {
+    const listing = await Listing.findByIdAndDelete(req.params.id);
+    if(!listing)
+      return next(errorHandeler(404, "Listing not found !"));
+  } catch (error) {
+    return next(errorHandeler(401, error.message));
+  }
+}
