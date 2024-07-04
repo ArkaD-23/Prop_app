@@ -164,8 +164,8 @@ export const paymentSession = async (req, res, next) => {
         },
         quantity: 1,
       }],
-      success_url: "https://your-success-url.com",
-      cancel_url: "https://your-cancel-url.com",    
+      success_url: "http://localhost:3001/success",
+      cancel_url: "http://localhost:3001/failure",    
     });
     res.status(200).json({ url: session.url });
   } catch (error) {
