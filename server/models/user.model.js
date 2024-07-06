@@ -26,6 +26,9 @@ const userSchema = new mongoose.Schema({
     favourites:{
         type: Array,
     },
+    negotiations:{
+        type: Array,
+    }
 } , {timestamps : true});
 
 const User = mongoose.model('User',userSchema);

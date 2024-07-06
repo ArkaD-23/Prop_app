@@ -159,3 +159,24 @@ export const emailSender = async (req, res, next) => {
     res.status(200).json({ success: true, message: 'Email sent: ' + emailRes.response });
   });
 };
+
+export const addNegotiation = async (req, res, next) => {
+  const { id } = req.body;
+    try {
+      const user = await User.findById(req.params.id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      if (user.negotiations.includes(id)) {
+        return res.status(400).json({ message: "Already in negotiations" , negotiations: user.negotiations});
+      }
+      user.negotiations.push(id);
+      await user.save();
+      return res
+        .status(200)
+        .json({ message: "Added to negotiations !", negotiations: user.negotiations });
+    } catch (error) {
+      console.error(error);
+      return next(errorHandeler(404, "Server error !"))
+    }
+}

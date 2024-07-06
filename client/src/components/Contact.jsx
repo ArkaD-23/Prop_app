@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import HoverButtonWrapper from "./HoverButtonWrapper";
-import { useAppSelector } from "@/store/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
+import { updateUserFailure, updateUserStart, updateUserSuccess } from "@/store/features/user/userSlice";
 
 const Contact = ({ listing }) => {
   const [landlord, setLandlord] = useState(null);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const {currentUser} = useAppSelector((state)=>state.user);
+  const dispatch = useAppDispatch();
   const onChange = (e) => {
     setMessage(e.target.value);
   };
@@ -45,12 +47,36 @@ const Contact = ({ listing }) => {
         }),
       });
       const data = await res.json();
-      if (data.success === false) {
+      if(data.success === false) {
         alert("Failed to send email: " + data.message);
         setLoading(false);
         return;
       }
-      console.log(data);
+      else {
+        try {      
+          dispatch(updateUserStart);
+          const res = await fetch(`/server/user/addnegotiation/${currentUser._id}`,
+          {
+            method:"POST",
+            headers:{
+              "Content-Type":"application/json"
+            },
+            body: JSON.stringify({id: listing._id})
+          });
+          const data = await res.json();
+          if(data.success === false) {
+            console.log(data);
+            dispatch(updateUserFailure(data));
+            return;
+          }
+          console.log(data);
+          dispatch(updateUserSuccess({ ...currentUser, negotiations: data.negotiations }))
+        } catch (error) {
+          console.log(error);
+          dispatch(updateUserFailure(error));
+          return;
+        }
+      }
       setLoading(false);
     } catch (error) {
       alert(error.message);
