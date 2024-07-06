@@ -2,6 +2,9 @@ import { errorHandeler } from "../utils/error.js";
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const test = (req, res) => {
   try {
@@ -134,8 +137,8 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   secure: "true",
   auth: {
-    user: "arkapravadhar16064@gmail.com",
-    pass: "psdcguwiepgpsvrg",
+    user: process.env.MY_EMAIL,
+    pass: process.env.MY_EMAIL_PASS,
   },
 });
 
