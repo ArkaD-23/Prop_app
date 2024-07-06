@@ -143,13 +143,13 @@ const transporter = nodemailer.createTransport({
 });
 
 export const emailSender = async (req, res, next) => {
-  const { senderEmail, recipientEmail, subject, text } = req.body; // Extract data from the request
+  const { senderEmail, recipientEmail, subject, text } = req.body; 
 
   const receiver = {
-    from: senderEmail, // sender's email address
-    to: recipientEmail, // recipient's email address
-    subject: subject, // email subject
-    text: text, // email body
+    from: senderEmail, 
+    to: recipientEmail, 
+    subject: subject, 
+    text: text, 
   };
 
   transporter.sendMail(receiver, (error, emailRes) => {

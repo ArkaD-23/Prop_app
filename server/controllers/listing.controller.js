@@ -67,7 +67,12 @@ export const getListings = async (req, res, next) => {
     const order = req.query.order === "asc" ? 1 : -1;
 
     const whereClause = {
-      name: { $regex: searchTerm, $options: "i" },
+      ...(searchTerm && {
+        $or: [
+          { name: { $regex: searchTerm, $options: "i" } },
+          { address: { $regex: searchTerm, $options: "i" } },
+        ]
+      }),
       ...(offer !== undefined && { offer }),
       ...(parking !== undefined && { parking }),
     };
