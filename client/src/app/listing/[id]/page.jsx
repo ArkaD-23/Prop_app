@@ -19,7 +19,7 @@ import {
   updateUserStart,
   updateUserSuccess,
 } from "@/store/features/user/userSlice.js";
-import Link from "next/link";
+import Contact from "@/components/Contact";
 
 const Listing = () => {
   const [listing, setListing] = useState(null);
@@ -27,12 +27,12 @@ const Listing = () => {
   const [error, setError] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [allListings, setAllListings] = useState([]);
+  const [contact, setContact] = useState(false);
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.user);
   const [landlord, setLandlord] = useState({});
   const [landlordLoading, setLandlordLoading] = useState(false);
-  //const [formData, setFormData] = useState(currentUser);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -75,29 +75,6 @@ const Listing = () => {
   }, [id]);
 
   useEffect(() => {
-    const fetchLandlord = async () => {
-      if(!loading) {
-      setLandlordLoading(true);
-      if (!listing || !listing.userRef) {
-        console.log("hello")
-        return;
-      }
-
-      try {
-        const res = await fetch(`/server/user/${listing.userRef}`);
-        const data = await res.json();
-        setLandlord(data.user);
-        console.log(landlord)
-        setLandlordLoading(false);
-      } catch (error) {
-        console.log(error);
-      } 
-    };
-  }
-  fetchLandlord();
-  }, [listing]);
-
-  useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 640);
     };
@@ -123,25 +100,25 @@ const Listing = () => {
 
   const addToFavourites = async () => {
     dispatch(updateUserStart());
-    if(currentUser.favourites.includes(id)) {
+    if (currentUser.favourites.includes(id)) {
       try {
-        const res = await fetch(`/server/user/remove/${currentUser._id}`,
-          {
-            method:"POST",
-            headers:{
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id }),
-          }
-        );
+        const res = await fetch(`/server/user/remove/${currentUser._id}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id }),
+        });
         const data = await res.json();
         console.log(data);
-        if(data.success === false) {
-          dispatch(updateUserFailure({...currentUser, data}));
+        if (data.success === false) {
+          dispatch(updateUserFailure({ ...currentUser, data }));
           console.log(data);
           return;
         }
-        dispatch(updateUserSuccess({ ...currentUser, favourites: data.favourites }));
+        dispatch(
+          updateUserSuccess({ ...currentUser, favourites: data.favourites })
+        );
         return;
       } catch (error) {
         console.log(error);
@@ -149,16 +126,13 @@ const Listing = () => {
       }
     }
     try {
-      const res = await fetch(
-        `/server/user/favourites/${currentUser._id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id }),
-        }
-      );
+      const res = await fetch(`/server/user/favourites/${currentUser._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
       const data = await res.json();
       console.log(data);
       if (data.success === false) {
@@ -175,14 +149,14 @@ const Listing = () => {
     }
   };
 
-  const Pay = async () => {
+  const pay = async () => {
     try {
       const res = await fetch(`/server/listing/create-checkout-session/${id}`, {
-        method:"POST",
-        headers:{
-          "Content-Type" : "application/json"
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        body:JSON.stringify({id}),
+        body: JSON.stringify({ id }),
       });
       if (!res.ok) {
         const errorData = await res.json();
@@ -191,17 +165,17 @@ const Listing = () => {
         return;
       }
       const data = await res.json();
-      if(data.success === false) {
+      if (data.success === false) {
         alert("Something went wrong !");
         return;
-      } 
+      }
       window.location.href = data.url;
       return;
     } catch (error) {
       console.log(error);
       return;
     }
-  }
+  };
 
   return (
     <div>
@@ -395,35 +369,33 @@ const Listing = () => {
                       {landlordLoading ? (
                         <p>...</p>
                       ) : (
-                        <>
-                          <HoverButtonWrapper>
-                            <Link href="#">
-                              <button
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  window.location.href = `mailto:${landlord.email}?subject=Negotiation regarding ${listing.name}`;
-                                }}
-                                style={{
-                                  fontFamily: '"Roboto", sans-serif',
-                                  textTransform: "uppercase",
-                                  outline: "0",
-                                  background: "#2980b9",
-                                  width: "100%",
-                                  border: "0",
-                                  padding: "15px",
-                                  color: "#FFFFFF",
-                                  fontSize: "14px",
-                                  WebkitTransition: "all 0.3s ease",
-                                  transition: "all 0.3s ease",
-                                  cursor: "pointer",
-                                  borderRadius: "50px",
-                                  marginBottom: "20px",
-                                }}
-                              >
-                                Negotiate
-                              </button>
-                            </Link>
-                          </HoverButtonWrapper>
+                        <div>
+                          {!contact && (
+                              <HoverButtonWrapper>
+                                <button
+                                  onClick={() => setContact(true)}
+                                  style={{
+                                    marginBottom:"20px",
+                                    fontFamily: '"Roboto", sans-serif',
+                                    textTransform: "uppercase",
+                                    outline: "0",
+                                    background: "#2980b9",
+                                    width: "100%",
+                                    border: "0",
+                                    padding: "15px",
+                                    color: "#FFFFFF",
+                                    fontSize: "14px",
+                                    WebkitTransition: "all 0.3s ease",
+                                    transition: "all 0.3s ease",
+                                    cursor: "pointer",
+                                    borderRadius: "50px",
+                                  }}
+                                >
+                                  Negotiate
+                                </button>
+                              </HoverButtonWrapper>
+                            )}
+                          {contact && <Contact listing={listing} />}
                           <HoverButtonWrapper>
                             <button
                               style={{
@@ -441,12 +413,12 @@ const Listing = () => {
                                 cursor: "pointer",
                                 borderRadius: "50px",
                               }}
-                              onClick={Pay}
+                              onClick={pay}
                             >
                               Buy now
                             </button>
                           </HoverButtonWrapper>
-                        </>
+                        </div>
                       )}
                     </div>
                   )}

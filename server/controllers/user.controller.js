@@ -1,6 +1,7 @@
 import { errorHandeler } from "../utils/error.js";
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
+import nodemailer from "nodemailer";
 
 export const test = (req, res) => {
   try {
@@ -127,4 +128,31 @@ export const getUser = async (req, res, next) => {
   } catch (error) {
      return next(errorHandeler(404, error.message));
   }
-}
+};
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  secure: "true",
+  auth: {
+    user: "arkapravadhar16064@gmail.com",
+    pass: "psdcguwiepgpsvrg",
+  },
+});
+
+export const emailSender = async (req, res, next) => {
+  const { senderEmail, recipientEmail, subject, text } = req.body; // Extract data from the request
+
+  const receiver = {
+    from: senderEmail, // sender's email address
+    to: recipientEmail, // recipient's email address
+    subject: subject, // email subject
+    text: text, // email body
+  };
+
+  transporter.sendMail(receiver, (error, emailRes) => {
+    if (error) {
+      return next(errorHandeler(401, error.toString()));
+    }
+    res.status(200).json({ success: true, message: 'Email sent: ' + emailRes.response });
+  });
+};

@@ -160,7 +160,7 @@ export const paymentSession = async (req, res, next) => {
           product_data: {
             name: listing.name
           },
-          unit_amount: listing.Price, // Stripe expects the amount in the smallest currency unit
+          unit_amount: listing.Price, 
         },
         quantity: 1,
       }],
@@ -175,13 +175,3 @@ export const paymentSession = async (req, res, next) => {
     next(errorHandeler(500, error.message)); // Adjust the status code as needed
   }
 };
-
-export const removeAfterPayment = async (req, res, next) => {
-  try {
-    const listing = await Listing.findByIdAndDelete(req.params.id);
-    if(!listing)
-      return next(errorHandeler(404, "Listing not found !"));
-  } catch (error) {
-    return next(errorHandeler(401, error.message));
-  }
-}
