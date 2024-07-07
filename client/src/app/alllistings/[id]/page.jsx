@@ -3,6 +3,7 @@ import HoverButtonWrapper from "@/components/HoverButtonWrapper";
 import { useAppSelector } from "@/store/hooks/hooks";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { MdOutlineReply } from "react-icons/md";
 
 const AllListings = () => {
   const [listings, setListings] = useState([]);
@@ -64,12 +65,40 @@ const AllListings = () => {
 
   return (
     <div>
+       <div
+        style={{
+          marginLeft: "20px",
+          marginRight: "20px",
+          marginTop: "100px",
+          marginBottom: "25px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <HoverButtonWrapper>
+          <button
+            title="Back"
+            style={{
+              padding: "12px",
+              color: "#ffffff",
+              borderRadius: "8px",
+              background: "#2980b9",
+              cursor: "pointer",
+              opacity: "1",
+            }}
+            onClick={() => window.history.back()}
+          >
+            <MdOutlineReply />
+          </button>
+        </HoverButtonWrapper>
+        </div>
       <h1
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          marginTop: "150px",
+          //marginTop: "150px",
         }}
       >
         My Listings

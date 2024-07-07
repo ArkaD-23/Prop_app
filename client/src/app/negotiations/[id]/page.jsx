@@ -1,6 +1,82 @@
-import React from "react";
+"use client";
+import HoverButtonWrapper from "@/components/HoverButtonWrapper";
+import {
+  updateUserFailure,
+  updateUserStart,
+  updateUserSuccess,
+} from "@/store/features/user/userSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks.js";
+import Link from "next/link";
+import { MdOutlineReply } from "react-icons/md";
+import React, { useState, useEffect } from "react";
 
 const Negotiations = () => {
+  const dispatch = useAppDispatch();
+  const [listings, setListings] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const { currentUser } = useAppSelector((state) => state.user);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const fetchListings = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch("/server/listing/getall");
+        const data = await res.json();
+        console.log(data);
+        setListings(Array.isArray(data) ? data : []);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching listings:", error);
+        setListings([]);
+        setLoading(false);
+      }
+    };
+    fetchListings();
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+  const cardStyle = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+    margin: isMobile ? "20px 20px" : "30px 22%",
+  };
+
+  /*const removeFavourite = async (id) => {
+    dispatch(updateUserStart());
+    try {
+      const res = await fetch(`/server/user/remove/${currentUser._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type" : "application/json"
+          },
+          body: JSON.stringify({ id }),
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+      if(data.success === false) {
+        dispatch(updateUserFailure(...currentUser, data));
+        console.log(data);
+        return;
+      }
+      dispatch(updateUserSuccess({...currentUser, favourites: data.favourites}));
+      return;
+    } catch (error) {
+      dispatch(updateUserFailure(error));
+      console.log(error);
+    }
+  }*/
+
   return (
     <div>
       <div
@@ -62,7 +138,7 @@ const Negotiations = () => {
         {listings && listings.length > 0 && (
           <div style={cardStyle}>
             {listings.map((listing) => {
-              if (currentUser.favourites.includes(listing._id)) {
+              if (currentUser.negotiations.includes(listing._id)) {
                 return (
                   <HoverButtonWrapper>
                     <div
@@ -105,10 +181,13 @@ const Negotiations = () => {
                       <div
                         style={{
                           display: "flex",
-                          flexDirection: "column",
+                          //flexDirection: "column",
                           alignItems: "center",
+                          justifyContent:"space-between",
+                          gap:"10px"
                         }}
                       >
+                        <p style={{color:"#8B8000"}}>Pending</p>
                         <button
                           onClick={() => removeFavourite(listing._id)}
                           style={{

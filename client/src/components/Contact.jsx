@@ -61,7 +61,7 @@ const Contact = ({ listing }) => {
             headers:{
               "Content-Type":"application/json"
             },
-            body: JSON.stringify({id: listing._id})
+            body: JSON.stringify({listingId: listing._id})
           });
           const data = await res.json();
           if(data.success === false) {

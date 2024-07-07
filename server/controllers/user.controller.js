@@ -161,20 +161,20 @@ export const emailSender = async (req, res, next) => {
 };
 
 export const addNegotiation = async (req, res, next) => {
-  const { id } = req.body;
+  const { listingId } = req.body;
     try {
-      const user = await User.findById(req.params.id);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
+      const buyer = await User.findById(req.params.id);
+      if (!buyer) {
+        return next(errorHandeler(404, "Buyer not found !"));
       }
-      if (user.negotiations.includes(id)) {
-        return res.status(400).json({ message: "Already in negotiations" , negotiations: user.negotiations});
+      if (buyer.negotiations.includes(listingId)) {
+        return res.status(400).json({ message: "Already in negotiations" , negotiations: buyer.negotiations});
       }
-      user.negotiations.push(id);
-      await user.save();
+      buyer.negotiations.push(listingId);
+      await buyer.save();
       return res
         .status(200)
-        .json({ message: "Added to negotiations !", negotiations: user.negotiations });
+        .json({ message: "Added to negotiations !", negotiations: buyer.negotiations });
     } catch (error) {
       console.error(error);
       return next(errorHandeler(404, "Server error !"))
