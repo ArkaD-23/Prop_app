@@ -1,5 +1,4 @@
 "use client";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useAppSelector } from "@/store/hooks/hooks.js";
 import axios from "axios";
@@ -9,7 +8,6 @@ import { MdDelete } from "react-icons/md";
 
 const Sell = () => {
   const { currentUser } = useAppSelector((state) => state.user);
-  const router = useRouter();
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
     imageUrls: [],

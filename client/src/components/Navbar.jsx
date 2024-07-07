@@ -37,13 +37,18 @@ export const Navbar = () => {
         <ul style={{ display: "flex", listStyle: "none", fontWeight: "600" }}>
           {currentUser && (
             <>
-              <Link href={`/negotiations/${currentUser._id}`} style={{ textDecoration: "none" }}>
-                <li style={{ color: "azure", margin: "0 15px" }}>Negotiations</li>
-              </Link>
               {currentUser.userType === "Customer" && (
                 <>
                   <Link href="/search" style={{ textDecoration: "none" }}>
                     <li style={{ color: "azure", margin: "0 15px" }}>Buy</li>
+                  </Link>
+                  <Link
+                    href={`/negotiations/${currentUser._id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <li style={{ color: "azure", margin: "0 15px" }}>
+                      Negotiations
+                    </li>
                   </Link>
                   <Link
                     href={`/favourites/${currentUser._id}`}

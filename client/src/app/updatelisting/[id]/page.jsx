@@ -5,7 +5,7 @@ import { useAppSelector } from "@/store/hooks/hooks.js";
 import axios from "axios";
 import styles from "./update.module.css";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdOutlineReply } from "react-icons/md";
 
 const Update = () => {
   const { currentUser } = useAppSelector((state) => state.user);
@@ -177,7 +177,27 @@ const Update = () => {
   };
 
   return (
-    <main style={{ padding: "12px", maxWidth: "1024px", margin: "150px auto" }}>
+    <>
+   
+      <HoverButtonWrapper>
+          <button
+            title="Back"
+            style={{
+              padding: "12px",
+              color: "#ffffff",
+              borderRadius: "8px",
+              background: "#2980b9",
+              cursor: "pointer",
+              opacity: "1",
+              marginTop: "100px",
+              marginLeft:"20px"
+            }}
+            onClick={() => window.history.back()}
+          >
+            <MdOutlineReply />
+          </button>
+        </HoverButtonWrapper>
+    <main style={{ padding: "12px", maxWidth: "1024px", margin: "0px auto" , height:"100vh"}}>
       <h1
         style={{
           fontSize: "1.875rem",
@@ -470,6 +490,7 @@ const Update = () => {
         </div>
       </form>
     </main>
+    </>
   );
 };
 

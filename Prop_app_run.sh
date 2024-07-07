@@ -2,7 +2,7 @@
 
 npm run dev &
 
-sleep 5
+sleep 6
 
 cd client
 npm run dev 

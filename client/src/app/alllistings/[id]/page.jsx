@@ -41,13 +41,13 @@ const AllListings = () => {
   const handleListingDelete = async (listingId) => {
     try {
       const res = await fetch(`/server/listing/delete/${listingId}`, {
-        method:"DELETE"
+        method: "DELETE",
       });
       const data = res.json();
-      if(data.success === false) {
+      if (data.success === false) {
         alert("Something went wrong!");
         return;
-      };
+      }
       setListings((prev) =>
         prev.filter((listing) => listing._id !== listingId)
       );
@@ -65,7 +65,7 @@ const AllListings = () => {
 
   return (
     <div>
-       <div
+      <div
         style={{
           marginLeft: "20px",
           marginRight: "20px",
@@ -92,7 +92,7 @@ const AllListings = () => {
             <MdOutlineReply />
           </button>
         </HoverButtonWrapper>
-        </div>
+      </div>
       <h1
         style={{
           display: "flex",
@@ -167,22 +167,10 @@ const AllListings = () => {
                       <div
                         style={{
                           display: "flex",
-                          flexDirection: "column",
+                          gap: "10px",
                           alignItems: "center",
                         }}
                       >
-                        <button
-                          onClick={() => handleListingDelete(listing._id)}
-                          style={{
-                            color: "#c53030",
-                            textTransform: "uppercase",
-                            background: "none",
-                            border: "none",
-                            cursor: "pointer",
-                          }}
-                        >
-                          Delete
-                        </button>
                         <Link href={`/updatelisting/${listing._id}`}>
                           <button
                             style={{
@@ -196,6 +184,31 @@ const AllListings = () => {
                             Edit
                           </button>
                         </Link>
+                        <Link href={`/negotiate/${currentUser._id}`}>
+                          <button
+                            style={{
+                              color: "#2980b9",
+                              textTransform: "uppercase",
+                              background: "none",
+                              border: "none",
+                              cursor: "pointer",
+                            }}
+                          >
+                            Offer
+                          </button>
+                        </Link>
+                        <button
+                          onClick={() => handleListingDelete(listing._id)}
+                          style={{
+                            color: "#c53030",
+                            textTransform: "uppercase",
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Delete
+                        </button>
                       </div>
                     </div>
                   </HoverButtonWrapper>
