@@ -15,8 +15,10 @@ export const createlisting = async (req, res, next) => {
     imageUrls,
     Realtor,
     coordinates,
-    userRef
+    userRef,
   } = req.body;
+
+  const offerPriceMap = new Map();
 
   const alreadyListed = await Listing.findOne({ address });
   if (alreadyListed) {
@@ -37,6 +39,7 @@ export const createlisting = async (req, res, next) => {
       Realtor,
       coordinates,
       userRef,
+      offerPriceMap
     });
     await newListing.save();
 
@@ -180,3 +183,26 @@ export const paymentSession = async (req, res, next) => {
     next(errorHandeler(500, error.message)); // Adjust the status code as needed
   }
 };
+
+export const openOffer = async (req, res, next) => {
+  const { contact_no , Price} = req.body;
+  const listingId = req.body.listingId;
+  try {
+    const listing = await Listing.findById(listingId);
+    if (!listing) {
+      return next(errorHandeler(404, 'Listing not found'));
+    }
+    if (!(listing.offerPriceMap instanceof Map)) {
+      listing.offerPriceMap = new Map(Object.entries(listing.offerPriceMap));
+    }
+    listing.offerPriceMap.set(contact_no, Price);
+    listing.offerPriceMap = Object.fromEntries(listing.offerPriceMap);
+    await listing.save();
+    res.status(200).json({
+      message: 'Offer updated successfully',
+      listing
+    });
+  } catch (error) {
+    return next(errorHandeler(404, error.message));
+  }
+}

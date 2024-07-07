@@ -1,12 +1,44 @@
 "use client";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper.jsx";
+import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import { MdOutlineReply } from "react-icons/md";
 
 const Negotiate = () => {
 
   const [loading, setLoading] = useState(false);
-  
+  const [formData, setFormData] = useState({});
+  const { id } = useParams();
+
+  const handleChange = (e) => {
+    setFormData({...formData, [e.target.id]: e.target.value});
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const { contact_no, Price } = formData;
+      const res = await fetch("/server/listing/offer", 
+        {
+          method:"POST",
+          headers: {
+            "Content-Type":"application/json"
+          },
+          body: JSON.stringify({contact_no, Price, listingId: id}),
+        }
+      )
+      const data = await res.json();
+      if(data.success === false) {
+        console.log(data);
+        return;
+      }
+      //console.log(id);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+  }
   return (
     <div>
       <div
@@ -48,10 +80,12 @@ const Negotiate = () => {
         Create Offer
       </h1>
       <form
+        onSubmit={handleSubmit}
         style={{ maxWidth: "400px", padding: "3% 0 0", margin: "0px auto" }}
       >
         <input
-          id="email"
+          id="contact_no"
+          onChange={handleChange}
           style={{
             fontFamily: "Roboto",
             outline: "0",
@@ -65,10 +99,11 @@ const Negotiate = () => {
             borderRadius: "50px",
           }}
           type="text"
-          placeholder="Buyer's email"
+          placeholder="Buyer's contact"
         />
         <input
           id="Price"
+          onChange={handleChange}
           style={{
             fontFamily: "Roboto",
             outline: "0",

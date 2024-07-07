@@ -184,7 +184,7 @@ const AllListings = () => {
                             Edit
                           </button>
                         </Link>
-                        <Link href={`/negotiate/${currentUser._id}`}>
+                        <Link href={`/negotiate/${listing._id}`}>
                           <button
                             style={{
                               color: "#2980b9",

@@ -206,26 +206,28 @@ const Listing = () => {
             <MdOutlineReply />
           </button>
         </HoverButtonWrapper>
-        <HoverButtonWrapper>
-          <button
-            title="Add to favourites"
-            style={{
-              padding: "12px",
-              color: "#ffffff",
-              borderRadius: "8px",
-              background: "#2980b9",
-              cursor: "pointer",
-              opacity: 1,
-            }}
-            onClick={addToFavourites}
-          >
-            {currentUser.favourites.includes(id) ? (
-              <IoMdHeart />
-            ) : (
-              <IoMdHeartEmpty />
-            )}
-          </button>
-        </HoverButtonWrapper>
+        {currentUser.userType === "Customer" && (
+          <HoverButtonWrapper>
+            <button
+              title="Add to favourites"
+              style={{
+                padding: "12px",
+                color: "#ffffff",
+                borderRadius: "8px",
+                background: "#2980b9",
+                cursor: "pointer",
+                opacity: 1,
+              }}
+              onClick={addToFavourites}
+            >
+              {currentUser.favourites.includes(id) ? (
+                <IoMdHeart />
+              ) : (
+                <IoMdHeartEmpty />
+              )}
+            </button>
+          </HoverButtonWrapper>
+        )}
       </div>
       <div>
         {loading && (
@@ -371,30 +373,30 @@ const Listing = () => {
                       ) : (
                         <div>
                           {!contact && (
-                              <HoverButtonWrapper>
-                                <button
-                                  onClick={() => setContact(true)}
-                                  style={{
-                                    marginBottom:"20px",
-                                    fontFamily: '"Roboto", sans-serif',
-                                    textTransform: "uppercase",
-                                    outline: "0",
-                                    background: "#2980b9",
-                                    width: "100%",
-                                    border: "0",
-                                    padding: "15px",
-                                    color: "#FFFFFF",
-                                    fontSize: "14px",
-                                    WebkitTransition: "all 0.3s ease",
-                                    transition: "all 0.3s ease",
-                                    cursor: "pointer",
-                                    borderRadius: "50px",
-                                  }}
-                                >
-                                  Negotiate
-                                </button>
-                              </HoverButtonWrapper>
-                            )}
+                            <HoverButtonWrapper>
+                              <button
+                                onClick={() => setContact(true)}
+                                style={{
+                                  marginBottom: "20px",
+                                  fontFamily: '"Roboto", sans-serif',
+                                  textTransform: "uppercase",
+                                  outline: "0",
+                                  background: "#2980b9",
+                                  width: "100%",
+                                  border: "0",
+                                  padding: "15px",
+                                  color: "#FFFFFF",
+                                  fontSize: "14px",
+                                  WebkitTransition: "all 0.3s ease",
+                                  transition: "all 0.3s ease",
+                                  cursor: "pointer",
+                                  borderRadius: "50px",
+                                }}
+                              >
+                                Negotiate
+                              </button>
+                            </HoverButtonWrapper>
+                          )}
                           {contact && <Contact listing={listing} />}
                           <HoverButtonWrapper>
                             <button

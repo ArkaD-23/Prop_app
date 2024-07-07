@@ -1,5 +1,5 @@
 import express from "express"
-import { createlisting, deleteListing, getListings, getOneListing, paymentSession, updateListing } from "../controllers/listing.controller.js";
+import { createlisting, deleteListing, getListings, getOneListing, openOffer, paymentSession, updateListing } from "../controllers/listing.controller.js";
 import { verifyToken } from "../utils/verifyToken.js";
 
 const router = express.Router();
@@ -10,5 +10,6 @@ router.get("/getone/:id", getOneListing);
 router.post("/update/:id", verifyToken, updateListing);
 router.delete("/delete/:id", verifyToken, deleteListing);
 router.post("/create-checkout-session/:id", verifyToken, paymentSession);
+router.post("/offer", verifyToken, openOffer);
 
 export default router;

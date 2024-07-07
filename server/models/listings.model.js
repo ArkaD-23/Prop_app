@@ -53,6 +53,10 @@ const listingSchema = new mongoose.Schema({
     userRef: {
         type: String,
     },
+    offerPriceMap: {
+        type: Map,
+        of: Number,
+    },
 }, {timestamps: true});
 
 const Listing = new mongoose.model('Listing', listingSchema);
