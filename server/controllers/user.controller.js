@@ -1,5 +1,6 @@
 import { errorHandeler } from "../utils/error.js";
 import User from "../models/user.model.js";
+import Listing from "../models/listings.model.js";
 import bcryptjs from "bcryptjs";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
@@ -179,4 +180,28 @@ export const addNegotiation = async (req, res, next) => {
       console.error(error);
       return next(errorHandeler(404, "Server error !"))
     }
+};
+
+export const removeNegotiation = async (req, res, next) => {
+  try {
+    const { id } = req.body;
+    const listing = await Listing.findById(id);
+    const user = await User.findById(req.params.id);
+    if(!user) {
+      return next(errorHandeler(404, "User not found !"));
+    }
+    if(!listing) {
+      return next(errorHandeler(404, "Listing not found !"));
+    }
+    /*if(!listing.offerPriceMap.has(user.contact_no)) {
+      return next(errorHandeler(401, "This user has no offer !"));    
+    }*/
+    user.negotiations = user.negotiations.filter(negotiation => negotiation !== id);
+    await user.save();
+    listing.offerPriceMap.delete(user.contact_no);
+    await listing.save();
+    return res.status(200).json({message:"Listing removed from negotiations .", negotiations: user.negotiations});
+  } catch (error) {
+    return next(errorHandeler(400, "Server error !"));
+  }
 }

@@ -52,6 +52,7 @@ const Negotiations = () => {
   };
 
   const removeNegotiation = async (id) => {
+    dispatch(updateUserStart());
     try {
       const res = await fetch(`/server/user/remove-negotiation/${currentUser._id}`,
         {
@@ -59,18 +60,22 @@ const Negotiations = () => {
           headers: {
             "Content-Type" : "application/json"
           },
-          body: JSON.stringify({ id }),
+          body: JSON.stringify({ id: id }),
         }
       );
       const data = await res.json();
       console.log(data);
       if(data.success === false) {
         console.log(data);
+        dispatch(updateUserFailure(...currentUser, data));
         return;
       }
+      dispatch(updateUserSuccess({...currentUser, negotiations: data.negotiations}));
       return;
     } catch (error) {
       console.log(error);
+      dispatch(updateUserFailure(error));
+      return;
     }
   }
 

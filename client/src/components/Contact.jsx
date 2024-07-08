@@ -54,7 +54,7 @@ const Contact = ({ listing }) => {
       }
       else {
         try {      
-          dispatch(updateUserStart);
+          dispatch(updateUserStart());
           const res = await fetch(`/server/user/addnegotiation/${currentUser._id}`,
           {
             method:"POST",
@@ -66,7 +66,7 @@ const Contact = ({ listing }) => {
           const data = await res.json();
           if(data.success === false) {
             console.log(data);
-            dispatch(updateUserFailure(data));
+            dispatch(updateUserFailure({...currentUser, negotiations: data.negotiations}));
             return;
           }
           console.log(data);
