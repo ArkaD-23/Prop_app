@@ -156,7 +156,7 @@ const Listing = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id: currentUser._id }),
       });
       if (!res.ok) {
         const errorData = await res.json();

@@ -1,5 +1,6 @@
 import { errorHandeler } from "../utils/error.js";
 import Listing from "../models/listings.model.js";
+import User from "../models/user.model.js";
 import Stripe from "stripe";
 
 export const createlisting = async (req, res, next) => {
@@ -18,7 +19,7 @@ export const createlisting = async (req, res, next) => {
     userRef,
   } = req.body;
 
-  const offerPriceMap = new Map();
+  let offerPriceMap = new Map();
 
   const alreadyListed = await Listing.findOne({ address });
   if (alreadyListed) {
@@ -39,7 +40,7 @@ export const createlisting = async (req, res, next) => {
       Realtor,
       coordinates,
       userRef,
-      offerPriceMap
+      offerPriceMap,
     });
     await newListing.save();
 
@@ -74,7 +75,7 @@ export const getListings = async (req, res, next) => {
         $or: [
           { name: { $regex: searchTerm, $options: "i" } },
           { address: { $regex: searchTerm, $options: "i" } },
-        ]
+        ],
       }),
       ...(offer !== undefined && { offer }),
       ...(parking !== undefined && { parking }),
@@ -107,29 +108,31 @@ export const updateListing = async (req, res, next) => {
   const listing = await Listing.findById(req.params.id);
   if (!listing) {
     return next(errorHandeler(404, "Listing not found!"));
-  };
+  }
 
   try {
     const updatedListing = await Listing.findByIdAndUpdate(
       req.params.id,
       {
         $set: {
-          name:req.body.name,
-          description:req.body.description,
-          address:req.body.address,
-          Price:req.body.Price,
-          bathrooms:req.body.bathrooms,
-          bedrooms:req.body.bedrooms,
-          parking:req.body.parking,
-          offer:req.body.offer,
-          imageUrls:req.body.imageUrls,
-          Realtor:req.body.Realtor,
-          coordinates:req.body.coordinates,
+          name: req.body.name,
+          description: req.body.description,
+          address: req.body.address,
+          Price: req.body.Price,
+          bathrooms: req.body.bathrooms,
+          bedrooms: req.body.bedrooms,
+          parking: req.body.parking,
+          offer: req.body.offer,
+          imageUrls: req.body.imageUrls,
+          Realtor: req.body.Realtor,
+          coordinates: req.body.coordinates,
         },
       },
       { new: true }
     );
-    res.status(200).json({data:updatedListing , message:"Listing has been updated!"});
+    res
+      .status(200)
+      .json({ data: updatedListing, message: "Listing has been updated!" });
   } catch (error) {
     next(errorHandeler(404, "Something went wrong!"));
   }
@@ -151,32 +154,43 @@ export const deleteListing = async (req, res, next) => {
 };
 
 export const paymentSession = async (req, res, next) => {
-  const listing = await Listing.findById(req.body.id);
+  const listing = await Listing.findById(req.params.id);
+  const currentUser = await User.findById(req.body.id);
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
   if (!listing) {
     return next(errorHandeler(404, "Listing not found!"));
   }
 
+  if (!currentUser) {
+    return next(errorHandeler(404, "User not found!"));
+  }
+
   try {
+    const unit_amount =
+    listing.offerPriceMap.has(currentUser.contact_no)
+        ? listing.offerPriceMap.get(currentUser.contact_no)
+        : listing.Price;
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
-      line_items: [{
-        price_data: {
-          currency: "inr",
-          product_data: {
-            name: listing.name
+      line_items: [
+        {
+          price_data: {
+            currency: "inr",
+            product_data: {
+              name: listing.name,
+            },
+            unit_amount: unit_amount,
           },
-          unit_amount: listing.Price, 
+          quantity: 1,
         },
-        quantity: 1,
-      }],
+      ],
       success_url: `${process.env.HOST_URL}/success`,
-      cancel_url: `${process.env.HOST_URL}/failure`, 
+      cancel_url: `${process.env.HOST_URL}/failure`,
       metadata: {
-        listing_id: listing._id.toString(), 
-      },   
+        listing_id: listing._id.toString(),
+      },
     });
     res.status(200).json({ url: session.url });
   } catch (error) {
@@ -185,24 +199,23 @@ export const paymentSession = async (req, res, next) => {
 };
 
 export const openOffer = async (req, res, next) => {
-  const { contact_no , Price} = req.body;
+  const { contact_no, Price } = req.body;
   const listingId = req.body.listingId;
   try {
     const listing = await Listing.findById(listingId);
     if (!listing) {
-      return next(errorHandeler(404, 'Listing not found'));
+      return next(errorHandeler(404, "Listing not found"));
     }
     if (!(listing.offerPriceMap instanceof Map)) {
       listing.offerPriceMap = new Map(Object.entries(listing.offerPriceMap));
     }
     listing.offerPriceMap.set(contact_no, Price);
-    listing.offerPriceMap = Object.fromEntries(listing.offerPriceMap);
     await listing.save();
     res.status(200).json({
-      message: 'Offer updated successfully',
-      listing
+      message: "Offer updated successfully",
+      listing,
     });
   } catch (error) {
     return next(errorHandeler(404, error.message));
   }
-}
+};

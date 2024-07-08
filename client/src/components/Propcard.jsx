@@ -1,7 +1,10 @@
-import React from "react";
+import { useAppSelector } from "@/store/hooks/hooks";
+import React, { useEffect } from "react";
 import { MdLocationOn } from "react-icons/md";
 
 const Propcard = ({ listing }) => {
+  const { currentUser } = useAppSelector((state) => state.user);
+
   return (
     <div
       style={{
@@ -44,7 +47,7 @@ const Propcard = ({ listing }) => {
               margin:"0px"
             }}
           >
-            Rs.{listing.Price}
+            {currentUser.contact_no in listing.offerPriceMap ? `Rs.${listing.offerPriceMap[currentUser.contact_no]}` : `Rs.${listing.Price}`}
           </p>
           <p style={{margin:"10px 0",marginBottom:"0px", color: "#4B5563" }}>{listing.name}</p>
           {/*<p style={{ fontSize: "1.875rem", color: "#1F2937" }}></p>*/}

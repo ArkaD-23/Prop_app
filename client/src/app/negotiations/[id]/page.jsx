@@ -16,6 +16,7 @@ const Negotiations = () => {
   const [loading, setLoading] = useState(false);
   const { currentUser } = useAppSelector((state) => state.user);
   const [isMobile, setIsMobile] = useState(false);
+  const [isNegotiated, setIsNegotiated] = useState(false);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -41,7 +42,7 @@ const Negotiations = () => {
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
-    };
+    };  
   }, []);
   const cardStyle = {
     display: "flex",
@@ -50,10 +51,9 @@ const Negotiations = () => {
     margin: isMobile ? "20px 20px" : "30px 22%",
   };
 
-  /*const removeFavourite = async (id) => {
-    dispatch(updateUserStart());
+  const removeNegotiation = async (id) => {
     try {
-      const res = await fetch(`/server/user/remove/${currentUser._id}`,
+      const res = await fetch(`/server/user/remove-negotiation/${currentUser._id}`,
         {
           method: "POST",
           headers: {
@@ -65,17 +65,14 @@ const Negotiations = () => {
       const data = await res.json();
       console.log(data);
       if(data.success === false) {
-        dispatch(updateUserFailure(...currentUser, data));
         console.log(data);
         return;
       }
-      dispatch(updateUserSuccess({...currentUser, favourites: data.favourites}));
       return;
     } catch (error) {
-      dispatch(updateUserFailure(error));
       console.log(error);
     }
-  }*/
+  }
 
   return (
     <div>
@@ -187,9 +184,10 @@ const Negotiations = () => {
                           gap:"10px"
                         }}
                       >
-                        <p style={{color:"#8B8000"}}>Pending</p>
+                        {currentUser.contact_no in listing.offerPriceMap ? <p style={{color:"green"}}>Accepted</p> : 
+                        <p style={{color:"#8B8000"}}>Pending</p>}
                         <button
-                          onClick={() => removeFavourite(listing._id)}
+                          onClick={() => removeNegotiation(listing._id)}
                           style={{
                             color: "#c53030",
                             textTransform: "uppercase",
