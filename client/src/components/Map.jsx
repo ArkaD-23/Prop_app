@@ -4,7 +4,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { createRoot } from 'react-dom/client';
 import Mapcard from './Mapcard';
 
-const Map = ({ listings, styleURL, highlightedListingId }) => {
+const Map = ({ listings, styleURL, highlightedListingId, zoom}) => {
   const mapContainerRef = useRef(null);
   const [map, setMap] = useState(null);
   const [pois, setPois] = useState([]);
@@ -17,12 +17,13 @@ const Map = ({ listings, styleURL, highlightedListingId }) => {
       container: mapContainerRef.current,
       style: styleURL,
       center: [listings[0].coordinates.longitude, listings[0].coordinates.latitude],
-      zoom: 3
+      zoom: zoom ? zoom : 9
     });
 
     initializeMap.on('load', () => {
       setMap(initializeMap);
     });
+
 
     return () => {
       if (map) {
@@ -33,6 +34,8 @@ const Map = ({ listings, styleURL, highlightedListingId }) => {
 
   useEffect(() => {
     if (!map || listings.length === 0) return;
+
+    const highlightedListing = listings.find(listing => listing._id === highlightedListingId)
 
     listings.forEach(listing => {
       const popupNode = document.createElement('div');
@@ -49,6 +52,7 @@ const Map = ({ listings, styleURL, highlightedListingId }) => {
         .addTo(map);
 
       if (highlighted) {
+        map.setCenter([highlightedListing.coordinates.longitude, highlightedListing.coordinates.latitude])
         fetchPOIs(listing.coordinates.longitude, listing.coordinates.latitude);
       }
     });

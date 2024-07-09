@@ -327,6 +327,7 @@ const Buy = () => {
           <Map
             listings={listings}
             styleURL="mapbox://styles/mapbox/streets-v12"
+            zoom={3}
           />
         </div>
       </div>
