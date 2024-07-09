@@ -2,14 +2,14 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem; 
-  padding: 7rem 0.75rem; 
+  padding: 7rem 0; 
   max-width: 96rem; 
   margin-left: auto;
   margin-right: auto;
 }
 @media (min-width: 640px) {
   .container {
-    margin-left: 100px; 
+    margin-left: 40px; 
   }
 }
 

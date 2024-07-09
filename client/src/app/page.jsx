@@ -43,9 +43,10 @@ export default function Home() {
     if (listings.length < 6) {
       const imageUrls = listings.map((listing) => listing.imageUrls[0]);
       setImages(imageUrls);
-    }
-    else {
-      const imageUrls = listings.map((listing) => listing.imageUrls[0].slice(0,6));
+    } else {
+      const imageUrls = listings.map((listing) =>
+        listing.imageUrls[0].slice(0, 6)
+      );
       setImages(imageUrls);
     }
   }, [listings]);
@@ -57,44 +58,56 @@ export default function Home() {
 
   return (
     <>
-      <div className={styles.container}>
-        <h1 className={styles.header}>
-          Find your next <span className={styles.highlight}>perfect</span>
-          <br />
-          place with ease
-        </h1>
-        <div className={styles.description}>
-          PropApp is the best place to find your next perfect place to live.
-          <br />
-          We have a wide range of properties for you to choose from.
+      <div style={{display:"flex", alignItems:"center", justifyContent:"space-between"}}>
+        <div className={styles.container}>
+          <h1 className={styles.header}>
+            Find your next <span className={styles.highlight}>perfect</span>
+            <br />
+            place with ease
+          </h1>
+          <div className={styles.description}>
+            PropApp is the best place to find your next perfect place to live.
+            <br />
+            We have a wide range of properties for you to choose from.
+          </div>
+          <Link
+            href={linkTo}
+            style={{ textDecoration: "none", width: "200px" }}
+          >
+            <HoverButtonWrapper>
+              <button
+                style={{
+                  fontFamily: '"Roboto", sans-serif',
+                  textTransform: "uppercase",
+                  outline: "0",
+                  background: "#2980b9",
+                  width: "100%",
+                  border: "0",
+                  padding: "15px",
+                  color: "#FFFFFF",
+                  fontSize: "14px",
+                  WebkitTransition: "all 0.3 ease",
+                  transition: "all 0.3 ease",
+                  cursor: "pointer",
+                  borderRadius: "50px",
+                }}
+              >
+                {loading ? "Loading...." : "Let's get started..."}
+              </button>
+            </HoverButtonWrapper>
+          </Link>
         </div>
-        <Link href={linkTo} style={{ textDecoration: "none", width: "200px" }}>
-          <HoverButtonWrapper>
-            <button
-              style={{
-                fontFamily: '"Roboto", sans-serif',
-                textTransform: "uppercase",
-                outline: "0",
-                background: "#2980b9",
-                width: "100%",
-                border: "0",
-                padding: "15px",
-                color: "#FFFFFF",
-                fontSize: "14px",
-                WebkitTransition: "all 0.3 ease",
-                transition: "all 0.3 ease",
-                cursor: "pointer",
-                borderRadius: "50px",
-              }}
-            >
-              {loading ? "Loading...." : "Let's get started..."}
-            </button>
-          </HoverButtonWrapper>
-        </Link>
+        {!isMobile && <div style={{ width: "45%", marginTop: "80px" , marginRight:"50px"}}>
+          <img
+            src="landingpage.jpg"
+            alt="home"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        </div>}
       </div>
-        <div style={containerStyles}>
-          <ImageSlider slides={images} />
-        </div>
+      <div style={containerStyles}>
+        <ImageSlider slides={images} />
+      </div>
     </>
   );
 }

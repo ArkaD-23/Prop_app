@@ -31,8 +31,6 @@ const Listing = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.user);
-  const [landlord, setLandlord] = useState({});
-  const [landlordLoading, setLandlordLoading] = useState(false);
 
   useEffect(() => {
     const fetchListing = async () => {
