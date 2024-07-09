@@ -368,39 +368,13 @@ const Listing = () => {
                         marginLeft: "20px",
                       }}
                     >
-                      {landlordLoading ? (
-                        <p>...</p>
-                      ) : (
-                        <div>
-                          {!contact && (
-                            <HoverButtonWrapper>
-                              <button
-                                onClick={() => setContact(true)}
-                                style={{
-                                  marginBottom: "20px",
-                                  fontFamily: '"Roboto", sans-serif',
-                                  textTransform: "uppercase",
-                                  outline: "0",
-                                  background: "#2980b9",
-                                  width: "100%",
-                                  border: "0",
-                                  padding: "15px",
-                                  color: "#FFFFFF",
-                                  fontSize: "14px",
-                                  WebkitTransition: "all 0.3s ease",
-                                  transition: "all 0.3s ease",
-                                  cursor: "pointer",
-                                  borderRadius: "50px",
-                                }}
-                              >
-                                Negotiate
-                              </button>
-                            </HoverButtonWrapper>
-                          )}
-                          {contact && <Contact listing={listing} />}
+                      <div>
+                        {!contact && (
                           <HoverButtonWrapper>
                             <button
+                              onClick={() => setContact(true)}
                               style={{
+                                marginBottom: "20px",
                                 fontFamily: '"Roboto", sans-serif',
                                 textTransform: "uppercase",
                                 outline: "0",
@@ -415,13 +389,35 @@ const Listing = () => {
                                 cursor: "pointer",
                                 borderRadius: "50px",
                               }}
-                              onClick={pay}
                             >
-                              Buy now
+                              Negotiate
                             </button>
                           </HoverButtonWrapper>
-                        </div>
-                      )}
+                        )}
+                        {contact && <Contact listing={listing} />}
+                        <HoverButtonWrapper>
+                          <button
+                            style={{
+                              fontFamily: '"Roboto", sans-serif',
+                              textTransform: "uppercase",
+                              outline: "0",
+                              background: "#2980b9",
+                              width: "100%",
+                              border: "0",
+                              padding: "15px",
+                              color: "#FFFFFF",
+                              fontSize: "14px",
+                              WebkitTransition: "all 0.3s ease",
+                              transition: "all 0.3s ease",
+                              cursor: "pointer",
+                              borderRadius: "50px",
+                            }}
+                            onClick={pay}
+                          >
+                            Buy now
+                          </button>
+                        </HoverButtonWrapper>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -429,6 +425,7 @@ const Listing = () => {
             </div>
             {currentUser.userType === "Customer" && (
               <div style={{ containerStyles }}>
+                <p style={{color:"lightgray", margin:"0px"}}>*Hospitals, schools and banks in 1km of radius are highlighted in green</p>
                 <Map
                   listings={allListings}
                   styleURL="mapbox://styles/mapbox/streets-v12"
