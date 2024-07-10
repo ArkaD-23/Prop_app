@@ -52,31 +52,6 @@ const Contact = ({ listing }) => {
         setLoading(false);
         return;
       }
-      else {
-        try {      
-          dispatch(updateUserStart());
-          const res = await fetch(`/server/user/addnegotiation/${currentUser._id}`,
-          {
-            method:"POST",
-            headers:{
-              "Content-Type":"application/json"
-            },
-            body: JSON.stringify({listingId: listing._id})
-          });
-          const data = await res.json();
-          if(data.success === false) {
-            console.log(data);
-            dispatch(updateUserFailure({...currentUser, negotiations: data.negotiations}));
-            return;
-          }
-          console.log(data);
-          dispatch(updateUserSuccess({ ...currentUser, negotiations: data.negotiations }))
-        } catch (error) {
-          console.log(error);
-          dispatch(updateUserFailure(error));
-          return;
-        }
-      }
       setLoading(false);
     } catch (error) {
       alert(error.message);

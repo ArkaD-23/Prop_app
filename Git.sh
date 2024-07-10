@@ -11,5 +11,5 @@ echo "Commiting message............"
 git commit -m "$commit_message"
 
 echo "Pushing code.............."
-sleep 5
+sleep 2
 git push origin master

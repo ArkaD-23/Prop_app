@@ -2,6 +2,7 @@
 import { useAppSelector } from "@/store/hooks/hooks.js";
 import Link from "next/link";
 import React from "react";
+import { Navbarmenu } from "@/components/Navbarmenu.jsx";
 
 export const Navbar = () => {
   const { currentUser } = useAppSelector((state) => state.user);
@@ -18,6 +19,7 @@ export const Navbar = () => {
         boxShadow: "0 5px 10px rgba(0, 0, 0, 0.1)",
       }}
     >
+      {/*<Navbarmenu />*/}
       <div
         style={{
           display: "flex",

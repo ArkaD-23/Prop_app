@@ -28,6 +28,7 @@ const Listing = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [allListings, setAllListings] = useState([]);
   const [contact, setContact] = useState(false);
+  const [negotiate, setNegotiate] = useState(false);
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.user);
@@ -94,6 +95,42 @@ const Listing = () => {
   const containerStyles = {
     width: isMobile ? "100%" : "60%",
     height: isMobile ? "30vh" : "70vh",
+  };
+
+  const addToNegotiations = async () => {
+    try {
+      dispatch(updateUserStart());
+      const res = await fetch(
+        `/server/user/addnegotiation/${currentUser._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            listingId: listing._id,
+            suggestedMinPrice: suggestedMinPrice,
+            suggestedMaxPrice: suggestedMaxPrice,
+          }),
+        }
+      );
+      const data = await res.json();
+      if (data.success === false) {
+        console.log(data);
+        dispatch(
+          updateUserFailure({ ...currentUser, negotiations: data.negotiations })
+        );
+        return;
+      }
+      console.log(data);
+      dispatch(
+        updateUserSuccess({ ...currentUser, negotiations: data.negotiations })
+      );
+    } catch (error) {
+      console.log(error);
+      dispatch(updateUserFailure(error));
+      return;
+    }
   };
 
   const addToFavourites = async () => {
@@ -367,6 +404,145 @@ const Listing = () => {
                       }}
                     >
                       <div>
+                        <div
+                          style={{
+                            display: negotiate ? "grid" : "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <div style={{ width: negotiate ? "100%":"45%" }}>
+                            <HoverButtonWrapper>
+                              <button
+                                style={{
+                                  marginBottom: "20px",
+                                  fontFamily: '"Roboto", sans-serif',
+                                  textTransform: "uppercase",
+                                  outline: "0",
+                                  background: "#2980b9",
+                                  width: "100%",
+                                  border: "0",
+                                  padding: "15px",
+                                  color: "#FFFFFF",
+                                  fontSize: "14px",
+                                  WebkitTransition: "all 0.3s ease",
+                                  transition: "all 0.3s ease",
+                                  cursor: "pointer",
+                                  borderRadius: "50px",
+                                }}
+                                onClick={pay}
+                              >
+                                Buy now
+                              </button>
+                            </HoverButtonWrapper>
+                          </div>
+                          <div style={{ width: "45%" }}>
+                            {!negotiate && (
+                              <HoverButtonWrapper>
+                                <button
+                                  onClick={() => setNegotiate(true)}
+                                  style={{
+                                    marginBottom: "20px",
+                                    fontFamily: '"Roboto", sans-serif',
+                                    textTransform: "uppercase",
+                                    outline: "0",
+                                    background: "#2980b9",
+                                    width: "100%",
+                                    border: "0",
+                                    padding: "15px",
+                                    color: "#FFFFFF",
+                                    fontSize: "14px",
+                                    WebkitTransition: "all 0.3s ease",
+                                    transition: "all 0.3s ease",
+                                    cursor: "pointer",
+                                    borderRadius: "50px",
+                                  }}
+                                >
+                                  Negotiate
+                                </button>
+                              </HoverButtonWrapper>
+                            )}
+                          </div>
+                          {negotiate && (
+                            <div>
+                              <p>
+                                Enter{" "}
+                                <span style={{ fontWeight: "bold" }}>
+                                  Price Range
+                                </span>{" "}
+                                for{" "}
+                                <span style={{ fontWeight: "bold" }}>
+                                  {listing.name.toLowerCase()}
+                                </span>
+                              </p>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <input
+                                  id="Min_Price"
+                                  style={{
+                                    fontFamily: "Roboto",
+                                    outline: "0",
+                                    background: "#f2f2f2",
+                                    width: "100%",
+                                    border: "0",
+                                    margin: "0 0 15px",
+                                    padding: "15px",
+                                    boxSizing: "border-box",
+                                    fontSize: "14px",
+                                    borderRadius: "50px",
+                                  }}
+                                  type="text"
+                                  placeholder="Min"
+                                />
+                                <span style={{ fontWeight: "bold" }}>-</span>
+                                <input
+                                  id="Max_Price"
+                                  style={{
+                                    fontFamily: "Roboto",
+                                    outline: "0",
+                                    background: "#f2f2f2",
+                                    width: "100%",
+                                    border: "0",
+                                    margin: "0 0 15px",
+                                    padding: "15px",
+                                    boxSizing: "border-box",
+                                    fontSize: "14px",
+                                    borderRadius: "50px",
+                                  }}
+                                  type="text"
+                                  placeholder="Max"
+                                />
+                              </div>
+                              <HoverButtonWrapper>
+                                <button
+                                  style={{
+                                    marginBottom: "20px",
+                                    fontFamily: '"Roboto", sans-serif',
+                                    textTransform: "uppercase",
+                                    outline: "0",
+                                    background: "#2980b9",
+                                    width: "100%",
+                                    border: "0",
+                                    padding: "15px",
+                                    color: "#FFFFFF",
+                                    fontSize: "14px",
+                                    WebkitTransition: "all 0.3s ease",
+                                    transition: "all 0.3s ease",
+                                    cursor: "pointer",
+                                    borderRadius: "50px",
+                                  }}
+                                >
+                                  Place
+                                </button>
+                              </HoverButtonWrapper>
+                            </div>
+                          )}
+                        </div>
                         {!contact && (
                           <HoverButtonWrapper>
                             <button
@@ -388,33 +564,11 @@ const Listing = () => {
                                 borderRadius: "50px",
                               }}
                             >
-                              Negotiate
+                              Contact Seller
                             </button>
                           </HoverButtonWrapper>
                         )}
                         {contact && <Contact listing={listing} />}
-                        <HoverButtonWrapper>
-                          <button
-                            style={{
-                              fontFamily: '"Roboto", sans-serif',
-                              textTransform: "uppercase",
-                              outline: "0",
-                              background: "#2980b9",
-                              width: "100%",
-                              border: "0",
-                              padding: "15px",
-                              color: "#FFFFFF",
-                              fontSize: "14px",
-                              WebkitTransition: "all 0.3s ease",
-                              transition: "all 0.3s ease",
-                              cursor: "pointer",
-                              borderRadius: "50px",
-                            }}
-                            onClick={pay}
-                          >
-                            Buy now
-                          </button>
-                        </HoverButtonWrapper>
                       </div>
                     </div>
                   )}
@@ -423,7 +577,10 @@ const Listing = () => {
             </div>
             {currentUser.userType === "Customer" && (
               <div style={{ containerStyles }}>
-                <p style={{color:"lightgray", margin:"0px"}}>*Hospitals, schools and banks in 1km of radius are highlighted in green</p>
+                <p style={{ color: "lightgray", margin: "0px" }}>
+                  *Hospitals, schools and banks in 1km of radius are highlighted
+                  in green
+                </p>
                 <Map
                   listings={allListings}
                   styleURL="mapbox://styles/mapbox/streets-v12"
