@@ -162,12 +162,25 @@ export const emailSender = async (req, res, next) => {
 };
 
 export const addNegotiation = async (req, res, next) => {
-  const { listingId } = req.body;
+  const { listingId , Min_Price , Max_Price } = req.body;
     try {
       const buyer = await User.findById(req.params.id);
+      const listing = await Listing.findById(listingId);
+      const seller = await User.findById(listing.userRef);
       if (!buyer) {
         return next(errorHandeler(404, "Buyer not found !"));
       }
+      if (!listing) {
+        return next(errorHandeler(404, "Listing not found !"));
+      }
+      if (!seller) {
+        return next(errorHandeler(404, "Seller not found !"));
+      }
+      if (!(seller.priceRangeMap instanceof Map)) {
+        seller.priceRangeMap = new Map(Object.entries(seller.priceRangeMap));
+      }
+      seller.priceRangeMap.set(buyer._id, `${buyer.username} has placed a negotiation of price range Rs.${Min_Price} to Rs.${Max_Price}`);
+      await seller.save();
       if (buyer.negotiations.includes(listingId)) {
         return res.status(400).json({ message: "Already in negotiations" , negotiations: buyer.negotiations});
       }

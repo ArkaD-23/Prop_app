@@ -28,7 +28,11 @@ const userSchema = new mongoose.Schema({
     },
     negotiations:{
         type: Array,
-    }
+    },
+    priceRangeMap: {
+        type: Map,
+        of: String,
+    },
 } , {timestamps : true});
 
 const User = mongoose.model('User',userSchema);

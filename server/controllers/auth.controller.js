@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 
 export const signup = async (req, res, next) => {
   const { username, email, password, contact_no, userType, favourites } = req.body;
+  let priceRangeMap = new Map();
   if (!username || !email || !password || !contact_no || !userType) {
     return next(errorHandeler(401, "Please fill all the fields !"));
   };
@@ -38,6 +39,7 @@ export const signup = async (req, res, next) => {
     contact_no,
     userType,
     favourites,
+    priceRangeMap,
   });
   try {
     await newUser.save();

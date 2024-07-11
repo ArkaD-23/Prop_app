@@ -32,6 +32,7 @@ const Listing = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.user);
+  const [formData, setFormData] = useState(null);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -97,6 +98,10 @@ const Listing = () => {
     height: isMobile ? "30vh" : "70vh",
   };
 
+  const handleChange = (e) => {
+    setFormData({...formData, [e.target.id] : e.target.value});
+  }
+
   const addToNegotiations = async () => {
     try {
       dispatch(updateUserStart());
@@ -109,8 +114,8 @@ const Listing = () => {
           },
           body: JSON.stringify({
             listingId: listing._id,
-            suggestedMinPrice: suggestedMinPrice,
-            suggestedMaxPrice: suggestedMaxPrice,
+            Min_Price: formData.Min_Price,
+            Max_Price: formData.Max_Price,
           }),
         }
       );
@@ -498,6 +503,7 @@ const Listing = () => {
                                   }}
                                   type="text"
                                   placeholder="Min"
+                                  onChange={handleChange}
                                 />
                                 <span style={{ fontWeight: "bold" }}>-</span>
                                 <input
@@ -516,6 +522,7 @@ const Listing = () => {
                                   }}
                                   type="text"
                                   placeholder="Max"
+                                  onChange={handleChange}
                                 />
                               </div>
                               <HoverButtonWrapper>
@@ -536,6 +543,7 @@ const Listing = () => {
                                     cursor: "pointer",
                                     borderRadius: "50px",
                                   }}
+                                  onClick={addToNegotiations}
                                 >
                                   Place
                                 </button>
