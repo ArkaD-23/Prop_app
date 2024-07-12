@@ -211,10 +211,19 @@ export const removeNegotiation = async (req, res, next) => {
     }*/
     user.negotiations = user.negotiations.filter(negotiation => negotiation !== id);
     await user.save();
-    listing.offerPriceMap.delete(user.contact_no);
+    listing.offerPriceMap.delete(user.username);
     await listing.save();
     return res.status(200).json({message:"Listing removed from negotiations .", negotiations: user.negotiations});
   } catch (error) {
     return next(errorHandeler(400, "Server error !"));
   }
+};
+
+export const removeNotification = async (req, res, next) => {
+  const {id} = req.body;
+  const currentUser = await User.findById(id);
+  if(!currentUser) {
+    return next(errorHandeler(404, "User not found !"));
+  }
+
 }

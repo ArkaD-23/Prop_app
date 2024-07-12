@@ -1,30 +1,16 @@
 "use client";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
 import { updateUserFailure, updateUserStart, updateUserSuccess } from "@/store/features/user/userSlice";
-import { useAppSelector } from "@/store/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
 import React, { useEffect, useState } from "react";
 import { MdOutlineReply , MdClear } from "react-icons/md";
 
 const Notificaions = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const [listings, setListings] = useState({});
   const { currentUser } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const fetchListings = async () => {
-      try {
-        const res = await fetch("/server/listing/getall");
-        const data = await res.json();
-        console.log(data);
-        console.log(currentUser.priceRangeMap)
-        setListings(Array.isArray(data) ? data : []);
-      } catch (error) {
-        console.error("Error fetching listings:", error);
-        setListings([]);
-      }
-    };
-    fetchListings();
-
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 640);
     };
@@ -43,7 +29,7 @@ const Notificaions = () => {
         headers:{
           "Content-type" : "application/json",
         },
-        body:JSON.stringify({currentUser: currentUser._id}) 
+        body:JSON.stringify({id : currentUser._id}) 
       });
       const data = await res.json();
       if(data.success === false) {
@@ -57,7 +43,6 @@ const Notificaions = () => {
       console.log(error);
       dispatch(updateUserFailure(error));
     }
-    
   }
 
   const cardStyle = {
