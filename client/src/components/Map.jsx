@@ -17,7 +17,7 @@ const Map = ({ listings, styleURL, highlightedListingId, zoom}) => {
       container: mapContainerRef.current,
       style: styleURL,
       center: [listings[0].coordinates.longitude, listings[0].coordinates.latitude],
-      zoom: zoom ? zoom : 9
+      zoom: zoom ? zoom : 12
     });
 
     initializeMap.on('load', () => {

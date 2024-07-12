@@ -17,14 +17,14 @@ const Negotiate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { contact_no, Price } = formData;
+      const { username , Price } = formData;
       const res = await fetch("/server/listing/offer", 
         {
           method:"POST",
           headers: {
             "Content-Type":"application/json"
           },
-          body: JSON.stringify({contact_no, Price, listingId: id}),
+          body: JSON.stringify({username, Price, listingId: id}),
         }
       )
       const data = await res.json();
@@ -84,7 +84,7 @@ const Negotiate = () => {
         style={{ maxWidth: "400px", padding: "3% 0 0", margin: "0px auto" }}
       >
         <input
-          id="contact_no"
+          id="username"
           onChange={handleChange}
           style={{
             fontFamily: "Roboto",
@@ -99,7 +99,7 @@ const Negotiate = () => {
             borderRadius: "50px",
           }}
           type="text"
-          placeholder="Buyer's contact"
+          placeholder="Buyer's username"
         />
         <input
           id="Price"

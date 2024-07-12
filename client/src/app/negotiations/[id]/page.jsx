@@ -189,7 +189,7 @@ const Negotiations = () => {
                           gap:"10px"
                         }}
                       >
-                        {currentUser.contact_no in listing.offerPriceMap ? <p style={{color:"green"}}>Accepted</p> : 
+                        {currentUser.username in listing.offerPriceMap ? <p style={{color:"green"}}>Accepted</p> : 
                         <p style={{color:"#8B8000"}}>Pending</p>}
                         <button
                           onClick={() => removeNegotiation(listing._id)}

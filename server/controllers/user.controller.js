@@ -106,7 +106,7 @@ export const updateUser = async (req, res, next) => {
     const { password, ...rest } = updatedUser._doc;
     res.status(200).json(rest);
   } catch (error) {
-    return next(errorHandeler(404, "Something went wrong !"));
+    return next(errorHandeler(404, "Something went wrong ! This could occur when you provide a already registered username, email or contact no"));
   }
 };
 
@@ -179,7 +179,7 @@ export const addNegotiation = async (req, res, next) => {
       if (!(seller.priceRangeMap instanceof Map)) {
         seller.priceRangeMap = new Map(Object.entries(seller.priceRangeMap));
       }
-      seller.priceRangeMap.set(buyer._id, `${buyer.username} has placed a negotiation of price range Rs.${Min_Price} to Rs.${Max_Price}`);
+      seller.priceRangeMap.set(listingId, `${buyer.username} has placed a negotiation of price range Rs.${Min_Price} to Rs.${Max_Price} for the listing ${listing.name}`);
       await seller.save();
       if (buyer.negotiations.includes(listingId)) {
         return res.status(400).json({ message: "Already in negotiations" , negotiations: buyer.negotiations});

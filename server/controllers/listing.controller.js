@@ -168,8 +168,8 @@ export const paymentSession = async (req, res, next) => {
 
   try {
     const unit_amount =
-    listing.offerPriceMap.has(currentUser.contact_no)
-        ? listing.offerPriceMap.get(currentUser.contact_no)
+    listing.offerPriceMap.has(currentUser.username)
+        ? listing.offerPriceMap.get(currentUser.username)
         : listing.Price;
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -181,7 +181,7 @@ export const paymentSession = async (req, res, next) => {
             product_data: {
               name: listing.name,
             },
-            unit_amount: unit_amount,
+            unit_amount: unit_amount*100,
           },
           quantity: 1,
         },
@@ -199,7 +199,7 @@ export const paymentSession = async (req, res, next) => {
 };
 
 export const openOffer = async (req, res, next) => {
-  const { contact_no, Price } = req.body;
+  const { username, Price } = req.body;
   const listingId = req.body.listingId;
   try {
     const listing = await Listing.findById(listingId);
@@ -209,7 +209,7 @@ export const openOffer = async (req, res, next) => {
     if (!(listing.offerPriceMap instanceof Map)) {
       listing.offerPriceMap = new Map(Object.entries(listing.offerPriceMap));
     }
-    listing.offerPriceMap.set(contact_no, Price);
+    listing.offerPriceMap.set(username, Price);
     await listing.save();
     res.status(200).json({
       message: "Offer updated successfully",

@@ -47,7 +47,7 @@ const Propcard = ({ listing }) => {
               margin:"0px"
             }}
           >
-            {currentUser.contact_no in listing.offerPriceMap ? `Rs.${listing.offerPriceMap[currentUser.contact_no]}` : `Rs.${listing.Price}`}
+            {currentUser.username in listing.offerPriceMap ? `Rs.${listing.offerPriceMap[currentUser.username]}` : `Rs.${listing.Price}`}
           </p>
           <p style={{margin:"10px 0",marginBottom:"0px", color: "#4B5563" }}>{listing.name}</p>
           {/*<p style={{ fontSize: "1.875rem", color: "#1F2937" }}></p>*/}

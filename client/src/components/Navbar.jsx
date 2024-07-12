@@ -75,6 +75,14 @@ export const Navbar = () => {
                       Listings
                     </li>
                   </Link>
+                  <Link
+                    href={`/notifications/${currentUser._id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <li style={{ color: "azure", margin: "0 15px" }}>
+                      Notifications
+                    </li>
+                  </Link>
                 </>
               )}
             </>

@@ -27,6 +27,8 @@ export const signup = async (req, res, next) => {
   if(!number.test(contact_no)) {
     return next(errorHandeler(401, "Please provide a valid contact number !"));
   }
+  const alreadyUsername = await User.findOne({email});
+  if(alreadyUsername) return next(errorHandeler(401, "This username is already registered !"));
   const alreadyUser = await User.findOne({email});
   if(alreadyUser) return next(errorHandeler(401, "This email is already registered !"));
   const alreadyno = await User.findOne({contact_no});
