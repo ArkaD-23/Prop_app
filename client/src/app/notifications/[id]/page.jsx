@@ -1,5 +1,6 @@
 "use client";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
+import { updateUserFailure, updateUserStart, updateUserSuccess } from "@/store/features/user/userSlice";
 import { useAppSelector } from "@/store/hooks/hooks";
 import React, { useEffect, useState } from "react";
 import { MdOutlineReply , MdClear } from "react-icons/md";
@@ -33,6 +34,31 @@ const Notificaions = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  const removeNotification = async () => {
+    dispatch(updateUserStart());
+    try {
+      const res = await fetch("/server/user/removenotification", {
+        method:"POST",
+        headers:{
+          "Content-type" : "application/json",
+        },
+        body:JSON.stringify({currentUser: currentUser._id}) 
+      });
+      const data = await res.json();
+      if(data.success === false) {
+        console.log(data);
+        dispatch(updateUserFailure({...currentUser, data}));
+        return;
+      }
+      console.log(data);
+      dispatch(updateUserSuccess({...currentUser, priceRangeMap:data.priceRangeMap}));
+    } catch (error) {
+      console.log(error);
+      dispatch(updateUserFailure(error));
+    }
+    
+  }
 
   const cardStyle = {
     display: "flex",
