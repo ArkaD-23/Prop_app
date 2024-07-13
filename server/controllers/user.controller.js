@@ -4,6 +4,7 @@ import Listing from "../models/listings.model.js";
 import bcryptjs from "bcryptjs";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import { v4 as uuidv4 } from 'uuid';
 
 dotenv.config();
 
@@ -176,19 +177,20 @@ export const addNegotiation = async (req, res, next) => {
       if (!seller) {
         return next(errorHandeler(404, "Seller not found !"));
       }
+      const notificationId = uuidv4();
       if (!(seller.priceRangeMap instanceof Map)) {
         seller.priceRangeMap = new Map(Object.entries(seller.priceRangeMap));
       }
-      seller.priceRangeMap.set(listingId, `${buyer.username} has placed a negotiation of price range Rs.${Min_Price} to Rs.${Max_Price} for the listing ${listing.name}`);
+      seller.priceRangeMap.set(notificationId, `${buyer.username} has placed a negotiation of price range Rs.${Min_Price} to Rs.${Max_Price} for the listing ${listing.name}`);
       await seller.save();
       if (buyer.negotiations.includes(listingId)) {
-        return res.status(400).json({ message: "Already in negotiations" , negotiations: buyer.negotiations});
+        return res.status(400).json({ message: "Offer is placed !" , negotiations: buyer.negotiations});
       }
       buyer.negotiations.push(listingId);
       await buyer.save();
       return res
         .status(200)
-        .json({ message: "Added to negotiations !", negotiations: buyer.negotiations });
+        .json({ message: "Added to negotiations and offer is placed !!", negotiations: buyer.negotiations });
     } catch (error) {
       console.error(error);
       return next(errorHandeler(404, "Server error !"))
@@ -220,10 +222,16 @@ export const removeNegotiation = async (req, res, next) => {
 };
 
 export const removeNotification = async (req, res, next) => {
-  const {id} = req.body;
-  const currentUser = await User.findById(id);
-  if(!currentUser) {
-    return next(errorHandeler(404, "User not found !"));
+  try {
+    const {id , notificationId} = req.body;
+    const currentUser = await User.findById(id);
+    if(!currentUser) {
+      return next(errorHandeler(404, "User not found !"));
+    }
+    currentUser.priceRangeMap.delete(notificationId);
+    await currentUser.save();
+    return res.status(200).json({priceRangeMap: currentUser.priceRangeMap, message:"Notification removed successfully !"})
+  } catch (error) {
+    return next(errorHandeler(400, "Server Error !"));
   }
-
 }

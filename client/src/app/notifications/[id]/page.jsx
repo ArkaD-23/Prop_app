@@ -21,15 +21,15 @@ const Notificaions = () => {
     };
   }, []);
 
-  const removeNotification = async () => {
+  const removeNotification = async (key) => {
     dispatch(updateUserStart());
     try {
-      const res = await fetch("/server/user/removenotification", {
+      const res = await fetch("/server/user/remove-notification", {
         method:"POST",
         headers:{
           "Content-type" : "application/json",
         },
-        body:JSON.stringify({id : currentUser._id}) 
+        body:JSON.stringify({id : currentUser._id, notificationId : key}) 
       });
       const data = await res.json();
       if(data.success === false) {
@@ -108,7 +108,7 @@ const Notificaions = () => {
               }}
             >
               <span style={{margin:"0"}}>{value}</span>
-              <MdClear onClick={removeNotification} style={{color:"red", fontSize:"50px", margin:"0"}}/>
+              <MdClear onClick={() => removeNotification(key)} style={{color:"red", fontSize:isMobile ? "60px":"30px", margin:"0"}}/>
             </div>
           ))}
         </div>

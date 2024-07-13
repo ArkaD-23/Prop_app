@@ -33,6 +33,8 @@ const Listing = () => {
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector((state) => state.user);
   const [formData, setFormData] = useState(null);
+  const [messageHandler, setMessageHandler] = useState(false);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -99,8 +101,8 @@ const Listing = () => {
   };
 
   const handleChange = (e) => {
-    setFormData({...formData, [e.target.id] : e.target.value});
-  }
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
 
   const addToNegotiations = async () => {
     try {
@@ -122,12 +124,16 @@ const Listing = () => {
       const data = await res.json();
       if (data.success === false) {
         console.log(data);
+        setMessage(data.message);
+        setMessageHandler(true);
         dispatch(
           updateUserFailure({ ...currentUser, negotiations: data.negotiations })
         );
         return;
       }
       console.log(data);
+      setMessage(data.message);
+      setMessageHandler(true);
       dispatch(
         updateUserSuccess({ ...currentUser, negotiations: data.negotiations })
       );
@@ -416,7 +422,7 @@ const Listing = () => {
                             justifyContent: "space-between",
                           }}
                         >
-                          <div style={{ width: negotiate ? "100%":"45%" }}>
+                          <div style={{ width: negotiate ? "100%" : "45%" }}>
                             <HoverButtonWrapper>
                               <button
                                 style={{
@@ -445,7 +451,10 @@ const Listing = () => {
                             {!negotiate && (
                               <HoverButtonWrapper>
                                 <button
-                                  onClick={() => setNegotiate(true)}
+                                  onClick={() => {
+                                    setNegotiate(true);
+                                    setMessageHandler(false);
+                                  }}
                                   style={{
                                     marginBottom: "20px",
                                     fontFamily: '"Roboto", sans-serif',
@@ -548,13 +557,17 @@ const Listing = () => {
                                   Place
                                 </button>
                               </HoverButtonWrapper>
+                              {messageHandler && <p style={{color:"green", marginBottom:"10px", marginLeft:"10px"}}>{message}</p>}
                             </div>
                           )}
                         </div>
                         {!contact && (
                           <HoverButtonWrapper>
                             <button
-                              onClick={() => setContact(true)}
+                              onClick={() => {
+                                setContact(true);
+                                setMessageHandler(false);
+                              }}
                               style={{
                                 marginBottom: "20px",
                                 fontFamily: '"Roboto", sans-serif',
@@ -576,7 +589,11 @@ const Listing = () => {
                             </button>
                           </HoverButtonWrapper>
                         )}
-                        {contact && <Contact listing={listing} />}
+                        {contact && (
+                          <div>
+                            <Contact listing={listing} />
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
