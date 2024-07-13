@@ -158,7 +158,7 @@ export const emailSender = async (req, res, next) => {
     if (error) {
       return next(errorHandeler(401, error.toString()));
     }
-    res.status(200).json({ success: true, message: 'Email sent: ' + emailRes.response });
+    res.status(200).json({ success: true, message: 'Email sent' });
   });
 };
 

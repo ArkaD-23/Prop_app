@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
 import HoverButtonWrapper from "./HoverButtonWrapper";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks";
-import { updateUserFailure, updateUserStart, updateUserSuccess } from "@/store/features/user/userSlice";
+import {
+  updateUserFailure,
+  updateUserStart,
+  updateUserSuccess,
+} from "@/store/features/user/userSlice";
 
 const Contact = ({ listing }) => {
   const [landlord, setLandlord] = useState(null);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const {currentUser} = useAppSelector((state)=>state.user);
+  const [confirmationMessage, setConfirmationMessage] = useState(null);
+  const [messageHandler, setMessageHandler] = useState(true);
+  const { currentUser } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const onChange = (e) => {
     setMessage(e.target.value);
@@ -41,20 +47,23 @@ const Contact = ({ listing }) => {
         },
         body: JSON.stringify({
           senderEmail: currentUser.email,
-          recipientEmail: landlord.email, 
-          subject: `Negotiation regarding ${listing.name}`, 
+          recipientEmail: landlord.email,
+          subject: `Negotiation regarding ${listing.name}`,
           text: `${message}`,
         }),
       });
       const data = await res.json();
-      if(data.success === false) {
-        alert("Failed to send email: " + data.message);
+      if (data.success === false) {
+        setConfirmationMessage(data.message);
         setLoading(false);
         return;
       }
+      console.log(data);
+      setConfirmationMessage(data.message);
       setLoading(false);
     } catch (error) {
       alert(error.message);
+      setConfirmationMessage("Something went wrong !");
       setLoading(false);
       return;
     }
@@ -89,8 +98,8 @@ const Contact = ({ listing }) => {
           ></textarea>
           <HoverButtonWrapper>
             <button
-            style={{
-                marginBottom:"20px",
+              style={{
+                marginBottom: "20px",
                 fontFamily: '"Roboto", sans-serif',
                 textTransform: "uppercase",
                 outline: "0",
@@ -110,6 +119,7 @@ const Contact = ({ listing }) => {
               {!loading ? "Send Message" : "Sending..."}
             </button>
           </HoverButtonWrapper>
+          {messageHandler && <p style={{color:"green", marginBottom:"10px", marginLeft:"10px"}}>{confirmationMessage}</p>}
         </div>
       )}
     </>

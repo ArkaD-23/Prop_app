@@ -139,6 +139,8 @@ const Listing = () => {
       );
     } catch (error) {
       console.log(error);
+      setMessage("Something went wrong !");
+      setMessageHandler(true);
       dispatch(updateUserFailure(error));
       return;
     }
@@ -591,7 +593,7 @@ const Listing = () => {
                         )}
                         {contact && (
                           <div>
-                            <Contact listing={listing} />
+                            <Contact listing={listing}/>
                           </div>
                         )}
                       </div>
