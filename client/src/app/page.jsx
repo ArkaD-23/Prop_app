@@ -5,6 +5,7 @@ import { useAppSelector } from "@/store/hooks/hooks";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
 import { useState, useEffect } from "react";
 import ImageSlider from "@/components/ImageSlider";
+import Carousel from "@/components/Carousel";
 
 export default function Home() {
   const { currentUser, loading } = useAppSelector((state) => state.user);
@@ -107,6 +108,9 @@ export default function Home() {
       </div>
       <div style={containerStyles}>
         <ImageSlider slides={images} />
+      </div>
+      <div style={{marginTop:"100px"}}>
+        <Carousel/>
       </div>
     </>
   );
