@@ -126,8 +126,15 @@ export default function Home() {
           >
             Explore Homes on PropApp
           </h1>
-          <p style={{textAlign:"center", color: "#9ca3af", fontSize:isMobile?"0.6rem":"0.90rem"}}>
-          Take a deep dive and browse homes for sale, original neighborhood photos and local insights to find what is right for you.
+          <p
+            style={{
+              textAlign: "center",
+              color: "#9ca3af",
+              fontSize: isMobile ? "0.6rem" : "0.90rem",
+            }}
+          >
+            Take a deep dive and browse homes for sale, original neighborhood
+            photos and local insights to find what is right for you.
           </p>
         </div>
         <div style={containerStyles}>
@@ -148,6 +155,30 @@ export default function Home() {
           </h1>
         </div>
         <Carousel />
+      </div>
+      <div style={{ marginTop: "80px" }}>
+        <div>
+          <h1
+            style={{
+              color: "#334155",
+              fontWeight: "bold",
+              fontSize: isMobile ? "20px" : "35px",
+              textAlign: "center",
+            }}
+          >
+            See how PropApp can help
+          </h1>
+          <div style={{display:isMobile?"grid":"flex", justifyContent:"center", alignItems:"center", width:"100%", marginBottom:"80px", gap:isMobile?"":"200px"}}>
+            <div style={{display:"grid", width:"230px", textAlign:"center", marginBottom:isMobile?"30px":""}}>
+              <h2 style={{color: "#6B7280", height:"70px", margin:"0", fontSize:isMobile?"15px":""}}>Buy a home</h2>
+              <p style={{color: "#9ca3af", margin:"0", fontSize: isMobile ? "0.7rem" : "1rem"}}>With over 1 million+ homes for sale available on the website, Trulia can match you with a house you will want to call home.</p>
+            </div>
+            <div style={{display:"grid", width:"230px", textAlign:"center"}}>
+              <h2 style={{color: "#6B7280", height:"70px", margin:"0", fontSize:isMobile?"15px":""}}>See neighborhoods</h2>
+              <p style={{color: "#9ca3af", margin:"0", fontSize: isMobile ? "0.7rem" : "1rem"}}>With over 1 million+ homes for sale available on the website, Trulia can match you with a house you will want to call home.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
