@@ -1,9 +1,22 @@
 import { useAppSelector } from "@/store/hooks/hooks";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { MdLocationOn } from "react-icons/md";
 
 const Propcard = ({ listing }) => {
   const { currentUser } = useAppSelector((state) => state.user);
+  const [isMobile , setIsMobile] = useState(false);
+
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <div
@@ -43,13 +56,13 @@ const Propcard = ({ listing }) => {
               letterSpacing: "0.05em",
               fontWeight: "bold",
               color: "#4B5563",
-              fontSize:"30px",
+              fontSize:isMobile?"20px":"30px",
               margin:"0px"
             }}
           >
-            {currentUser.username in listing.offerPriceMap ? `Rs.${listing.offerPriceMap[currentUser.username]}` : `Rs.${listing.Price}`}
+            {currentUser && currentUser.username in listing.offerPriceMap ? `Rs.${listing.offerPriceMap[currentUser.username]}` : `Rs.${listing.Price}`}
           </p>
-          <p style={{margin:"10px 0",marginBottom:"0px", color: "#4B5563" }}>{listing.name}</p>
+          <p style={{margin:isMobile?"0":"10px 0",marginBottom:"0px", color: "#4B5563" }}>{listing.name}</p>
           {/*<p style={{ fontSize: "1.875rem", color: "#1F2937" }}></p>*/}
           <div
             style={{

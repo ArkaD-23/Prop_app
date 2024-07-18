@@ -6,6 +6,7 @@
   max-width: 96rem; 
   margin-left: auto;
   margin-right: auto;
+  padding-bottom: 3rem;
 }
 @media (min-width: 640px) {
   .container {

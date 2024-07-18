@@ -59,7 +59,13 @@ export default function Home() {
 
   return (
     <>
-      <div style={{display:"flex", alignItems:"center", justifyContent:"space-between"}}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         <div className={styles.container}>
           <h1 className={styles.header}>
             Find your next <span className={styles.highlight}>perfect</span>
@@ -98,19 +104,50 @@ export default function Home() {
             </HoverButtonWrapper>
           </Link>
         </div>
-        {!isMobile && <div style={{ width: "45%", marginTop: "80px" , marginRight:"50px"}}>
-          <img
-            src="landingpage.jpg"
-            alt="home"
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          />
-        </div>}
+        {!isMobile && (
+          <div style={{ width: "45%", marginTop: "80px", marginRight: "50px" }}>
+            <img
+              src="landingpage.jpg"
+              alt="home"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          </div>
+        )}
       </div>
-      <div style={containerStyles}>
-        <ImageSlider slides={images} />
+      <div>
+        <div>
+          <h1
+            style={{
+              color: "#334155",
+              fontWeight: "bold",
+              fontSize: isMobile ? "20px" : "35px",
+              textAlign: "center",
+            }}
+          >
+            Explore Homes on PropApp
+          </h1>
+          <p style={{textAlign:"center", color: "#9ca3af", fontSize:isMobile?"0.6rem":"0.90rem"}}>
+          Take a deep dive and browse homes for sale, original neighborhood photos and local insights to find what is right for you.
+          </p>
+        </div>
+        <div style={containerStyles}>
+          <ImageSlider slides={images} />
+        </div>
       </div>
-      <div style={{marginTop:"100px"}}>
-        <Carousel/>
+      <div style={{ marginTop: "80px" }}>
+        <div>
+          <h1
+            style={{
+              color: "#334155",
+              fontWeight: "bold",
+              fontSize: isMobile ? "20px" : "35px",
+              textAlign: "center",
+            }}
+          >
+            Newly Listed
+          </h1>
+        </div>
+        <Carousel />
       </div>
     </>
   );
