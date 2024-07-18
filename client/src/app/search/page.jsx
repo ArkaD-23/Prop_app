@@ -175,36 +175,32 @@ const Buy = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <div
-        style={{
-          padding: "0rem 1.75rem",
-          justifyContent: "center",
+    <div className={styles.container} style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <div style={{
+        justifyContent: "center",
+        flexWrap: "wrap",
+        position: "fixed",
+        width: "100%",
+        backgroundColor: "white",
+        zIndex: 1,
+      }}>
+        <div style={{
+          display: "flex",
+          width: "100%",
+          gap: "2rem",
           flexWrap: "wrap",
-          //backgroundColor: "#ffffff",
-        }}
-      >
-        <div
-          style={{
+          alignItems: "center",
+          padding:"0 2rem"
+        }}>
+          <div style={{
             display: "flex",
-            width: "100%",
-            gap: "2rem",
-            flexWrap: "wrap",
             alignItems: "center",
-            //justifyContent:"center"
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              background: "#f2f2f2",
-              padding: "10px",
-              height: "23px",
-              borderRadius: "50px",
-            }}
-          >
+            gap: "0.5rem",
+            background: "#f2f2f2",
+            padding: "10px",
+            height: "23px",
+            borderRadius: "50px",
+          }}>
             <input
               type="text"
               id="searchTerm"
@@ -222,11 +218,11 @@ const Buy = () => {
               value={sidebardata.searchTerm}
               onChange={handleChange}
             />
-            <div style={{ border: "0", hover: "0" }} onClick={handleSubmit}>
+            <div style={{ border: "0", hover: "0", cursor:"pointer"}} onClick={handleSubmit}>
               <MdSearch />
             </div>
           </div>
-
+  
           <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
             <input
               type="checkbox"
@@ -247,7 +243,7 @@ const Buy = () => {
             />
             <span>Offer</span>
           </div>
-
+  
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <select
               defaultValue={"createdAt_desc"}
@@ -266,72 +262,50 @@ const Buy = () => {
             </select>
           </div>
         </div>
-      </div>
-      <hr
-        style={{
+        <hr style={{
           border: "none",
           borderTop: "2px solid lightgrey",
           margin: "20px 0px",
           width: "100%",
-        }}
-      />
-      <div style={{ display: "flex" }}>
-        <div style={{ flex: 1 }}>
-          <div
-            style={{
-              padding: "0 2rem 2rem 2rem",
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "2rem",
-            }}
-          >
-            {!loading && listings.length === 0 && (
-              <p style={{ fontSize: "1.25rem", color: "#2f4f4f" }}>
-                No listing found!
-              </p>
-            )}
-            {loading && (
-              <p
-                style={{
-                  fontSize: "1.25rem",
-                  color: "#2f4f4f",
-                  textAlign: "center",
-                  width: "100%",
-                }}
-              >
-                Loading...
-              </p>
-            )}
-
-            {!loading &&
-              listings &&
-              listings.map((listing) => (
-                <Link
-                  href={`/listing/${listing._id}`}
-                  style={{ textDecoration: "none" }}
-                >
-                  <Propcard key={listing._id} listing={listing} />
-                </Link>
-              ))}
-            {showMore && (
-              <button
-                onClick={onShowMoreClick}
-                className="text-green-700 hover:underline p-7 text-center w-full"
-              >
-                Show more
-              </button>
-            )}
+        }} />
+      </div>
+      <div style={{ marginTop: '100px', display: 'flex', height: 'calc(100vh - 160px)' }}>
+        <div style={{ flex: 1, overflowY: 'scroll', padding: "0 2rem 2rem 2rem" }}>
+          {!loading && listings.length === 0 && (
+            <p style={{ fontSize: "1.25rem", color: "#2f4f4f" }}>
+              No listing found!
+            </p>
+          )}
+          {loading && (
+            <p style={{
+              fontSize: "1.25rem",
+              color: "#2f4f4f",
+              textAlign: "left",
+              width: "100%",
+            }}>
+              Loading...
+            </p>
+          )}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "2rem", width:"700px", top:"180px"}}>
+            {!loading && listings && listings.map((listing) => (
+              <Link href={`/listing/${listing._id}`} style={{ textDecoration: "none" , flexWrap:"wrap"}} key={listing._id}>
+                <Propcard listing={listing} />
+              </Link>
+            ))}
           </div>
+          {showMore && (
+            <button onClick={onShowMoreClick} className="text-green-700 hover:underline p-7 text-center w-full">
+              Show more
+            </button>
+          )}
         </div>
-        <div style={{ width: "700px", marginRight: "20px"}}>
-          <Map
-            listings={listings}
-            styleURL="mapbox://styles/mapbox/streets-v12"
-            zoom={3}
-          />
+        <div style={{ width: "700px", marginRight: "20px", position: "fixed", right: 0, top: "180px", bottom: 0 }}>
+          <Map listings={listings} styleURL="mapbox://styles/mapbox/streets-v12" zoom={3} />
         </div>
       </div>
     </div>
   );
+  
+  
 };
 export default Buy;
