@@ -31,32 +31,17 @@ const Carousel = () => {
     };
   }, []);
 
-  const cards = [
-    { id: 1, title: "Card 1", content: "Content for card 1" },
-    { id: 2, title: "Card 2", content: "Content for card 2" },
-    { id: 3, title: "Card 3", content: "Content for card 3" },
-    { id: 4, title: "Card 4", content: "Content for card 4" },
-    { id: 5, title: "Card 5", content: "Content for card 5" },
-    { id: 6, title: "Card 6", content: "Content for card 6" },
-  ];
-
   const next = () => {
     setCurrentIndex((prevIndex) => {
-      if (isMobile) {
-        prevIndex === cards.length - 2 ? 0 : prevIndex + 1;
-      } else {
-        prevIndex === cards.length - 3 ? 0 : prevIndex + 1;
-      }
+      const maxIndex = isMobile ? allListings.length - 1 : allListings.length - 3;
+      return prevIndex === maxIndex ? 0 : prevIndex + 1;
     });
   };
 
   const prev = () => {
     setCurrentIndex((prevIndex) => {
-      if (isMobile) {
-        prevIndex === 0 ? cards.length - 2 : prevIndex - 1;
-      } else {
-        prevIndex === 0 ? cards.length - 3 : prevIndex - 1;
-      }
+      const maxIndex = isMobile ? allListings.length - 1 : allListings.length - 3;
+      return prevIndex === 0 ? maxIndex : prevIndex - 1;
     });
   };
 
@@ -89,10 +74,10 @@ const Carousel = () => {
         style={{
           display: "flex",
           justifyContent: "space-between",
-          width: "100%",
+          width: isMobile ? "" : "100%",
         }}
       >
-        {allListings.slice(currentIndex, currentIndex + 3).map((listing) => (
+        {allListings.slice(currentIndex, currentIndex + (isMobile ? 1 : 3)).map((listing) => (
           <Propcard key={listing._id} listing={listing} />
         ))}
       </div>
