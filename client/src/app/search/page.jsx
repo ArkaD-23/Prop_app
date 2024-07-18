@@ -1,8 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import styles from "./buy.module.css";
 import Propcard from "@/components/Propcard.jsx";
 import Link from "next/link";
 import { MdSearch } from "react-icons/md";
@@ -188,33 +186,43 @@ const Buy = () => {
   };
 
   return (
-    <div className={styles.container} style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <div style={{
-        justifyContent: "center",
-        flexWrap: "wrap",
-        position: "fixed",
-        width: "100%",
-        backgroundColor: "white",
-        zIndex: 1,
-      }}>
-        <div style={{
-          display: "flex",
-          width: "100%",
-          gap: "2rem",
+    <div
+      //className={styles.container}
+      style={{ display: isMobile?"column":"flex", flexWrap:"wrap", height: "100vh",width:"100%" }}
+    >
+      <div
+        style={{
+          justifyContent: "center",
           flexWrap: "wrap",
-          alignItems: "center",
-          padding:"0 2rem",
-          width:isMobile?"400px":"100%",
-        }}>
-          <div style={{
+          position: "fixed",
+          width: "100%",
+          backgroundColor: "white",
+          zIndex: 1,
+          paddingTop:"80px"
+        }}
+      >
+        <div
+          style={{
             display: "flex",
+            width: "100%",
+            gap: "2rem",
+            flexWrap: "wrap",
             alignItems: "center",
-            gap: "0.5rem",
-            background: "#f2f2f2",
-            padding: "10px",
-            height: "23px",
-            borderRadius: "50px",
-          }}>
+            padding: isMobile?"":"0 2rem",
+            width: isMobile ? "400px" : "100%",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              background: "#f2f2f2",
+              padding: "10px",
+              height: "23px",
+              borderRadius: "50px",
+            }}
+          >
             <input
               type="text"
               id="searchTerm"
@@ -232,11 +240,14 @@ const Buy = () => {
               value={sidebardata.searchTerm}
               onChange={handleChange}
             />
-            <div style={{ border: "0", hover: "0", cursor:"pointer"}} onClick={handleSubmit}>
+            <div
+              style={{ border: "0", hover: "0", cursor: "pointer" }}
+              onClick={handleSubmit}
+            >
               <MdSearch />
             </div>
           </div>
-  
+
           <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
             <input
               type="checkbox"
@@ -257,7 +268,7 @@ const Buy = () => {
             />
             <span>Offer</span>
           </div>
-  
+
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <select
               defaultValue={"createdAt_desc"}
@@ -276,50 +287,95 @@ const Buy = () => {
             </select>
           </div>
         </div>
-        <hr style={{
-          border: "none",
-          borderTop: "2px solid lightgrey",
-          margin: "20px 0px",
-          width: window.innerWidth,
-        }} />
+        <hr
+          style={{
+            border: "none",
+            borderTop: "2px solid lightgrey",
+            margin: "20px 0px",
+            width: window.innerWidth,
+          }}
+        />
       </div>
-      <div style={{ marginTop: isMobile?"170px":"90px", display: 'flex', height: 'calc(100vh - 160px)' }}>
-        <div style={{ flex: 1, overflowY: 'scroll', padding: "0 2rem 2rem 2rem" }}>
+      <div
+        style={{
+          marginTop: isMobile ? "170px" : "90px",
+          marginLeft:0,
+          display: isMobile?"grid":"flex",
+          height: "calc(100vh - 160px)",
+          gap:isMobile?"2rem":"",
+          width:"100%"
+        }}
+      >
+        <div
+          style={{ flex: 1, overflowY: isMobile?"":"scroll", padding: "0 2rem 2rem 2rem", height:"100vh" }}
+        >
           {!loading && listings.length === 0 && (
             <p style={{ fontSize: "1.25rem", color: "#2f4f4f" }}>
               No listing found!
             </p>
           )}
           {loading && (
-            <p style={{
-              fontSize: "1.25rem",
-              color: "#2f4f4f",
-              textAlign: "left",
-              width: "100%",
-            }}>
+            <p
+              style={{
+                fontSize: "1.25rem",
+                color: "#2f4f4f",
+                textAlign: "left",
+                width: "100%",
+              }}
+            >
               Loading...
             </p>
           )}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "2rem", width:isMobile?"640px":"700px"}}>
-            {!loading && listings && listings.map((listing) => (
-              <Link href={`/listing/${listing._id}`} style={{ textDecoration: "none" , flexWrap:"wrap"}} key={listing._id}>
-                <Propcard listing={listing} />
-              </Link>
-            ))}
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "2rem",
+              width: isMobile ? "640px" : "700px",
+              marginTop:"80px"
+            }}
+          >
+            {!loading &&
+              listings &&
+              listings.map((listing) => (
+                <Link
+                  href={`/listing/${listing._id}`}
+                  style={{ textDecoration: "none", flexWrap: "wrap" }}
+                  key={listing._id}
+                >
+                  <Propcard listing={listing} />
+                </Link>
+              ))}
           </div>
           {showMore && (
-            <button onClick={onShowMoreClick} className="text-green-700 hover:underline p-7 text-center w-full">
+            <button
+              onClick={onShowMoreClick}
+              className="text-green-700 hover:underline p-7 text-center w-full"
+            >
               Show more
             </button>
           )}
         </div>
-        {!isMobile && <div style={{ width: "700px", marginRight: "20px", position: "fixed", right: 0, top: "180px", bottom: 0 }}>
-          <Map listings={listings} styleURL="mapbox://styles/mapbox/streets-v12" zoom={3} />
-        </div>}
+        {!isMobile && (
+          <div
+            style={{
+              width: "700px",
+              marginRight: "20px",
+              position: "fixed",
+              right: 0,
+              top: "180px",
+              bottom: 0,
+            }}
+          >
+            <Map
+              listings={listings}
+              styleURL="mapbox://styles/mapbox/streets-v12"
+              zoom={3}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
-  
-  
 };
 export default Buy;

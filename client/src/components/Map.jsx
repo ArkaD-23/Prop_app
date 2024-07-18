@@ -4,7 +4,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { createRoot } from 'react-dom/client';
 import Mapcard from './Mapcard';
 
-const Map = ({ listings, styleURL, highlightedListingId, zoom}) => {
+const Map = ({ listings, styleURL, highlightedListingId, zoom, height}) => {
   const mapContainerRef = useRef(null);
   const [map, setMap] = useState(null);
   const [pois, setPois] = useState([]);
@@ -87,7 +87,7 @@ const Map = ({ listings, styleURL, highlightedListingId, zoom}) => {
   return (
     <div
       ref={mapContainerRef}
-      style={{ height: '550px', border: 'solid 2px black', borderRadius: "20px" }}
+      style={{ height: height?height:'550px', border: 'solid 2px black', borderRadius: "20px", margin:"0"}}
     />
   );
 };
