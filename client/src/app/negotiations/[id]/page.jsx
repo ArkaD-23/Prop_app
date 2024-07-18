@@ -42,7 +42,7 @@ const Negotiations = () => {
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
-    };  
+    };
   }, []);
   const cardStyle = {
     display: "flex",
@@ -54,30 +54,33 @@ const Negotiations = () => {
   const removeNegotiation = async (id) => {
     dispatch(updateUserStart());
     try {
-      const res = await fetch(`/server/user/remove-negotiation/${currentUser._id}`,
+      const res = await fetch(
+        `/server/user/remove-negotiation/${currentUser._id}`,
         {
           method: "POST",
           headers: {
-            "Content-Type" : "application/json"
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ id: id }),
         }
       );
       const data = await res.json();
       console.log(data);
-      if(data.success === false) {
+      if (data.success === false) {
         console.log(data);
         dispatch(updateUserFailure(...currentUser, data));
         return;
       }
-      dispatch(updateUserSuccess({...currentUser, negotiations: data.negotiations}));
+      dispatch(
+        updateUserSuccess({ ...currentUser, negotiations: data.negotiations })
+      );
       return;
     } catch (error) {
       console.log(error);
       dispatch(updateUserFailure(error));
       return;
     }
-  }
+  };
 
   return (
     <div>
@@ -178,19 +181,30 @@ const Negotiations = () => {
                           flex: "1",
                         }}
                       >
-                        <p>{listing.name}</p>
+                        <p
+                          style={{
+                            wordWrap: "break-word",
+                            overflowWrap: "break-word",
+                            whiteSpace: "normal",
+                          }}
+                        >
+                          {listing.name}
+                        </p>
                       </Link>
                       <div
                         style={{
                           display: "flex",
                           //flexDirection: "column",
                           alignItems: "center",
-                          justifyContent:"space-between",
-                          gap:"10px"
+                          justifyContent: "space-between",
+                          gap: "10px",
                         }}
                       >
-                        {currentUser.username in listing.offerPriceMap ? <p style={{color:"green"}}>Accepted</p> : 
-                        <p style={{color:"#8B8000"}}>Pending</p>}
+                        {currentUser.username in listing.offerPriceMap ? (
+                          <p style={{ color: "green" }}>Accepted</p>
+                        ) : (
+                          <p style={{ color: "#8B8000" }}>Pending</p>
+                        )}
                         <button
                           onClick={() => removeNegotiation(listing._id)}
                           style={{
