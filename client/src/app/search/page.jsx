@@ -19,7 +19,20 @@ const Buy = () => {
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
   const [showMore, setShowMore] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get("searchTerm");
@@ -190,7 +203,8 @@ const Buy = () => {
           gap: "2rem",
           flexWrap: "wrap",
           alignItems: "center",
-          padding:"0 2rem"
+          padding:"0 2rem",
+          width:isMobile?"400px":"100%",
         }}>
           <div style={{
             display: "flex",
@@ -266,10 +280,10 @@ const Buy = () => {
           border: "none",
           borderTop: "2px solid lightgrey",
           margin: "20px 0px",
-          width: "100%",
+          width: window.innerWidth,
         }} />
       </div>
-      <div style={{ marginTop: '100px', display: 'flex', height: 'calc(100vh - 160px)' }}>
+      <div style={{ marginTop: isMobile?"170px":"90px", display: 'flex', height: 'calc(100vh - 160px)' }}>
         <div style={{ flex: 1, overflowY: 'scroll', padding: "0 2rem 2rem 2rem" }}>
           {!loading && listings.length === 0 && (
             <p style={{ fontSize: "1.25rem", color: "#2f4f4f" }}>
@@ -286,7 +300,7 @@ const Buy = () => {
               Loading...
             </p>
           )}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "2rem", width:"700px", top:"180px"}}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "2rem", width:isMobile?"640px":"700px"}}>
             {!loading && listings && listings.map((listing) => (
               <Link href={`/listing/${listing._id}`} style={{ textDecoration: "none" , flexWrap:"wrap"}} key={listing._id}>
                 <Propcard listing={listing} />
@@ -299,9 +313,9 @@ const Buy = () => {
             </button>
           )}
         </div>
-        <div style={{ width: "700px", marginRight: "20px", position: "fixed", right: 0, top: "180px", bottom: 0 }}>
+        {!isMobile && <div style={{ width: "700px", marginRight: "20px", position: "fixed", right: 0, top: "180px", bottom: 0 }}>
           <Map listings={listings} styleURL="mapbox://styles/mapbox/streets-v12" zoom={3} />
-        </div>
+        </div>}
       </div>
     </div>
   );

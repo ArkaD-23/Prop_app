@@ -30,7 +30,7 @@ export const Navbar = () => {
         position: "fixed",
         left: "0",
         top: "0",
-        width: "100%",
+        width: window.innerWidth,
         background: "#2980b9",
         boxShadow: "0 5px 10px rgba(0, 0, 0, 0.1)",
       }}
