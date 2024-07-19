@@ -128,6 +128,14 @@ export default function Signin() {
                 e.preventDefault();
                 setVisible(!visible);
               }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setVisible(!visible);
+                }
+              }}
+              tabIndex="0"
+              role="button"
               style={{ outline: "0", border: "0" }}
             >
               {visible ? <EnableVisibility /> : <DisableVisibility />}

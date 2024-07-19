@@ -422,7 +422,7 @@ const Update = () => {
             </button>
           </div>
           <p style={{ color: "#C53030", fontSize: "14px" }}>
-            {imageUploadError && imageUploadError}
+            {imageUploadError}
           </p>
           {formData.imageUrls.length > 0 &&
             formData.imageUrls.map((url, index) => (

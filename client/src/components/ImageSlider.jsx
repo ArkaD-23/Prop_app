@@ -70,22 +70,48 @@ const ImageSlider = ({ slides }) => {
 
   return (
     <>
-
-    <div style={sliderStyles}>
-      <div onClick={goToPrevious} style={leftArrowStyles}>
-        ❰
+      <div style={sliderStyles}>
+        <div
+          onClick={goToPrevious}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              goToPrevious();
+            }
+          }}
+          tabIndex="0"
+          role="button"
+          style={leftArrowStyles}
+        >
+          ❰
+        </div>
+        <img src={slides[currentIndex]} alt="Loading..." style={slideStyles} />
+        <div
+          onClick={goToNext}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              goToNext();
+            }
+          }}
+          tabIndex="0"
+          role="button"
+          style={rightArrowStyles}
+        >
+          ❱
+        </div>
       </div>
-      <img src={slides[currentIndex]} alt="Loading..." style={slideStyles} />
-      <div onClick={goToNext} style={rightArrowStyles}>
-        ❱
-      </div>
-    </div>
       <div style={dotsContainerStyles}>
         {slides.map((slide, slideIndex) => (
           <div
             style={dotStyle}
             key={slideIndex}
             onClick={() => goToSlide(slideIndex)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                goToSlide(slideIndex);
+              }
+            }}
+            tabIndex="0"
+            role="button"
           >
             ●
           </div>

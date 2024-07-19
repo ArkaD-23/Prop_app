@@ -204,7 +204,6 @@ const Buy = () => {
         <div
           style={{
             display: "flex",
-            width: "100%",
             gap: "2rem",
             flexWrap: "wrap",
             alignItems: "center",
@@ -241,8 +240,15 @@ const Buy = () => {
               onChange={handleChange}
             />
             <div
-              style={{ border: "0", hover: "0", cursor: "pointer" }}
+              style={{ border: "0",cursor: "pointer" }}
               onClick={handleSubmit}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  handleSubmit();
+                }
+              }}
+              tabIndex="0"
+              role="button"
             >
               <MdSearch />
             </div>
