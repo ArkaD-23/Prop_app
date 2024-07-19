@@ -19,6 +19,7 @@ import {
   DisableVisibility,
   EnableVisibility,
 } from "@/components/PasswordVisibility";
+import Footer from "@/components/Footer";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
@@ -86,205 +87,208 @@ const Profile = () => {
   };
 
   return (
-    <div style={{ display: "grid" }}>
-      <div
-        style={{
-          width: "100%",
-          padding: "8% 0 0",
-          margin: " auto",
-          display: "grid",
-          justifyItems: "center",
-        }}
-      >
+    <>
+      <div style={{ display: "grid" }}>
         <div
           style={{
-            background: "#FFFFFF",
-            maxWidth: "360px",
-            margin: "0, auto 100px",
-            padding: "45px",
+            width: "100%",
+            padding: "8% 0 0",
+            margin: " auto",
             display: "grid",
-            justifyContent: "center",
-            alignItems: "center",
+            justifyItems: "center",
           }}
         >
-          <h1 style={{ textAlign: "center" }}>My Profile</h1>
-          <form onSubmit={handleSubmit}>
-            <input
-              id="username"
-              required
-              style={{
-                fontFamily: "Roboto",
-                outline: "0",
-                background: "#f2f2f2",
-                width: "100%",
-                border: "0",
-                margin: "0 0 15px",
-                padding: "15px",
-                boxSizing: "border-box",
-                fontSize: "14px",
-                borderRadius: "50px",
-              }}
-              type="text"
-              defaultValue={currentUser ? currentUser.username : ""}
-              placeholder="username"
-              onChange={handleChange}
-            />
-            <input
-              id="email"
-              style={{
-                fontFamily: "Roboto",
-                outline: "0",
-                background: "#f2f2f2",
-                width: "100%",
-                border: "0",
-                margin: "0 0 15px",
-                padding: "15px",
-                boxSizing: "border-box",
-                fontSize: "14px",
-                borderRadius: "50px",
-              }}
-              type="text"
-              defaultValue={currentUser ? currentUser.email : ""}
-              placeholder="email"
-              onChange={handleChange}
-            />
-            <input
-              id="contact_no"
-              style={{
-                fontFamily: "Roboto",
-                outline: "0",
-                background: "#f2f2f2",
-                width: "100%",
-                border: "0",
-                margin: "0 0 15px",
-                padding: "15px",
-                boxSizing: "border-box",
-                fontSize: "14px",
-                borderRadius: "50px",
-              }}
-              type="text"
-              defaultValue={currentUser ? currentUser.contact_no : ""}
-              placeholder="contact"
-              onChange={handleChange}
-            />
+          <div
+            style={{
+              background: "#FFFFFF",
+              maxWidth: "360px",
+              margin: "0, auto 100px",
+              padding: "45px",
+              display: "grid",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <h1 style={{ textAlign: "center" }}>My Profile</h1>
+            <form onSubmit={handleSubmit}>
+              <input
+                id="username"
+                required
+                style={{
+                  fontFamily: "Roboto",
+                  outline: "0",
+                  background: "#f2f2f2",
+                  width: "100%",
+                  border: "0",
+                  margin: "0 0 15px",
+                  padding: "15px",
+                  boxSizing: "border-box",
+                  fontSize: "14px",
+                  borderRadius: "50px",
+                }}
+                type="text"
+                defaultValue={currentUser ? currentUser.username : ""}
+                placeholder="username"
+                onChange={handleChange}
+              />
+              <input
+                id="email"
+                style={{
+                  fontFamily: "Roboto",
+                  outline: "0",
+                  background: "#f2f2f2",
+                  width: "100%",
+                  border: "0",
+                  margin: "0 0 15px",
+                  padding: "15px",
+                  boxSizing: "border-box",
+                  fontSize: "14px",
+                  borderRadius: "50px",
+                }}
+                type="text"
+                defaultValue={currentUser ? currentUser.email : ""}
+                placeholder="email"
+                onChange={handleChange}
+              />
+              <input
+                id="contact_no"
+                style={{
+                  fontFamily: "Roboto",
+                  outline: "0",
+                  background: "#f2f2f2",
+                  width: "100%",
+                  border: "0",
+                  margin: "0 0 15px",
+                  padding: "15px",
+                  boxSizing: "border-box",
+                  fontSize: "14px",
+                  borderRadius: "50px",
+                }}
+                type="text"
+                defaultValue={currentUser ? currentUser.contact_no : ""}
+                placeholder="contact"
+                onChange={handleChange}
+              />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  background: "#f2f2f2",
+                  width: "100%",
+                  border: "0",
+                  padding: "15px",
+                  boxSizing: "border-box",
+                  fontSize: "14px",
+                  borderRadius: "50px",
+                  fontFamily: "Roboto",
+                }}
+              >
+                <input
+                  id="password"
+                  onChange={handleChange}
+                  style={{
+                    border: "0",
+                    background: "#f2f2f2",
+                    outline: "0",
+                    //margin: "0 0 15px",
+                  }}
+                  type={visible ? "text" : "password"}
+                  placeholder="password"
+                />
+                <div
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setVisible(!visible);
+                  }}
+                  style={{ outline: "0", border: "0" }}
+                >
+                  {visible ? <EnableVisibility /> : <DisableVisibility />}
+                </div>
+              </div>
+              <p
+                style={{
+                  margin: "0px 10px 15px",
+                  fontSize: "10px",
+                  fontWeight: "1",
+                  textAlign: "left",
+                  opacity: "0.5",
+                }}
+              >
+                Your password should be atleast: 8 characters long, contains
+                atleast a uppercase, a lowercase, a number and a special
+                character and no spacing
+              </p>
+              <HoverButtonWrapper>
+                <button
+                  id="button"
+                  style={{
+                    fontFamily: '"Roboto", sans-serif',
+                    textTransform: "uppercase",
+                    outline: "0",
+                    background: "#2980b9",
+                    width: "100%",
+                    border: "0",
+                    padding: "15px",
+                    color: "#FFFFFF",
+                    fontSize: "14px",
+                    WebkitTransition: "all 0.3 ease",
+                    transition: "all 0.3 ease",
+                    cursor: "pointer",
+                    borderRadius: "50px",
+                  }}
+                >
+                  {" "}
+                  {loading ? "Loading...." : "Update"}
+                </button>
+              </HoverButtonWrapper>
+            </form>
             <div
               style={{
                 display: "flex",
                 justifyContent: "space-between",
-                alignItems: "center",
-                background: "#f2f2f2",
-                width: "100%",
-                border: "0",
-                padding: "15px",
-                boxSizing: "border-box",
-                fontSize: "14px",
-                borderRadius: "50px",
-                fontFamily: "Roboto",
+                marginTop: "1.25rem",
               }}
             >
-              <input
-                id="password"
-                onChange={handleChange}
+              <Link
+                href="/"
                 style={{
-                  border: "0",
-                  background: "#f2f2f2",
-                  outline: "0",
-                  //margin: "0 0 15px",
-                }}
-                type={visible ? "text" : "password"}
-                placeholder="password"
-              />
-              <div
-                onClick={(e) => {
-                  e.preventDefault();
-                  setVisible(!visible);
-                }}
-                style={{ outline: "0", border: "0" }}
-              >
-                {visible ? <EnableVisibility /> : <DisableVisibility />}
-              </div>
-            </div>
-            <p
-              style={{
-                margin: "0px 10px 15px",
-                fontSize: "10px",
-                fontWeight: "1",
-                textAlign: "left",
-                opacity: "0.5",
-              }}
-            >
-              Your password should be atleast: 8 characters long, contains
-              atleast a uppercase, a lowercase, a number and a special character
-              and no spacing
-            </p>
-            <HoverButtonWrapper>
-              <button
-                id="button"
-                style={{
-                  fontFamily: '"Roboto", sans-serif',
-                  textTransform: "uppercase",
-                  outline: "0",
-                  background: "#2980b9",
-                  width: "100%",
-                  border: "0",
-                  padding: "15px",
-                  color: "#FFFFFF",
-                  fontSize: "14px",
-                  WebkitTransition: "all 0.3 ease",
-                  transition: "all 0.3 ease",
+                  color: "#DC2626",
                   cursor: "pointer",
-                  borderRadius: "50px",
+                  textDecoration: "none",
+                }}
+                onClick={handleDeleteAccount}
+              >
+                Delete Account
+              </Link>
+
+              <Link
+                href="/signin"
+                onClick={handleSignout}
+                style={{
+                  color: "#DC2626",
+                  cursor: "pointer",
+                  textDecoration: "none",
                 }}
               >
-                {" "}
-                {loading ? "Loading...." : "Update"}
-              </button>
-            </HoverButtonWrapper>
-          </form>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginTop: "1.25rem",
-            }}
-          >
-            <Link
-              href="/"
-              style={{
-                color: "#DC2626",
-                cursor: "pointer",
-                textDecoration: "none",
-              }}
-              onClick={handleDeleteAccount}
-            >
-              Delete Account
-            </Link>
-
-            <Link
-              href="/signin"
-              onClick={handleSignout}
-              style={{
-                color: "#DC2626",
-                cursor: "pointer",
-                textDecoration: "none",
-              }}
-            >
-              Sign Out
-            </Link>
-          </div>
-          {error ? (
-            <p style={{ color: "#C53030", fontSize: "14px" }}>
-              {error.message}
+                Sign Out
+              </Link>
+            </div>
+            {error ? (
+              <p style={{ color: "#C53030", fontSize: "14px" }}>
+                {error.message}
+              </p>
+            ) : (
+              ""
+            )}
+            <p style={{ color: "#16A34A", marginTop: "1.25rem" }}>
+              {updateSuccess ? "User updated successfully!" : ""}
             </p>
-          ) : (
-            ""
-          )}
-          <p style={{ color: "#16A34A", marginTop: "1.25rem" }}>
-            {updateSuccess ? "User updated successfully!" : ""}
-          </p>
+          </div>
         </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 
