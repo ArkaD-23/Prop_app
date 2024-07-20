@@ -109,6 +109,7 @@ const FavouriteListings = () => {
           alignItems: "center",
           justifyContent: "center",
           //marginTop: "50px",
+          color:"#334155"
         }}
       >
         My Favourites

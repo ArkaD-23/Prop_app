@@ -99,6 +99,7 @@ const AllListings = () => {
           alignItems: "center",
           justifyContent: "center",
           //marginTop: "150px",
+          color:"#334155",
         }}
       >
         My Listings

@@ -157,6 +157,7 @@ const Sell = () => {
           fontWeight: "600",
           textAlign: "center",
           margin: "28px 0",
+          color:"#334155"
         }}
       >
         Create a Listing

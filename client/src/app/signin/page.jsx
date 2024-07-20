@@ -75,7 +75,7 @@ export default function Signin() {
             "0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)",
         }}
       >
-        <h1 style={{ textAlign: "center", marginBottom: "1.6em" }}>SIGNIN</h1>
+        <h1 style={{ textAlign: "center", marginBottom: "1.6em", color:"#334155"}}>SIGNIN</h1>
         <form onSubmit={handleSubmit}>
           <input
             id="email"

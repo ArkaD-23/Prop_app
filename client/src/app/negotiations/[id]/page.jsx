@@ -118,6 +118,7 @@ const Negotiations = () => {
           alignItems: "center",
           justifyContent: "center",
           //marginTop: "50px",
+          color:"#334155",
         }}
       >
         My Negotiations

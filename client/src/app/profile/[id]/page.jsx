@@ -109,7 +109,7 @@ const Profile = () => {
               alignItems: "center",
             }}
           >
-            <h1 style={{ textAlign: "center" }}>My Profile</h1>
+            <h1 style={{ textAlign: "center", color:"#334155" }}>My Profile</h1>
             <form onSubmit={handleSubmit}>
               <input
                 id="username"

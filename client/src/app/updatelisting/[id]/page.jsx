@@ -204,6 +204,7 @@ const Update = () => {
           fontWeight: "600",
           textAlign: "center",
           margin: "28px 0",
+          color:"#334155",
         }}
       >
         Update your Listing

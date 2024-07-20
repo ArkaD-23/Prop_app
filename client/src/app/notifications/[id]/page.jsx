@@ -88,6 +88,7 @@ const Notificaions = () => {
           alignItems: "center",
           justifyContent: "center",
           //marginTop: "150px",
+          color:"#334155",
         }}
       >
         Notifications
