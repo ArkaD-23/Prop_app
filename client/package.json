@@ -32,6 +32,7 @@
     "react-transition-group": "^4.4.5",
     "redux-persist": "^6.0.0",
     "router-dom": "^2.2.11",
+    "styled-components": "^6.1.12",
     "swiper": "^11.1.4"
   },
   "devDependencies": {
