@@ -13,4 +13,4 @@ RUN npm run build
 
 EXPOSE 3001
 
-ENTRYPOINT ["npm","start"]
+CMD ["npm","start"]
