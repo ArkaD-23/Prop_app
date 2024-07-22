@@ -171,6 +171,7 @@ export const paymentSession = async (req, res, next) => {
     listing.offerPriceMap.has(currentUser.username)
         ? listing.offerPriceMap.get(currentUser.username)
         : listing.Price;
+    const HOST_URL = process.env.HOST_URL || "http://backend:3000";
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
@@ -186,15 +187,15 @@ export const paymentSession = async (req, res, next) => {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.HOST_URL}/success`,
-      cancel_url: `${process.env.HOST_URL}/failure`,
+      success_url: `${HOST_URL}/success`,
+      cancel_url: `${HOST_URL}/failure`,
       metadata: {
         listing_id: listing._id.toString(),
       },
     });
     res.status(200).json({ url: session.url });
   } catch (error) {
-    next(errorHandeler(500, error.message)); // Adjust the status code as needed
+    next(errorHandeler(500, error.message)); 
   }
 };
 
