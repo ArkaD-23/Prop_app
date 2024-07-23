@@ -24,6 +24,7 @@ import Contact from "@/components/Contact";
 const Listing = () => {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [paymentLoading, setPaymentLoading] = useState(false);
   const [error, setError] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [allListings, setAllListings] = useState([]);
@@ -106,6 +107,7 @@ const Listing = () => {
 
   const addToNegotiations = async () => {
     try {
+      setLoading(true);
       dispatch(updateUserStart());
       const res = await fetch(
         `/server/user/addnegotiation/${currentUser._id}`,
@@ -129,6 +131,7 @@ const Listing = () => {
         dispatch(
           updateUserFailure({ ...currentUser, negotiations: data.negotiations })
         );
+        setLoading(false);
         return;
       }
       console.log(data);
@@ -137,11 +140,13 @@ const Listing = () => {
       dispatch(
         updateUserSuccess({ ...currentUser, negotiations: data.negotiations })
       );
+      setLoading(false);
     } catch (error) {
       console.log(error);
       setMessage("Something went wrong !");
       setMessageHandler(true);
       dispatch(updateUserFailure(error));
+      setLoading(false);
       return;
     }
   };
@@ -199,6 +204,7 @@ const Listing = () => {
 
   const pay = async () => {
     try {
+      setPaymentLoading(true);
       const res = await fetch(`/server/listing/create-checkout-session/${id}`, {
         method: "POST",
         headers: {
@@ -210,17 +216,21 @@ const Listing = () => {
         const errorData = await res.json();
         console.error("Error from server:", errorData);
         alert("Something went wrong!");
+        setPaymentLoading(false);
         return;
       }
       const data = await res.json();
       if (data.success === false) {
         alert("Something went wrong !");
+        setPaymentLoading(false);
         return;
       }
+      setPaymentLoading(false);
       window.location.href = data.url;
       return;
     } catch (error) {
       console.log(error);
+      setPaymentLoading(false);
       return;
     }
   };
@@ -445,7 +455,7 @@ const Listing = () => {
                                 }}
                                 onClick={pay}
                               >
-                                Buy now
+                                {paymentLoading ? "Please wait..." : "Buy now"}
                               </button>
                             </HoverButtonWrapper>
                           </div>
@@ -556,7 +566,7 @@ const Listing = () => {
                                   }}
                                   onClick={addToNegotiations}
                                 >
-                                  Place
+                                  {loading ? "Loading..." : "Place"}
                                 </button>
                               </HoverButtonWrapper>
                               {messageHandler && <p style={{color:"green", marginBottom:"10px", marginLeft:"10px"}}>{message}</p>}
