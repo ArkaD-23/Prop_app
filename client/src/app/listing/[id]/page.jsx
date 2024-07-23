@@ -455,7 +455,7 @@ const Listing = () => {
                                 }}
                                 onClick={pay}
                               >
-                                {paymentLoading ? "Please wait..." : "Buy now"}
+                                {paymentLoading ? "Loading..." : "Buy now"}
                               </button>
                             </HoverButtonWrapper>
                           </div>
