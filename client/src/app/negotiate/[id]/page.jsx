@@ -17,6 +17,7 @@ const Negotiate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const { username , Price } = formData;
       const res = await fetch("/server/listing/offer", 
         {
@@ -30,12 +31,15 @@ const Negotiate = () => {
       const data = await res.json();
       if(data.success === false) {
         console.log(data);
+        setLoading(false);
         return;
       }
       //console.log(id);
       console.log(data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
       return;
     }
   }

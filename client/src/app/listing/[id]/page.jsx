@@ -109,7 +109,7 @@ const Listing = () => {
   const addToNegotiations = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      setNegotiationLoading(true);
       dispatch(updateUserStart());
       const res = await fetch(
         `/server/user/addnegotiation/${currentUser._id}`,
@@ -133,7 +133,7 @@ const Listing = () => {
         dispatch(
           updateUserFailure({ ...currentUser, negotiations: data.negotiations })
         );
-        setLoading(false);
+        setNegotiationLoading(false);
         return;
       }
       console.log(data);
@@ -142,13 +142,13 @@ const Listing = () => {
       dispatch(
         updateUserSuccess({ ...currentUser, negotiations: data.negotiations })
       );
-      setLoading(false);
+      setNegotiationLoading(false);
     } catch (error) {
       console.log(error);
       setMessage("Something went wrong !");
       setMessageHandler(true);
       dispatch(updateUserFailure(error));
-      setLoading(false);
+      setNegotiationLoading(false);
       return;
     }
   };

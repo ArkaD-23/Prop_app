@@ -184,7 +184,10 @@ export const addNegotiation = async (req, res, next) => {
       seller.priceRangeMap.set(notificationId, `${buyer.username} has placed a negotiation of price range Rs.${Min_Price} to Rs.${Max_Price} for the listing ${listing.name}`);
       await seller.save();
       if (buyer.negotiations.includes(listingId)) {
-        return res.status(400).json({ message: "Offer is placed !" , negotiations: buyer.negotiations});
+        buyer.negotiations = buyer.negotiations.filter(negotiation => negotiation !== listingId);
+        await buyer.save();
+        listing.offerPriceMap.delete(buyer.username);
+        await listing.save();
       }
       buyer.negotiations.push(listingId);
       await buyer.save();
