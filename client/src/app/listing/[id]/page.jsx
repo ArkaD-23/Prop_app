@@ -106,7 +106,8 @@ const Listing = () => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  const addToNegotiations = async () => {
+  const addToNegotiations = async (e) => {
+    e.preventDefault();
     try {
       setLoading(true);
       dispatch(updateUserStart());
