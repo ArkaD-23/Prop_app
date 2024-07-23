@@ -25,6 +25,7 @@ const Listing = () => {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
+  const [negotiationLoading, setNegotiationLoading] = useState(false);
   const [error, setError] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [allListings, setAllListings] = useState([]);
@@ -566,7 +567,7 @@ const Listing = () => {
                                   }}
                                   onClick={addToNegotiations}
                                 >
-                                  {loading ? "Loading..." : "Place"}
+                                  {negotiationLoading ? "Loading..." : "Place"}
                                 </button>
                               </HoverButtonWrapper>
                               {messageHandler && <p style={{color:"green", marginBottom:"10px", marginLeft:"10px"}}>{message}</p>}
