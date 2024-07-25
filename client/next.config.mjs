@@ -4,7 +4,7 @@ const nextConfig = {
     return [
       {
         source: "/server/:path*",
-        destination: "http://backend:5000/server/:path*",
+        destination: "https://propapp-backend.onrender.com/server/:path*",
       },
     ];
   },
