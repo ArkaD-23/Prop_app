@@ -2,7 +2,7 @@ services:
   backend:
     build:
       context: ./server
-      dockerfile: Dockerfile
+      dockerfile: ./server/Dockerfile
     image: arkad23/propapp_backend:latest
     ports:
       - '5000:5000'
@@ -15,7 +15,7 @@ services:
   frontend:
     build:
       context: ./client
-      dockerfile: Dockerfile
+      dockerfile: ./client/Dockerfile
     image: arkad23/propapp_frontend:latest
     ports:
       - '3000:3000'
