@@ -2,8 +2,7 @@ services:
   backend:
     build:
       context: ./server
-      dockerfile: ./server/Dockerfile
-    image: arkad23/propapp_backend:latest
+      dockerfile: Dockerfile
     ports:
       - '5000:5000'
     env_file:
@@ -15,8 +14,7 @@ services:
   frontend:
     build:
       context: ./client
-      dockerfile: ./client/Dockerfile
-    image: arkad23/propapp_frontend:latest
+      dockerfile: Dockerfile
     ports:
       - '3000:3000'
     env_file:
