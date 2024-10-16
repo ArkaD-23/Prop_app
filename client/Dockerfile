@@ -5,12 +5,12 @@ WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
 
-RUN npm install
-
 COPY . .
 
-RUN npx next build
+RUN npm install
+
+RUN npm run build
 
 EXPOSE 3000
 
-CMD ["npx","next","start"]
+CMD ["npm","run","start"]
