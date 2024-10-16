@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import Propcard from "@/components/Propcard.jsx";
 import Link from "next/link";
 import {
@@ -10,6 +10,7 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  clearError
 } from "@/store/features/user/userSlice.js";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks.js";
 import { useRouter } from "next/navigation";
@@ -27,6 +28,10 @@ const Profile = () => {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [formData, setFormData] = useState({});
   const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    dispatch(clearError());  
+  }, [dispatch]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });

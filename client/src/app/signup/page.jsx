@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useLayoutEffect , useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   signUpStart,
@@ -9,6 +9,7 @@ import {
   signInStart,
   signInSuccess,
   signInFailure,
+  clearError
 } from "@/store/features/user/userSlice.js";
 import { useAppDispatch, useAppSelector } from "@/store/hooks/hooks.js";
 import HoverButtonWrapper from "@/components/HoverButtonWrapper";
@@ -24,6 +25,10 @@ export default function Signup() {
   const { currentUser, error, loading } = useAppSelector((state) => state.user);
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    dispatch(clearError());  
+  }, [dispatch]);
 
   useLayoutEffect(() => {
     if (currentUser) {
