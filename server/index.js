@@ -7,26 +7,37 @@ import userRoutes from "./routes/user.route.js";
 import listRoutes from "./routes/listing.route.js";
 import mongoose from "mongoose";
 
-dotenv.config();
-
-mongoose
-  .connect(process.env.MONGO_URL)
-  .then(() => {
-    console.log("Connected to the database........");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+dotenv.config({
+  path:"./env"
+});
 
 const app = express();
+
+;(async () => {
+  try {
+    mongoose
+      .connect(process.env.MONGO_URL)
+      .then(() => {
+        console.log("Connected to the database........");
+      })
+    app.on("error", (error) => {
+      console.log("Error: ", error);
+      process.exit(1);
+    })
+    app.listen(process.env.PORT, () => {
+      console.log(`Server is running on port ${process.env.PORT}..........`);
+    });
+  }
+  catch(err) {
+    console.log(err);
+    process.exit(1);
+  };
+})()
 
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
-app.listen(5000, () => {
-  console.log("Server is running on port 5000..........");
-});
 
 app.use("/server/user", userRoutes);
 app.use("/server/auth", authRoutes);
