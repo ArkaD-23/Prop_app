@@ -18,7 +18,7 @@ jobs:
 
     # FRONTEND
     - name: Build Frontend Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend-app:latest ./frontend
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend-app:latest ./client
 
     - name: Push Frontend Docker image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/frontend-app:latest
@@ -30,7 +30,7 @@ jobs:
 
     # BACKEND
     - name: Build Backend Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/backend-app:latest ./backend
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/backend-app:latest ./server
 
     - name: Push Backend Docker image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/backend-app:latest
