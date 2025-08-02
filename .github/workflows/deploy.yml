@@ -18,10 +18,10 @@ jobs:
 
     # FRONTEND
     - name: Build Frontend Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend-app:latest ./client
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/propapp_frontend:latest ./client
 
     - name: Push Frontend Docker image
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/frontend-app:latest
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/propapp_frontend:latest
 
     - name: Trigger Render Frontend Deploy
       run: |
@@ -30,10 +30,10 @@ jobs:
 
     # BACKEND
     - name: Build Backend Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/backend-app:latest ./server
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/propapp_backend:latest ./server
 
     - name: Push Backend Docker image
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/backend-app:latest
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/propapp_backend:latest
 
     - name: Trigger Render Backend Deploy
       run: |
