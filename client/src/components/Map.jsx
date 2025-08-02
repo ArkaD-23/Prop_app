@@ -73,7 +73,7 @@ const Map = ({ listings, styleURL, highlightedListingId, zoom, height}) => {
 
   useEffect(() => {
     if (!map || pois.length === 0) return;
-
+    console.log(pois);
     pois.forEach(poi => {
       new mapboxgl.Marker({ color: "#00ff00" })
         .setLngLat(poi.geometry.coordinates)

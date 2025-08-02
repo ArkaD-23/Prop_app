@@ -1,0 +1,41 @@
+name: Build and Deploy Frontend and Backend
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+    # FRONTEND
+    - name: Build Frontend Docker image
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend-app:latest ./frontend
+
+    - name: Push Frontend Docker image
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/frontend-app:latest
+
+    - name: Trigger Render Frontend Deploy
+      run: |
+        curl -X POST https://api.render.com/deploy/${{ secrets.FRONTEND_RENDER_SERVICE_ID }} \
+        -H 'Authorization: Bearer ${{ secrets.RENDER_API_KEY }}'
+
+    # BACKEND
+    - name: Build Backend Docker image
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/backend-app:latest ./backend
+
+    - name: Push Backend Docker image
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/backend-app:latest
+
+    - name: Trigger Render Backend Deploy
+      run: |
+        curl -X POST https://api.render.com/deploy/${{ secrets.BACKEND_RENDER_SERVICE_ID }} \
+        -H 'Authorization: Bearer ${{ secrets.RENDER_API_KEY }}'
