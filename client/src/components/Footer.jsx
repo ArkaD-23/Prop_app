@@ -15,7 +15,7 @@ const Footer = () => {
         </div>
         <div style={{ flex: '1', margin: '10px' }}>
           <h4>Contact Us</h4>
-          <p><FontAwesomeIcon icon={faEnvelope} /> info@PropApp.com</p>
+          <p><FontAwesomeIcon icon={faEnvelope} /> details@PropApp.com</p>
           <p><FontAwesomeIcon icon={faPhone} /> +1 234 567 890</p>
         </div>
         <div style={{ flex: '1', margin: '10px' }}>
