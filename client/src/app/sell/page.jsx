@@ -11,6 +11,7 @@ const Sell = () => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
     imageUrls: [],
+    captions: [],
     name: "",
     description: "",
     address: "",
@@ -26,7 +27,7 @@ const Sell = () => {
   const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e) => {
-    setFiles(Array.from(e.target.files)); // Ensure files is an array
+    setFiles(Array.from(e.target.files)); 
   };
 
   const handleImageSubmit = async () => {
@@ -66,6 +67,7 @@ const Sell = () => {
       const response = await axios.post(url, formData);
       const data = response.data;
       if (data.secure_url) {
+        generateCaption(data.secure_url);
         return data.secure_url;
       } else {
         throw new Error(
@@ -75,6 +77,25 @@ const Sell = () => {
     } catch (error) {
       throw error;
     }
+  };
+
+  const generateCaption = async (cloudinaryImageUrl) => {
+    const response = await fetch(
+      "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-base",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer NEXT_PUBLIC_HUGGINGFACE_API_TOKEN`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          inputs: cloudinaryImageUrl,
+        }),
+      }
+    );
+
+    const result = await response.json();
+    console.log(result); // { generated_text: "A modern kitchen with..." }
   };
 
   const handleRemoveImage = (index) => {
@@ -136,7 +157,7 @@ const Sell = () => {
         }),
       });
       const datas = await res.json();
-      console.log(datas)
+      console.log(datas);
       setLoading(false);
       if (!datas.success) {
         setError(datas.message);
@@ -157,7 +178,7 @@ const Sell = () => {
           fontWeight: "600",
           textAlign: "center",
           margin: "28px 0",
-          color:"#334155"
+          color: "#334155",
         }}
       >
         Create a Listing

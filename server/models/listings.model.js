@@ -34,6 +34,9 @@ const listingSchema = new mongoose.Schema({
         type: Array,
         required: true,
     },
+    captions:{
+        type: Array,
+    },
     parking:{
         type: Boolean,
         required: true,
