@@ -49,8 +49,9 @@ const dotStyle = {
   fontSize: "20px",
 };
 
-const ImageSlider = ({ slides }) => {
+const ImageSlider = ({ slides, captions }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  console.log(captions);
 
   const goToPrevious = () => {
     const isFirstSlide = currentIndex === 0;
@@ -84,7 +85,7 @@ const ImageSlider = ({ slides }) => {
         >
           ❰
         </div>
-        <img src={slides[currentIndex]} alt="Loading..." style={slideStyles} />
+        <img src={slides[currentIndex]} alt={captions[currentIndex]} style={slideStyles} />
         <div
           onClick={goToNext}
           onKeyDown={(e) => {

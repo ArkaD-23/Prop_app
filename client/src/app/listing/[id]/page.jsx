@@ -308,7 +308,7 @@ const Listing = () => {
           <div>
             <div style={divStyle}>
               <div style={containerStyles}>
-                <ImageSlider slides={listing.imageUrls} />
+                <ImageSlider slides={listing.imageUrls} captions={listing.captions}/>
               </div>
               {isMobile && (
                 <hr

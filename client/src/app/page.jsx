@@ -11,6 +11,7 @@ import Footer from "@/components/Footer";
 export default function Home() {
   const { currentUser, loading } = useAppSelector((state) => state.user);
   const [listings, setListings] = useState([]);
+  const [captions, setCaptions] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
   const [images, setImages] = useState([]);
   const linkToUser =
@@ -44,12 +45,18 @@ export default function Home() {
   useEffect(() => {
     if (listings.length < 6) {
       const imageUrls = listings.map((listing) => listing.imageUrls[0]);
+      const imageCaptions = listings.map((listing) => listing.captions[0]);
       setImages(imageUrls);
+      setCaptions(imageCaptions);
     } else {
       const imageUrls = listings.map((listing) =>
         listing.imageUrls[0].slice(0, 6)
       );
+      const imageCaptions = listings.map((listing) =>
+        listing.imageCaptions[0].slice(0, 6)
+      );
       setImages(imageUrls);
+      setCaptions(imageCaptions);
     }
   }, [listings]);
 
@@ -139,7 +146,7 @@ export default function Home() {
           </p>
         </div>
         <div style={containerStyles}>
-          <ImageSlider slides={images} />
+          <ImageSlider slides={images} captions={captions}/>
         </div>
       </div>
       <div style={{ marginTop: "80px" }}>

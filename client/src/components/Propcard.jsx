@@ -42,7 +42,7 @@ const Propcard = ({ listing }) => {
         >
           <img
             src={listing.imageUrls[0]}
-            alt="listing cover"
+            alt={listing.captions[0]}
             style={{
               width: "100%",  
               height: "180px", 

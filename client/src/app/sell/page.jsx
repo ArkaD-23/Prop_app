@@ -27,7 +27,7 @@ const Sell = () => {
   const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e) => {
-    setFiles(Array.from(e.target.files)); 
+    setFiles(Array.from(e.target.files));
   };
 
   const handleImageSubmit = async () => {
@@ -36,10 +36,17 @@ const Sell = () => {
       setImageUploadError(false);
 
       try {
-        const urls = await Promise.all(files.map((file) => storeImage(file)));
+        const imageResults = await Promise.all(
+          files.map((file) => storeImage(file))
+        );
+
+        const newUrls = imageResults.map((res) => res.url);
+        const newCaptions = imageResults.map((res) => res.caption);
+
         setFormData((prevState) => ({
           ...prevState,
-          imageUrls: prevState.imageUrls.concat(urls),
+          imageUrls: prevState.imageUrls.concat(newUrls),
+          captions: prevState.captions.concat(newCaptions),
         }));
         setImageUploadError(false);
       } catch (error) {
@@ -67,8 +74,8 @@ const Sell = () => {
       const response = await axios.post(url, formData);
       const data = response.data;
       if (data.secure_url) {
-        generateCaption(data.secure_url);
-        return data.secure_url;
+        const caption = await generateCaption(data.secure_url);
+        return { url: data.secure_url, caption };
       } else {
         throw new Error(
           data.error.message || "Failed to upload image to Cloudinary"
@@ -80,22 +87,17 @@ const Sell = () => {
   };
 
   const generateCaption = async (cloudinaryImageUrl) => {
-    const response = await fetch(
-      "https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-base",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer NEXT_PUBLIC_HUGGINGFACE_API_TOKEN`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          inputs: cloudinaryImageUrl,
-        }),
-      }
-    );
+    const response = await fetch("/server/listing/caption", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ cloudinaryImageUrl }),
+    });
 
     const result = await response.json();
-    console.log(result); // { generated_text: "A modern kitchen with..." }
+    console.log(result);
+    return result.caption;
   };
 
   const handleRemoveImage = (index) => {
@@ -424,6 +426,16 @@ const Sell = () => {
                     borderRadius: "8px",
                   }}
                 />
+                <p
+                  style={{
+                    marginTop: "8px",
+                    fontSize: "13px",
+                    color: "#4A5568",
+                  }}
+                >
+                  {formData.captions[index]}
+                </p>
+
                 <button
                   type="button"
                   onClick={() => handleRemoveImage(index)}

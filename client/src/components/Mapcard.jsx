@@ -6,6 +6,7 @@ const Mapcard = ({ listing }) => {
       <div style={{ height: "150px", width: "100%" }}>
         <img
           src={listing.imageUrls[0]}
+          alt={listing.captions[0]}
           style={{ objectFit: "center", height: "100%", width: "100%" }}
         />
       </div>

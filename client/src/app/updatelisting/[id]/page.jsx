@@ -18,6 +18,7 @@ const Update = () => {
   const { id } = useParams();
   const [formData, setFormData] = useState({
     imageUrls: [],
+    captions: [],
     name: '',
     description: '',
     address: '',
@@ -439,7 +440,7 @@ const Update = () => {
               >
                 <img
                   src={url}
-                  alt="listing image"
+                  alt={formData.captions[index] || "Listing image"}
                   style={{
                     width: "80px",
                     height: "80px",

@@ -143,7 +143,7 @@ const AllListings = () => {
                       <Link href={`/listing/${listing._id}`}>
                         <img
                           src={listing.imageUrls[0]}
-                          alt="listing cover"
+                          alt={listing.captions[0]}
                           style={{
                             height: "4rem",
                             width: "4rem",
