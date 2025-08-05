@@ -1,26 +1,50 @@
+version: '3.8'
+
 services:
   backend:
     build:
       context: ./server
       dockerfile: Dockerfile
-    ports:
-      - '5000:5000'
+    container_name: PropApp_backend
     env_file:
       - ./server/.env
     volumes:
       - ./server:/app
-    container_name: PropApp_backend
+    expose:
+      - "5000"  
+    networks:
+      - app-network
 
   frontend:
     build:
       context: ./client
       dockerfile: Dockerfile
-    ports:
-      - '3000:3000'
+    container_name: PropApp_frontend
     env_file:
       - ./client/.env.local
     volumes:
       - ./client:/app
-    container_name: PropApp_frontend
+    expose:
+      - "3000"  
     depends_on:
       - backend
+    networks:
+      - app-network
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app-network
+
+
+networks:
+  app-network:
+    driver: bridge
