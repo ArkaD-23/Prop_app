@@ -2,6 +2,8 @@ import { errorHandeler } from "../utils/error.js";
 import Listing from "../models/listings.model.js";
 import User from "../models/user.model.js";
 import Stripe from "stripe";
+import ModelClient, { isUnexpected } from "@azure-rest/ai-inference";
+import { AzureKeyCredential } from "@azure/core-auth";
 
 export const createlisting = async (req, res, next) => {
   const {
@@ -169,10 +171,9 @@ export const paymentSession = async (req, res, next) => {
   }
 
   try {
-    const unit_amount =
-    listing.offerPriceMap.has(currentUser.username)
-        ? listing.offerPriceMap.get(currentUser.username)
-        : listing.Price;
+    const unit_amount = listing.offerPriceMap.has(currentUser.username)
+      ? listing.offerPriceMap.get(currentUser.username)
+      : listing.Price;
     const HOST_URL = process.env.HOST_URL || "http://backend:3000";
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -184,7 +185,7 @@ export const paymentSession = async (req, res, next) => {
             product_data: {
               name: listing.name,
             },
-            unit_amount: unit_amount*100,
+            unit_amount: unit_amount * 100,
           },
           quantity: 1,
         },
@@ -197,7 +198,7 @@ export const paymentSession = async (req, res, next) => {
     });
     res.status(200).json({ url: session.url });
   } catch (error) {
-    next(errorHandeler(500, error.message)); 
+    next(errorHandeler(500, error.message));
   }
 };
 
@@ -220,5 +221,136 @@ export const openOffer = async (req, res, next) => {
     });
   } catch (error) {
     return next(errorHandeler(404, error.message));
+  }
+};
+
+const token = process.env["AZURE_AI_TOKEN"];
+const endpoint = "https://models.github.ai/inference";
+const modelName = "meta/Llama-3.2-90B-Vision-Instruct";
+
+export const createCaption = async (req, res, next) => {
+  const { cloudinaryImageUrl } = req.body;
+
+  const client = ModelClient(endpoint, new AzureKeyCredential(token));
+
+  try {
+    const response = await client.path("/chat/completions").post({
+      body: {
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a helpful assistant that give image captions by analyzing images.",
+          },
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: "Caption this image in 8 words for image captioning.",
+              },
+              {
+                type: "image_url",
+                image_url: {
+                  url: cloudinaryImageUrl,
+                  details: "low",
+                },
+              },
+            ],
+          },
+        ],
+        model: modelName,
+      },
+    });
+
+    if (isUnexpected(response)) {
+      res.status(500).json({
+        message: "Image caption generation unsuccessful!",
+      });
+    }
+
+    const caption = response.body.choices[0].message.content;
+
+    res.status(200).json({
+      message: "Caption generated successfully!",
+      caption,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal Server Error!",
+    });
+  }
+};
+
+export const createDescription = async (req, res, next) => {
+  const client = ModelClient(endpoint, new AzureKeyCredential(token));
+  console.log("Request body:", req.body);
+
+  const {
+    name,
+    address,
+    captions,
+    bedrooms,
+    bathrooms,
+    price,
+    parking,
+    offer,
+  } = req.body;
+
+  const prompt = `
+Write a compelling real estate listing description for the following in one paragraph of 50 waords only:
+
+- Name: ${name}
+- Address: ${address}
+- Bedrooms: ${bedrooms}
+- Bathrooms: ${bathrooms}
+- Price: Rs. ${price}
+- Parking: ${parking ? "Yes" : "No"}
+- Special Offer: ${offer ? "Yes" : "No"}
+- Image Highlights: ${captions.join(", ")}
+
+Make it sound engaging and professional.
+`;
+
+  try {
+    const response = await client.path("/chat/completions").post({
+      body: {
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a helpful assistant that gives property descriptions based on provided details.",
+          },
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: prompt, 
+              },
+            ],
+          },
+        ],
+        model: modelName,
+      },
+    });
+
+    if (isUnexpected(response)) {
+      return res.status(500).json({
+        message: "Image caption generation unsuccessful!",
+      }); 
+    }
+
+    const description = response.body.choices[0].message.content;
+
+    return res.status(200).json({
+      message: "Caption generated successfully!",
+      description,
+    }); 
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal Server Error!",
+    }); 
   }
 };

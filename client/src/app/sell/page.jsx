@@ -25,6 +25,7 @@ const Sell = () => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [descriptionLoading, setDescriptionLoading] = useState(false);
 
   const handleFileChange = (e) => {
     setFiles(Array.from(e.target.files));
@@ -172,6 +173,41 @@ const Sell = () => {
     }
   };
 
+  const handleGenerateDescription = async () => {
+    setDescriptionLoading(true);
+    try {
+      const res = await fetch("/server/listing/description", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          address: formData.address,
+          captions: formData.captions,
+          bedrooms: formData.bedrooms,
+          bathrooms: formData.bathrooms,
+          price: formData.Price,
+          parking: formData.parking,
+          offer: formData.offer,
+        }),
+      });
+
+      const data = await res.json();
+      console.log("Description:", data.description);
+      if (data.description) {
+        setFormData((prev) => ({ ...prev, description: data.description }));
+      } else {
+        alert("Could not generate description.");
+      }
+    } catch (err) {
+      console.error("Error generating description", err);
+      alert("Error generating description.");
+    } finally {
+      setDescriptionLoading(false);
+    }
+  };
+
   return (
     <main style={{ padding: "12px", maxWidth: "1024px", margin: "150px auto" }}>
       <h1
@@ -232,9 +268,28 @@ const Sell = () => {
               padding: "15px",
               boxSizing: "border-box",
               fontSize: "14px",
-              borderRadius: "50px",
+              borderRadius: "10px",
             }}
           />
+          <button
+            type="button"
+            onClick={handleGenerateDescription}
+            disabled={loading}
+            style={{
+              width: "25%",
+              marginBottom: "15px",
+              backgroundColor: "#3182CE",
+              color: "white",
+              padding: "10px 20px",
+              borderRadius: "25px",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "14px",
+            }}
+          >
+            {descriptionLoading ? "Generating..." : "Generate"}
+          </button>
+
           <input
             type="text"
             placeholder="Address"

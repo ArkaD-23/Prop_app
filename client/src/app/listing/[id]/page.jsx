@@ -100,6 +100,8 @@ const Listing = () => {
   const containerStyles = {
     width: isMobile ? "100%" : "60%",
     height: isMobile ? "30vh" : "70vh",
+    flex: 2,
+    padding: isMobile ? "0" : "20px",
   };
 
   const handleChange = (e) => {
@@ -320,7 +322,7 @@ const Listing = () => {
                   }}
                 />
               )}
-              <div style={{ flex: "grid" }}>
+              <div style={{ align: "right", flex: "1" }}>
                 <div style={{ padding: "20px" }}>
                   <p
                     style={{
