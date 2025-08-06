@@ -274,7 +274,7 @@ const Sell = () => {
           <button
             type="button"
             onClick={handleGenerateDescription}
-            disabled={loading}
+            disabled={descriptionLoading}
             style={{
               width: "25%",
               marginBottom: "15px",

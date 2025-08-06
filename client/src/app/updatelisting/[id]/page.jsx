@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useAppSelector } from "@/store/hooks/hooks.js";
 import axios from "axios";
 import styles from "./update.module.css";
@@ -16,12 +16,14 @@ const Update = () => {
   const [loading, setLoading] = useState(false);
   const [listing, setListing] = useState(null);
   const { id } = useParams();
+  const [descriptionLoading, setDescriptionLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     imageUrls: [],
     captions: [],
-    name: '',
-    description: '',
-    address: '',
+    name: "",
+    description: "",
+    address: "",
     bedrooms: 1,
     bathrooms: 1,
     Price: 50,
@@ -41,6 +43,7 @@ const Update = () => {
           setLoading(false);
           return;
         }
+        console.log(data);
         setFormData(data);
         setListing(data);
         setLoading(false);
@@ -54,7 +57,7 @@ const Update = () => {
   }, []);
 
   const handleFileChange = (e) => {
-    setFiles(Array.from(e.target.files)); // Ensure files is an array
+    setFiles(Array.from(e.target.files));
   };
 
   const handleImageSubmit = async () => {
@@ -63,10 +66,17 @@ const Update = () => {
       setImageUploadError(false);
 
       try {
-        const urls = await Promise.all(files.map((file) => storeImage(file)));
+        const imageResults = await Promise.all(
+          files.map((file) => storeImage(file))
+        );
+
+        const newUrls = imageResults.map((res) => res.url);
+        const newCaptions = imageResults.map((res) => res.caption);
+
         setFormData((prevState) => ({
           ...prevState,
-          imageUrls: prevState.imageUrls.concat(urls),
+          imageUrls: prevState.imageUrls.concat(newUrls),
+          captions: prevState.captions.concat(newCaptions),
         }));
         setImageUploadError(false);
       } catch (error) {
@@ -94,7 +104,8 @@ const Update = () => {
       const response = await axios.post(url, formData);
       const data = response.data;
       if (data.secure_url) {
-        return data.secure_url;
+        const caption = await generateCaption(data.secure_url);
+        return { url: data.secure_url, caption };
       } else {
         throw new Error(
           data.error.message || "Failed to upload image to Cloudinary"
@@ -103,6 +114,20 @@ const Update = () => {
     } catch (error) {
       throw error;
     }
+  };
+
+  const generateCaption = async (cloudinaryImageUrl) => {
+    const response = await fetch("/server/listing/caption", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ cloudinaryImageUrl }),
+    });
+
+    const result = await response.json();
+    console.log(result);
+    return result.caption;
   };
 
   const handleRemoveImage = (index) => {
@@ -130,15 +155,12 @@ const Update = () => {
       const response = await fetch(url);
 
       if (!response.ok) {
-        setError(`HTTP error! Status: ${response.status}`);
-        alert(`HTTP error! Status: ${response.status}`);
+        alert("Something went wrong!");
       }
 
       const data = await response.json();
-      console.log(data.features[0].center[1]);
 
       if (data.features.length === 0) {
-        setError("Location not found");
         alert("Location not found");
       }
 
@@ -146,9 +168,12 @@ const Update = () => {
         latitude: data.features[0].center[1],
         longitude: data.features[0].center[0],
       };
+
+      if (formData.imageUrls.length < 1)
+        return setError("You must upload at least one image");
       setLoading(true);
       setError(false);
-      const res = await fetch(`/server/listing/update/${listing._id}`, {
+      const res = await fetch(`/server/listing/update/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -156,6 +181,7 @@ const Update = () => {
         body: JSON.stringify({
           ...formData,
           Realtor: currentUser.username,
+          userRef: currentUser._id,
           coordinates: {
             latitude: coordinates.latitude,
             longitude: coordinates.longitude,
@@ -171,327 +197,404 @@ const Update = () => {
         return;
       }
     } catch (error) {
-      setError(error.message);
       console.log(error);
       setLoading(false);
     }
   };
 
+  const handleGenerateDescription = async () => {
+    setDescriptionLoading(true);
+    try {
+      const res = await fetch("/server/listing/description", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          address: formData.address,
+          captions: formData.captions,
+          bedrooms: formData.bedrooms,
+          bathrooms: formData.bathrooms,
+          price: formData.Price,
+          parking: formData.parking,
+          offer: formData.offer,
+        }),
+      });
+
+      const data = await res.json();
+      console.log("Description:", data.description);
+      if (data.description) {
+        setFormData((prev) => ({ ...prev, description: data.description }));
+      } else {
+        alert("Could not generate description.");
+      }
+    } catch (err) {
+      console.error("Error generating description", err);
+      alert("Error generating description.");
+    } finally {
+      setDescriptionLoading(false);
+    }
+  };
+
   return (
     <>
-   
       <HoverButtonWrapper>
-          <button
-            title="Back"
-            style={{
-              padding: "12px",
-              color: "#ffffff",
-              borderRadius: "8px",
-              background: "#2980b9",
-              cursor: "pointer",
-              opacity: "1",
-              marginTop: "100px",
-              marginLeft:"20px"
-            }}
-            onClick={() => window.history.back()}
-          >
-            <MdOutlineReply />
-          </button>
-        </HoverButtonWrapper>
-    <main style={{ padding: "12px", maxWidth: "1024px", margin: "0px auto" , height:"100vh"}}>
-      <h1
+        <button
+          title="Back"
+          style={{
+            padding: "12px",
+            color: "#ffffff",
+            borderRadius: "8px",
+            background: "#2980b9",
+            cursor: "pointer",
+            opacity: "1",
+            marginTop: "100px",
+            marginLeft: "20px",
+          }}
+          onClick={() => window.history.back()}
+        >
+          <MdOutlineReply />
+        </button>
+      </HoverButtonWrapper>
+      <main
         style={{
-          fontSize: "1.875rem",
-          fontWeight: "600",
-          textAlign: "center",
-          margin: "28px 0",
-          color:"#334155",
+          padding: "12px",
+          maxWidth: "1024px",
+          margin: "0px auto",
+          height: "100vh",
         }}
       >
-        Update your Listing
-      </h1>
-      <form onSubmit={handleSubmit} className={styles.container}>
-        <div
+        <h1
           style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "16px",
-            flex: "1",
+            fontSize: "1.875rem",
+            fontWeight: "600",
+            textAlign: "center",
+            margin: "28px 0",
+            color: "#334155",
           }}
         >
-          <input
-            type="text"
-            placeholder="Name"
-            id="name"
-            maxLength="62"
-            minLength="10"
-            onChange={handleChange}
-            value={formData.name}
+          Update your Listing
+        </h1>
+        <form onSubmit={handleSubmit} className={styles.container}>
+          <div
             style={{
-              fontFamily: "Roboto",
-              outline: "0",
-              background: "#f2f2f2",
-              width: "100%",
-              border: "0",
-              margin: "0 0 15px",
-              padding: "15px",
-              boxSizing: "border-box",
-              fontSize: "14px",
-              borderRadius: "50px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+              flex: "1",
             }}
-          />
-          <textarea
-            placeholder="Description"
-            id="description"
-            onChange={handleChange}
-            value={formData.description}
-            style={{
-              fontFamily: "Roboto",
-              outline: "0",
-              background: "#f2f2f2",
-              width: "100%",
-              border: "0",
-              margin: "0 0 15px",
-              padding: "15px",
-              boxSizing: "border-box",
-              fontSize: "14px",
-              borderRadius: "50px",
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Address"
-            id="address"
-            onChange={handleChange}
-            value={formData.address}
-            style={{
-              fontFamily: "Roboto",
-              outline: "0",
-              background: "#f2f2f2",
-              width: "100%",
-              border: "0",
-              margin: "0 0 15px",
-              padding: "15px",
-              boxSizing: "border-box",
-              fontSize: "14px",
-              borderRadius: "50px",
-            }}
-          />
-          <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
-            <div style={{ display: "flex", gap: "8px" }}>
-              <input
-                type="checkbox"
-                id="parking"
-                style={{ width: "20px" }}
-                onChange={handleChange}
-                checked={formData.parking}
-              />
-              <span>Parking spot</span>
-            </div>
-            <div style={{ display: "flex", gap: "8px" }}>
-              <input
-                type="checkbox"
-                id="offer"
-                style={{ width: "20px" }}
-                onChange={handleChange}
-                checked={formData.offer}
-              />
-              <span>Offer</span>
-            </div>
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "24px" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <input
-                type="text"
-                id="bedrooms"
-                onChange={handleChange}
-                value={formData.bedrooms}
-                style={{
-                  fontFamily: "Roboto",
-                  outline: "0",
-                  background: "#f2f2f2",
-                  width: "100%",
-                  border: "0",
-                  margin: "0 0 15px",
-                  padding: "15px",
-                  boxSizing: "border-box",
-                  fontSize: "14px",
-                  borderRadius: "50px",
-                }}
-              />
-              <p>Bedroom(s)</p>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <input
-                type="text"
-                id="bathrooms"
-                onChange={handleChange}
-                value={formData.bathrooms}
-                style={{
-                  fontFamily: "Roboto",
-                  outline: "0",
-                  background: "#f2f2f2",
-                  width: "100%",
-                  border: "0",
-                  margin: "0 0 15px",
-                  padding: "15px",
-                  boxSizing: "border-box",
-                  fontSize: "14px",
-                  borderRadius: "50px",
-                }}
-              />
-              <p>Bathroom(s)</p>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <input
-                type="text"
-                id="Price"
-                onChange={handleChange}
-                value={formData.Price}
-                style={{
-                  fontFamily: "Roboto",
-                  outline: "0",
-                  background: "#f2f2f2",
-                  width: "100%",
-                  border: "0",
-                  margin: "0 0 15px",
-                  padding: "15px",
-                  boxSizing: "border-box",
-                  fontSize: "14px",
-                  borderRadius: "50px",
-                }}
-              />
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <p>Price (Rs.)</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            flex: "1",
-            gap: "16px",
-          }}
-        >
-          <p style={{ fontWeight: "600" }}>
-            Images:
-            <span
-              style={{ fontWeight: "400", color: "#718096", marginLeft: "8px" }}
-            >
-              The first image will be the cover (max 6)
-            </span>
-          </p>
-          <div style={{ display: "flex", gap: "16px" }}>
+          >
             <input
-              onChange={handleFileChange}
-              type="file"
-              id="images"
-              accept="image/*"
-              multiple
+              type="text"
+              placeholder="Name"
+              id="name"
+              maxLength="62"
+              minLength="10"
+              onChange={handleChange}
+              value={formData.name}
               style={{
-                padding: "12px",
-                border: "1px solid #D1D5DB",
-                borderRadius: "8px",
+                fontFamily: "Roboto",
+                outline: "0",
+                background: "#f2f2f2",
                 width: "100%",
+                border: "0",
+                margin: "0 0 15px",
+                padding: "15px",
+                boxSizing: "border-box",
+                fontSize: "14px",
+                borderRadius: "50px",
+              }}
+            />
+            <textarea
+              placeholder="Description"
+              id="description"
+              onChange={handleChange}
+              value={formData.description}
+              style={{
+                fontFamily: "Roboto",
+                outline: "0",
+                background: "#f2f2f2",
+                width: "100%",
+                border: "0",
+                margin: "0 0 15px",
+                padding: "15px",
+                boxSizing: "border-box",
+                fontSize: "14px",
+                borderRadius: "50px",
               }}
             />
             <button
               type="button"
-              disabled={uploading}
-              onClick={handleImageSubmit}
+              onClick={handleGenerateDescription}
+              disabled={descriptionLoading}
               style={{
-                padding: "12px",
-                color: "#2F855A",
-                border: "1px solid #2F855A",
-                borderRadius: "8px",
-                textTransform: "uppercase",
-                cursor: uploading ? "not-allowed" : "pointer",
-                opacity: uploading ? "0.8" : "1",
-                boxShadow: uploading
-                  ? "none"
-                  : "0px 2px 8px rgba(0, 0, 0, 0.15)",
+                width: "25%",
+                marginBottom: "15px",
+                backgroundColor: "#3182CE",
+                color: "white",
+                padding: "10px 20px",
+                borderRadius: "25px",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "14px",
               }}
             >
-              {uploading ? "Uploading..." : "Upload"}
+              {descriptionLoading ? "Generating..." : "Generate"}
             </button>
-          </div>
-          <p style={{ color: "#C53030", fontSize: "14px" }}>
-            {imageUploadError}
-          </p>
-          {formData.imageUrls.length > 0 &&
-            formData.imageUrls.map((url, index) => (
-              <div
-                key={url}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  padding: "12px",
-                  border: "1px solid #E2E8F0",
-                  alignItems: "center",
-                }}
-              >
-                <img
-                  src={url}
-                  alt={formData.captions[index] || "Listing image"}
-                  style={{
-                    width: "80px",
-                    height: "80px",
-                    objectFit: "contain",
-                    borderRadius: "8px",
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={() => handleRemoveImage(index)}
-                  style={{
-                    padding: "12px",
-                    color: "#C53030",
-                    borderRadius: "8px",
-                    textTransform: "uppercase",
-                    cursor: "pointer",
-                    opacity: "1",
-                  }}
-                >
-                  <MdDelete />
-                </button>
-              </div>
-            ))}
-          <HoverButtonWrapper>
-            <button
-              disabled={loading || uploading}
+            <input
+              type="text"
+              placeholder="Address"
+              id="address"
+              onChange={handleChange}
+              value={formData.address}
               style={{
-                fontFamily: '"Roboto", sans-serif',
-                textTransform: "uppercase",
+                fontFamily: "Roboto",
                 outline: "0",
-                background: "green",
+                background: "#f2f2f2",
                 width: "100%",
                 border: "0",
+                margin: "0 0 15px",
                 padding: "15px",
-                color: "#FFFFFF",
+                boxSizing: "border-box",
                 fontSize: "14px",
-                WebkitTransition: "all 0.3s ease",
-                transition: "all 0.3s ease",
-                cursor: "pointer",
                 borderRadius: "50px",
               }}
-            >
-              {loading ? "Updating..." : "Upadte"}
-            </button>
-          </HoverButtonWrapper>
-          {error && (
-            <p style={{ color: "#C53030", fontSize: "14px" }}>{error}</p>
-          )}
-        </div>
-      </form>
-    </main>
+            />
+            <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: "8px" }}>
+                <input
+                  type="checkbox"
+                  id="parking"
+                  style={{ width: "20px" }}
+                  onChange={handleChange}
+                  checked={formData.parking}
+                />
+                <span>Parking spot</span>
+              </div>
+              <div style={{ display: "flex", gap: "8px" }}>
+                <input
+                  type="checkbox"
+                  id="offer"
+                  style={{ width: "20px" }}
+                  onChange={handleChange}
+                  checked={formData.offer}
+                />
+                <span>Offer</span>
+              </div>
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "24px" }}>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+              >
+                <input
+                  type="text"
+                  id="bedrooms"
+                  onChange={handleChange}
+                  value={formData.bedrooms}
+                  style={{
+                    fontFamily: "Roboto",
+                    outline: "0",
+                    background: "#f2f2f2",
+                    width: "100%",
+                    border: "0",
+                    margin: "0 0 15px",
+                    padding: "15px",
+                    boxSizing: "border-box",
+                    fontSize: "14px",
+                    borderRadius: "50px",
+                  }}
+                />
+                <p>Bedroom(s)</p>
+              </div>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+              >
+                <input
+                  type="text"
+                  id="bathrooms"
+                  onChange={handleChange}
+                  value={formData.bathrooms}
+                  style={{
+                    fontFamily: "Roboto",
+                    outline: "0",
+                    background: "#f2f2f2",
+                    width: "100%",
+                    border: "0",
+                    margin: "0 0 15px",
+                    padding: "15px",
+                    boxSizing: "border-box",
+                    fontSize: "14px",
+                    borderRadius: "50px",
+                  }}
+                />
+                <p>Bathroom(s)</p>
+              </div>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
+              >
+                <input
+                  type="text"
+                  id="Price"
+                  onChange={handleChange}
+                  value={formData.Price}
+                  style={{
+                    fontFamily: "Roboto",
+                    outline: "0",
+                    background: "#f2f2f2",
+                    width: "100%",
+                    border: "0",
+                    margin: "0 0 15px",
+                    padding: "15px",
+                    boxSizing: "border-box",
+                    fontSize: "14px",
+                    borderRadius: "50px",
+                  }}
+                />
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <p>Price (Rs.)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              flex: "1",
+              gap: "16px",
+            }}
+          >
+            <p style={{ fontWeight: "600" }}>
+              Images:
+              <span
+                style={{
+                  fontWeight: "400",
+                  color: "#718096",
+                  marginLeft: "8px",
+                }}
+              >
+                The first image will be the cover (max 6)
+              </span>
+            </p>
+            <div style={{ display: "flex", gap: "16px" }}>
+              <input
+                onChange={handleFileChange}
+                type="file"
+                id="images"
+                accept="image/*"
+                multiple
+                style={{
+                  padding: "12px",
+                  border: "1px solid #D1D5DB",
+                  borderRadius: "8px",
+                  width: "100%",
+                }}
+              />
+              <button
+                type="button"
+                disabled={uploading}
+                onClick={handleImageSubmit}
+                style={{
+                  padding: "12px",
+                  color: "#2F855A",
+                  border: "1px solid #2F855A",
+                  borderRadius: "8px",
+                  textTransform: "uppercase",
+                  cursor: uploading ? "not-allowed" : "pointer",
+                  opacity: uploading ? "0.8" : "1",
+                  boxShadow: uploading
+                    ? "none"
+                    : "0px 2px 8px rgba(0, 0, 0, 0.15)",
+                }}
+              >
+                {uploading ? "Uploading..." : "Upload"}
+              </button>
+            </div>
+            <p style={{ color: "#C53030", fontSize: "14px" }}>
+              {imageUploadError}
+            </p>
+            {formData.imageUrls.length > 0 &&
+              formData.imageUrls.map((url, index) => (
+                <div
+                  key={url}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    padding: "12px",
+                    border: "1px solid #E2E8F0",
+                    alignItems: "center",
+                  }}
+                >
+                  <img
+                    src={url}
+                    alt={formData.captions[index] || "Listing image"}
+                    style={{
+                      width: "80px",
+                      height: "80px",
+                      objectFit: "contain",
+                      borderRadius: "8px",
+                    }}
+                  />
+                  <p
+                    style={{
+                      marginTop: "8px",
+                      fontSize: "13px",
+                      color: "#4A5568",
+                    }}
+                  >
+                    {formData.captions[index]}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage(index)}
+                    style={{
+                      padding: "12px",
+                      color: "#C53030",
+                      borderRadius: "8px",
+                      textTransform: "uppercase",
+                      cursor: "pointer",
+                      opacity: "1",
+                    }}
+                  >
+                    <MdDelete />
+                  </button>
+                </div>
+              ))}
+            <HoverButtonWrapper>
+              <button
+                disabled={loading || uploading}
+                style={{
+                  fontFamily: '"Roboto", sans-serif',
+                  textTransform: "uppercase",
+                  outline: "0",
+                  background: "green",
+                  width: "100%",
+                  border: "0",
+                  padding: "15px",
+                  color: "#FFFFFF",
+                  fontSize: "14px",
+                  WebkitTransition: "all 0.3s ease",
+                  transition: "all 0.3s ease",
+                  cursor: "pointer",
+                  borderRadius: "50px",
+                }}
+              >
+                {loading ? "Updating..." : "Upadte"}
+              </button>
+            </HoverButtonWrapper>
+            {error && (
+              <p style={{ color: "#C53030", fontSize: "14px" }}>{error}</p>
+            )}
+          </div>
+        </form>
+      </main>
     </>
   );
 };

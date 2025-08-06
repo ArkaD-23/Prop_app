@@ -128,6 +128,7 @@ export const updateListing = async (req, res, next) => {
           parking: req.body.parking,
           offer: req.body.offer,
           imageUrls: req.body.imageUrls,
+          captions: req.body.captions,
           Realtor: req.body.Realtor,
           coordinates: req.body.coordinates,
         },
